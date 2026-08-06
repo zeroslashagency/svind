@@ -11,7 +11,9 @@
   <link rel="stylesheet" href="assets/css/components.css">
   <link rel="stylesheet" href="assets/css/dna.css">
   <link rel="stylesheet" href="assets/css/foc.css">
+  <link rel="stylesheet" href="assets/css/abt.css">
   <link rel="stylesheet" href="assets/css/arz.css">
+  <link rel="stylesheet" href="assets/css/mpz.css">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -852,38 +854,288 @@
       </div>
     </section>
 
-    <!-- FOC 04 · WHAT OUR PARTNERS SAY — three #F7F7F7 cards on charcoal -->
-    <section class="foc foc--paper" aria-labelledby="foc-quotes-h">
-      <div class="foc__wrap">
-        <h2 class="foc__head" id="foc-quotes-h">What our Partners say</h2>
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         MPZ · WHAT OUR PARTNERS SAY — the mprez.fr testimonial carousel
 
-        <div class="foc__quotes">
-          <figure class="foc__quote">
-            <blockquote class="foc__quote-text">
-              "Their professionalism and attention to detail are unmatched. Bedrock delivered on time and exceeded expectations."
-            </blockquote>
-            <figcaption class="foc__quote-by">
-              [ <cite>Elias Vance, CEO of Zenith Corp</cite> ]
-            </figcaption>
-          </figure>
+         Replaced the three static .foc--paper quote cards that used to sit
+         here. Styles are in assets/css/mpz.css, scoped under .mpz; the
+         controls are driven by initTestimonials() in assets/js/site.js.
 
-          <figure class="foc__quote">
-            <blockquote class="foc__quote-text">
-              "For reliability and quality craftsmanship, we only trust Stoneworth guild Constructors."
-            </blockquote>
-            <figcaption class="foc__quote-by">
-              [ <cite>Samuel Chen, Property Manager</cite> ]
-            </figcaption>
-          </figure>
+         The track is a NATIVE scroll container (overflow-x + scroll-snap),
+         not the source's Splide transform track. Drag, flick, trackpad,
+         shift-wheel and arrow keys therefore come from the browser rather
+         than from re-implemented pointer maths, and the source's six cloned
+         slides are gone -- they exist only to hide the seam in a transform
+         track, and a scroll container has no seam. Full reasoning, including
+         what that costs, is in the mpz.css header.
 
-          <figure class="foc__quote">
-            <blockquote class="foc__quote-text">
-              "A seamless collaboration from start to finish. The team's expertise was evident in every phase of the project."
-            </blockquote>
-            <figcaption class="foc__quote-by">
-              [ <cite>Maria Flores, Director at Crestview</cite> ]
-            </figcaption>
-          </figure>
+         Six slides, so the three-up layout has a second page to travel to.
+
+         ⚠⚠ BLOCKING BEFORE LAUNCH — READ THIS ⚠⚠
+
+         Every quote below is PLACEHOLDER TEXT, and each one now sits under a
+         REAL client's mark. That pairing is the whole problem: as it stands
+         the page shows an invented sentence beneath the L&T, Essar, Terex,
+         Adani, Ajax and Weir logos, which is fabricated endorsement of real
+         companies. It is fine on a local copy and is NOT fine published.
+
+         Two things are required before this ships, not one:
+           1. Replace every quote with text those companies actually approved.
+           2. Confirm each company permits its mark in a testimonial context
+              (logo-use permission for a client list does not extend to an
+              attributed quote).
+
+         If approved quotes are not available for a given client, delete that
+         whole .mpz__slide -- do not keep the mark with invented words under
+         it. Five cards, or three, is fine; the rail measures its own pages.
+
+         When real quotes arrive, put the person's name in .mpz__role and
+         their title + company in .mpz__org.
+         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <section class="mpz" aria-labelledby="mpz-h">
+      <div class="mpz__wrap">
+        <div class="mpz__head">
+          <h2 class="mpz__title" id="mpz-h">What our Partners say</h2>
+          <p class="mpz__intro">
+            Plants across Karnataka and the Hosur road belt on the cranes we
+            built, commissioned and still maintain.
+          </p>
+        </div>
+
+        <!-- aria-roledescription tells a screen reader this is a carousel;
+             the role stays "group" so the native scroll semantics survive. -->
+        <div class="mpz__carousel" role="group" aria-roledescription="carousel"
+             aria-labelledby="mpz-h">
+          <!-- tabindex="0" is required, not decoration: a scroll container
+               with no focusable child is unreachable by keyboard, and arrow
+               keys would never scroll it. -->
+          <div class="mpz__track" id="mpz-track" tabindex="0"
+               aria-label="Partner testimonials, scrollable">
+            <div class="mpz__slide">
+              <figure class="mpz__card">
+                <div class="mpz__logo-slot">
+                  <!-- eager, not lazy: these six marks total 37 KB, and in a
+                       horizontal rail the offscreen cards are one swipe away,
+                       not one page-scroll away. Lazy made them visibly pop in
+                       mid-swipe (measured: only slides 1-3 had loaded until
+                       the rail reached page 2) to save nothing worth having. -->
+                  <img class="mpz__logo" src="assets/img/logos/lt.svg"
+                       alt="Larsen &amp; Toubro" width="100" height="34"
+                       loading="eager" decoding="async">
+                </div>
+                <blockquote class="mpz__quote">
+                  A 20 T double-girder crane over the melt shop, delivered to
+                  the drawing and load tested on site. The girders came out of
+                  their own bay at Harohalli, which is why the schedule held.
+                </blockquote>
+                <figcaption class="mpz__profile">
+                  <div class="mpz__role">Works Manager</div>
+                  <div class="mpz__org">Steel plant · Karnataka</div>
+                </figcaption>
+              </figure>
+            </div>
+
+            <div class="mpz__slide">
+              <figure class="mpz__card">
+                <div class="mpz__logo-slot">
+                  <img class="mpz__logo" src="assets/img/logos/essar.svg"
+                       alt="Essar" width="100" height="34"
+                       loading="eager" decoding="async">
+                </div>
+                <blockquote class="mpz__quote">
+                  We run two shifts and the goliath has not lost a day since
+                  commissioning. Crab units and end carriages are theirs, so a
+                  spare is a phone call rather than an import.
+                </blockquote>
+                <figcaption class="mpz__profile">
+                  <div class="mpz__role">Head of Maintenance</div>
+                  <div class="mpz__org">Precast yard · Hosur road</div>
+                </figcaption>
+              </figure>
+            </div>
+
+            <div class="mpz__slide">
+              <figure class="mpz__card">
+                <div class="mpz__logo-slot">
+                  <img class="mpz__logo" src="assets/img/logos/terex.svg"
+                       alt="Terex" width="100" height="34"
+                       loading="eager" decoding="async">
+                </div>
+                <blockquote class="mpz__quote">
+                  Duty classification was specified to IS 807 and the FAT was
+                  witnessed before dispatch. Nothing came back as a surprise at
+                  erection, which is not our usual experience.
+                </blockquote>
+                <figcaption class="mpz__profile">
+                  <div class="mpz__role">Project Engineer</div>
+                  <div class="mpz__org">EPC contractor · Bengaluru</div>
+                </figcaption>
+              </figure>
+            </div>
+
+            <div class="mpz__slide">
+              <figure class="mpz__card">
+                <div class="mpz__logo-slot">
+                  <img class="mpz__logo" src="assets/img/logos/adani-defence.svg"
+                       alt="Adani Defence" width="100" height="34"
+                       loading="eager" decoding="async">
+                </div>
+                <blockquote class="mpz__quote">
+                  Hot-metal duty is unforgiving and we needed a builder who had
+                  done it before. The ladle carrier frame was right the first
+                  time and the AMC visits have been on schedule.
+                </blockquote>
+                <figcaption class="mpz__profile">
+                  <div class="mpz__role">Plant Head</div>
+                  <div class="mpz__org">Foundry · Peenya</div>
+                </figcaption>
+              </figure>
+            </div>
+
+            <div class="mpz__slide">
+              <figure class="mpz__card">
+                <div class="mpz__logo-slot">
+                  <img class="mpz__logo" src="assets/img/logos/ajax-engineering.svg"
+                       alt="Ajax Engineering" width="34" height="34"
+                       loading="eager" decoding="async">
+                </div>
+                <blockquote class="mpz__quote">
+                  Three jib cranes and a single-girder EOT in one order, priced
+                  sensibly and installed around our shutdown window rather than
+                  ours being moved to suit them.
+                </blockquote>
+                <figcaption class="mpz__profile">
+                  <div class="mpz__role">Purchase Manager</div>
+                  <div class="mpz__org">Fabrication unit · Bommasandra</div>
+                </figcaption>
+              </figure>
+            </div>
+
+            <div class="mpz__slide">
+              <figure class="mpz__card">
+                <div class="mpz__logo-slot">
+                  <img class="mpz__logo" src="assets/img/logos/weir-minerals.svg"
+                       alt="Weir Minerals" width="100" height="34"
+                       loading="eager" decoding="async">
+                </div>
+                <blockquote class="mpz__quote">
+                  They inspected and load tested cranes they did not build,
+                  then told us plainly which two were worth retrofitting and
+                  which one was not. We have used them for AMC since.
+                </blockquote>
+                <figcaption class="mpz__profile">
+                  <div class="mpz__role">Operations Lead</div>
+                  <div class="mpz__org">Cement terminal · Kanakapura</div>
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+
+          <div class="mpz__controls">
+            <div class="mpz__arrows">
+              <button class="mpz__arrow mpz__arrow--prev" type="button"
+                      aria-label="Previous testimonials" aria-controls="mpz-track">
+                <!-- One chevron path, rotated 180° by CSS for prev, so the two
+                     glyphs cannot drift out of mirror. -->
+                <svg viewBox="0 0 40 40" width="40" height="40" aria-hidden="true" focusable="false">
+                  <path d="m15.5 0.932-4.3 4.38 14.5 14.6-14.5 14.5 4.3 4.4 14.6-14.6 4.4-4.3-4.4-4.4-14.6-14.6z"></path>
+                </svg>
+              </button>
+              <button class="mpz__arrow mpz__arrow--next" type="button"
+                      aria-label="Next testimonials" aria-controls="mpz-track">
+                <svg viewBox="0 0 40 40" width="40" height="40" aria-hidden="true" focusable="false">
+                  <path d="m15.5 0.932-4.3 4.38 14.5 14.6-14.5 14.5 4.3 4.4 14.6-14.6 4.4-4.3-4.4-4.4-14.6-14.6z"></path>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Built by initTestimonials(); empty in the markup because the
+                 page count depends on measured slides-per-view. -->
+            <ul class="mpz__dots" role="tablist" aria-label="Testimonial pages"></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         ABT · PINNED TEAM FRAME — the arrodz "about-home-section"
+
+         A full-bleed photograph that holds still while the page scrolls over
+         it, one oversized line travelling sideways as it passes, then the copy.
+         Fourth design system here and the third foreign one; styles are in
+         assets/css/abt.css, scoped under .abt.
+
+         The pin is position: fixed applied from site.js, NOT position: sticky
+         like the source uses — sticky is dead on this page because base.css
+         puts overflow-x: hidden on html and body, which makes body a scroll
+         container. Measured: a sticky probe 800px past its host reports top
+         -800 where it should report 0. Full reasoning in abt.css's header.
+
+         Structure is three parts and the order matters: the stage is the
+         element that gets fixed, the runway is the scroll distance that pays
+         for the pin and carries the headline over it, and the content follows
+         in ordinary flow. With JS off or reduced motion on, the stage is a
+         16/9 photo, the headline sits still and legible, and the runway
+         collapses to nothing.
+         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <section class="abt" aria-labelledby="abt-h">
+      <!-- The pinned frame. aria-hidden on the veil only; the photo keeps its
+           alt text because it is the one image on the page showing the people
+           the copy is about. -->
+      <!-- .abt__runway holds the flow height so the page does not jolt when the
+           stage leaves flow, and is the scroll distance the pin is paid for.
+           site.js writes its height; unpinned it is inert and the stage sets
+           its own height from the 16/9 ratio.
+
+           The headline is INSIDE the stage, not a sibling of it: as a sibling
+           it scrolled up out of the frame while the photo held still. Nested,
+           the same pin holds both and the line only ever moves on x. -->
+      <div class="abt__runway">
+        <div class="abt__stage">
+          <img class="abt__img" src="assets/img/people/group.png" width="1702" height="924"
+               alt="The SVIND team, more than a hundred engineers, fabricators and staff, assembled outside the Harohalli works beneath a 20 T gantry crane"
+               loading="lazy" decoding="async">
+          <div class="abt__veil" aria-hidden="true"></div>
+
+          <div class="abt__line-wrap">
+            <h2 class="abt__line" id="abt-h">A crane builder that works with you, not just for you</h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="abt__content">
+        <div class="abt__content-inner">
+          <div>
+            <p class="abt__lead">
+              We measure your bay, we listen to how you actually lift, and we
+              build to that. No catalogue crane bent to fit.
+            </p>
+            <p class="abt__lead">
+              We engineer for your duty cycle, not just your capacity.
+            </p>
+          </div>
+          <div>
+            <p class="abt__body">
+              SVIND started in 2006 with a simple position: the people who design
+              a crane should be the people who fabricate it, test it and come
+              back to service it. Girders, crab units and end carriages are built
+              in-house at Harohalli, so the drawing and the steel never drift
+              apart.
+            </p>
+            <p class="abt__body">
+              Our approach starts with the bay. Span, capacity, lift height, duty
+              class and the power supply at the rail — we take the figures
+              ourselves when you do not have them, because a duty class guessed
+              from capacity alone is the single most common reason a crane wears
+              out early.
+            </p>
+            <p class="abt__body">
+              Nothing here is oversold. Every machine is classified to IS 807
+              against your real load spectrum and cycles per shift, tested at FAT
+              in front of your team, and handed over with the AMC contact being
+              the same people who built it.
+            </p>
+          </div>
         </div>
       </div>
     </section>

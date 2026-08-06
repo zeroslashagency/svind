@@ -1,0 +1,481 @@
+/* ==========================================================================
+   MPZ · WHAT OUR PARTNERS SAY — the mprez.fr testimonial carousel
+   https://www.mprez.fr/  ("They entrust us with their projects")
+
+   Fifth scoped design system on this page; load order is
+   SVIND DNA -> FOC -> ABT -> ARZ -> MPZ. Replaces the three static
+   .foc__quote cards that used to sit in the .foc--paper band.
+
+   --------------------------------------------------------------------------
+   WHAT THE SOURCE IS, AND WHAT THIS IS INSTEAD
+
+   The source is Splide (type: 'loop', rewind: true, draggable) inside a
+   Webflow shell. Its DOM is a .splide__track wrapping a .splide__list that
+   is moved with `transform: translateX(-4518px)`, plus SIX cloned slides
+   (clone01..clone12 in the captured markup) to fake the infinite loop, plus
+   a role="tablist" pagination whose tabs control three slides each.
+
+   None of that is reproduced literally, for three reasons:
+
+   1. Splide is not on this site and pulling in a carousel library for one
+      section is not a trade worth making. There is no build step here.
+   2. A transform-driven track has to reimplement touch momentum, drag
+      inertia, keyboard scrolling and focus containment by hand. A native
+      scroll container gets all four from the browser, correctly, for free.
+   3. The clones exist ONLY to hide the seam in a transform track. A scroll
+      container has no seam to hide, so they are dead weight -- and they are
+      the reason the source ships six duplicate testimonials to assistive
+      technology behind aria-hidden.
+
+   So the track here is `overflow-x: auto` + `scroll-snap-type: x mandatory`.
+   Slides are real flex children at a snap-aligned width; arrows and dots
+   call scrollTo() on the container. Drag, flick, trackpad, shift-wheel and
+   arrow keys all work without a line of JS.
+
+   The one behaviour genuinely lost is a TRUE infinite loop -- you cannot
+   scroll past the last card straight into the first. The source's own
+   `rewind: true` means its arrows wrap around rather than travel onward, so
+   the arrows here wrap too (last -> first, first -> last), which is the same
+   observable behaviour at the only place a visitor can notice it.
+
+   --------------------------------------------------------------------------
+   DARK TREATMENT
+
+   The band is near-black with raised cards, matching the reference shot: a
+   white logo at the card head, a hairline above the attribution, controls on
+   a footer row (arrows centred, dots right).
+
+   It is also the right neighbour behaviour. This section sits between the
+   #E0E0E0 .foc--ash legacy band and the .abt team photograph, which is a
+   dark frame under a veil -- so the page reads ash -> black -> photograph
+   rather than ash -> white -> photograph, and the photo arrives without a
+   white slab flashing directly before it.
+
+   Everything that carries the treatment is a token in the .mpz block below.
+   Reverting to the source's white cards on a tinted ground is --mpz-bg,
+   --mpz-card, --mpz-ink, --mpz-grey, --mpz-line and the --mpz-logo-filter,
+   and nothing else.
+
+   --------------------------------------------------------------------------
+   SLIDES PER VIEW
+
+   The source's breakpoints are `mediaQuery: 'min'`, so they read as
+   min-width: 478 -> 1, 767 -> 2, 991 -> 3, with Splide's default of 1 below
+   that. 478 and the default are both 1, so there are only three real steps
+   and the 478 entry is a no-op. Reproduced with two media queries.
+
+   The flex-basis is (100% - (n - 1) * gap) / n, not 100% / n: `gap` adds
+   space BETWEEN children and is not part of their basis, so dividing by n
+   alone overflows the track by (n - 1) * gap and the third card is clipped.
+
+   --------------------------------------------------------------------------
+   OMITTED FROM THE SOURCE
+
+   The .trustfolio block ("+ d'avis sur notre" + a Trustfolio logo) is a link
+   to mprez's profile on a third-party French review platform. SVIND has no
+   equivalent account, and inventing a review-platform badge would be
+   fabricating third-party validation. Dropped rather than faked.
+
+   Avatar portraits are dropped: there are no client portraits in
+   assets/img/people/, and the alternative is a stock face attached to a
+   named person at a real company. The client mark at the card head carries
+   the brand identity the avatar would have reinforced.
+
+   --------------------------------------------------------------------------
+   SCOPING: every selector below is a descendant of .mpz, every custom
+   property carries a --mpz- prefix, and there are no bare element selectors.
+   Nothing here can reach the SVIND, FOC, ABT or ARZ sections.
+
+   FONT: this uses the SVIND stack (--font-sans, Inter Tight) rather than the
+   source's Webflow default. FOC copies its source's type because FOC was an
+   exact-reproduction exercise; this section is an adaptation being folded
+   into the SVIND page, so it takes the page's voice.
+   ========================================================================== */
+
+.mpz {
+  --mpz-bg:     #0A0B0E;   /* band fill */
+  --mpz-card:   #14161A;   /* raised card; +6% lightness is enough to read as
+                              a panel on this ground without a border */
+  --mpz-ink:    #F2F3F4;   /* body copy. NOT pure #FFF: full white on near
+                              black is where halation shows on LCD subpixels,
+                              and a 16px quote is exactly the size it hurts */
+  --mpz-head:   #FFFFFF;   /* headings and the role line, where the weight is
+                              high enough that full white is a gain */
+  --mpz-grey:   #9AA0A6;   /* .text-color-grey -- the organisation line */
+  --mpz-line:   rgba(255, 255, 255, 0.12);
+  --mpz-accent: #4C7DC9;   /* SVIND --color-navy (#1E3A6B) is unreadable on
+                              this ground: 1.4:1. This is the same hue lifted
+                              until it clears the fill, so the accent still
+                              belongs to the page palette. */
+
+  /* Forces any client mark to flat white regardless of its internal fills.
+     Two-step and in this order: brightness(0) crushes every colour to black
+     first, so invert(1) then lands on white for ALL of them. invert alone
+     would map each hue to its complement -- Ajax's #F50A11 red would come
+     out cyan. Full reasoning at .mpz__logo. */
+  --mpz-logo-filter: brightness(0) invert(1);
+
+  --mpz-display: clamp(34px, 4.6vw, 56px);
+  --mpz-large:   18px;   /* .text-size-large -> the role line */
+  --mpz-body:    16px;   /* quote body */
+  --mpz-small:   14px;   /* .text-size-small -> the organisation line */
+
+  --mpz-gap:         clamp(16px, 1.7vw, 24px);
+  --mpz-radius:      14px;
+  --mpz-max:         1280px;
+  --mpz-pad-inline:  clamp(20px, 3.9vw, 50px);
+  --mpz-pad-block:   clamp(64px, 8vw, 112px);
+
+  padding-block: var(--mpz-pad-block);
+  background-color: var(--mpz-bg);
+  color: var(--mpz-ink);
+  font-family: var(--font-sans);
+  font-size: var(--mpz-body);
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scoped resets. :where() contributes ZERO specificity, so this scores 0,0,0
+   and every single-class rule below can override it. Written flat as
+   `.mpz h2, .mpz p { margin: 0 }` it would score 0,1,1 and silently beat
+   every margin in this file. Do not flatten these selectors out.
+   (Same reasoning as the :where() reset at the top of foc.css.) */
+:where(.mpz) :where(h2, h3, p, figure, figcaption, blockquote) {
+  margin: 0;
+}
+
+:where(.mpz) img {
+  display: block;
+}
+
+.mpz__wrap {
+  max-width: var(--mpz-max);
+  margin-inline: auto;
+  padding-inline: var(--mpz-pad-inline);
+}
+
+/* --------------------------------------------------------------------------
+   HEADER — .gallery_content-wrapper: heading left, intro copy right
+   -------------------------------------------------------------------------- */
+
+.mpz__head {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-block-end: 56px;
+}
+
+@media (min-width: 860px) {
+  .mpz__head {
+    /* The source pairs a wide heading column with a narrow copy column
+       (.max-width-xsmall). align-items: end sits the paragraph on the
+       heading's last baseline instead of floating it at the top. */
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    align-items: end;
+    gap: var(--mpz-gap);
+  }
+}
+
+.mpz__title {
+  font-size: var(--mpz-display);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  text-wrap-style: balance;   /* longhand, NOT the `text-wrap` shorthand:
+                                 the shorthand also sets text-wrap-mode and
+                                 would fight any nowrap set elsewhere. */
+  color: var(--mpz-head);
+}
+
+.mpz__intro {
+  max-width: 46ch;
+  font-size: var(--mpz-body);
+  line-height: 1.5;
+  color: var(--mpz-grey);
+}
+
+@media (min-width: 860px) {
+  .mpz__intro {
+    /* Nudges the copy off the heading's optical baseline. */
+    padding-block-end: 6px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   TRACK — the native scroll container
+   -------------------------------------------------------------------------- */
+
+.mpz__carousel {
+  position: relative;
+}
+
+.mpz__track {
+  display: flex;
+  gap: var(--mpz-gap);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;   /* a flick that runs out of track must not
+                                       chain into the page or trigger the
+                                       browser's back-swipe gesture */
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+
+  /* The rail bleeds to the viewport edge so a partially visible next card
+     signals "there is more" -- the reference clips cards at both edges the
+     same way. Negative margin cancels the wrap's inline padding; matching
+     scroll-padding keeps the snap position aligned to the text column rather
+     than the viewport edge. initTestimonials() subtracts the same value when
+     it computes page offsets. */
+  margin-inline: calc(var(--mpz-pad-inline) * -1);
+  padding-inline: var(--mpz-pad-inline);
+  scroll-padding-inline-start: var(--mpz-pad-inline);
+
+  /* Native scrollbar hidden: the dots and arrows are the affordance, and a
+     permanent horizontal bar under the cards reads as a layout bug on
+     platforms that do not auto-hide it. Scrolling itself is untouched. */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.mpz__track::-webkit-scrollbar {
+  display: none;
+}
+
+.mpz__track:focus-visible {
+  outline: 2px solid var(--mpz-accent);
+  outline-offset: 4px;
+}
+
+/* flex-basis is (100% - (n - 1) * gap) / n. Dividing by n alone overflows
+   the track by (n - 1) * gap and clips the last card -- see the header. */
+.mpz__slide {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  min-inline-size: 0;   /* without this a long unbroken word in the quote
+                           blows the flex item past its basis */
+}
+
+@media (min-width: 767px) {
+  .mpz__slide {
+    flex-basis: calc((100% - var(--mpz-gap)) / 2);
+  }
+}
+
+@media (min-width: 991px) {
+  .mpz__slide {
+    flex-basis: calc((100% - var(--mpz-gap) * 2) / 3);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   CARD — .box > .box_padding > .testimonial_content
+   -------------------------------------------------------------------------- */
+
+.mpz__card {
+  display: flex;
+  flex-direction: column;
+  block-size: 100%;         /* .height-100: every card in a row matches the
+                               tallest, so the hairlines and the attribution
+                               blocks line up across the row */
+  min-block-size: 340px;
+  padding: 34px 32px;
+  border-radius: var(--mpz-radius);
+  background-color: var(--mpz-card);
+  color: var(--mpz-ink);
+}
+
+/* Fixed height, not auto: the marks have different intrinsic proportions, and
+   a slot that sizes to its content would start every quote at a different y
+   across the row. */
+.mpz__logo-slot {
+  display: flex;
+  align-items: center;
+  block-size: 34px;
+  margin-block-end: 26px;
+}
+
+/* Constrains HEIGHT and lets width follow: a wide wordmark (Terex, 1129x198)
+   and a square badge (Ajax, 652x652) share an optical weight by cap height,
+   not by bounding width -- capping width instead would render Ajax large and
+   Terex hairline-thin.
+
+   The filter is why these marks work here at all. They are full-colour source
+   files, including Ajax's #F50A11, and colour marks on a near-black card
+   fight each other and the copy. Flattening to white is also what the
+   reference does with every mark in the row. It is a real trade: brand
+   colour is lost. Restoring it means dark cards go, or per-brand white
+   variants get authored -- see --mpz-logo-filter. */
+.mpz__logo {
+  inline-size: auto;
+  max-inline-size: 132px;
+  block-size: 100%;
+  max-block-size: 34px;
+  object-fit: contain;
+  object-position: left center;
+  filter: var(--mpz-logo-filter);
+  opacity: 0.92;   /* pure white marks out-weigh the 16px quote below them;
+                      this pulls them back to a head, not a shout */
+}
+
+.mpz__quote {
+  font-size: var(--mpz-body);
+  font-style: normal;   /* stated because large italic pull-quotes are the
+                           default assumption; the source sets normal, and
+                           so did the .foc__quote-text rule this replaces */
+  line-height: 1.55;
+  color: var(--mpz-ink);
+}
+
+/* margin-block-start: auto pins the attribution to the card floor regardless
+   of quote length -- this is what makes the equal-height row read as a row,
+   and it is what puts every hairline on one line across the row. */
+.mpz__profile {
+  margin-block-start: auto;
+  padding-block-start: 24px;
+  border-block-start: 1px solid var(--mpz-line);
+}
+
+.mpz__role {
+  font-size: var(--mpz-large);
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--mpz-head);
+}
+
+.mpz__org {
+  margin-block-start: 3px;
+  font-size: var(--mpz-small);
+  font-style: normal;
+  line-height: 1.3;
+  color: var(--mpz-grey);
+}
+
+/* --------------------------------------------------------------------------
+   CONTROLS — arrows centred, dots right, on one footer row
+
+   Splide's stock CSS overlays arrows on the track edges, vertically centred;
+   over card corners that swallows the first and last card's logo. The
+   reference moves them under the rail instead, which is also what keeps every
+   card fully visible.
+
+   Three columns rather than `justify-content: center` plus an absolutely
+   positioned dot rail: 1fr on both sides centres the arrows against the WRAP,
+   and the dots occupy real grid space instead of floating over it. With
+   space-between the arrows would drift left by half the dot rail's width.
+   -------------------------------------------------------------------------- */
+
+.mpz__controls {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  margin-block-start: 40px;
+}
+
+.mpz__arrows {
+  display: flex;
+  grid-column: 2;
+  gap: 10px;
+}
+
+.mpz__arrow {
+  display: grid;
+  place-items: center;
+  inline-size: 46px;
+  block-size: 46px;
+  padding: 0;
+  border: 1px solid var(--mpz-line);
+  border-radius: 50%;
+  background-color: transparent;
+  color: var(--mpz-ink);
+  cursor: pointer;
+  transition: background-color 180ms var(--ease-out),
+              border-color 180ms var(--ease-out),
+              color 180ms var(--ease-out);
+}
+
+.mpz__arrow svg {
+  inline-size: 13px;
+  block-size: 13px;
+  fill: currentColor;
+  pointer-events: none;   /* clicks land on the button, never the glyph */
+}
+
+/* The source ships ONE right-chevron path and flips it for prev, so the two
+   glyphs are guaranteed to be mirror-identical. Same trick here. */
+.mpz__arrow--prev svg {
+  transform: rotate(180deg);
+}
+
+.mpz__arrow:hover {
+  border-color: var(--mpz-head);
+  background-color: var(--mpz-head);
+  color: var(--mpz-bg);
+}
+
+.mpz__arrow:focus-visible {
+  outline: 2px solid var(--mpz-accent);
+  outline-offset: 2px;
+}
+
+.mpz__dots {
+  display: flex;
+  grid-column: 3;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 0;
+  list-style: none;
+}
+
+.mpz__dot {
+  inline-size: 9px;
+  block-size: 9px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background-color: var(--mpz-line);
+  cursor: pointer;
+  transition: background-color 200ms var(--ease-out),
+              transform 200ms var(--ease-out);
+}
+
+.mpz__dot[aria-current="true"] {
+  background-color: var(--mpz-head);
+  transform: scale(1.35);
+}
+
+.mpz__dot:focus-visible {
+  outline: 2px solid var(--mpz-accent);
+  outline-offset: 3px;
+}
+
+/* Controls are hidden until JS wires them: a control with no controller is a
+   lie about what is clickable, and the dot count depends on measured
+   slides-per-view so it cannot be authored in the markup. The rail itself
+   still scrolls, snaps and drags with JS off -- only the affordances go. */
+.mpz:not(.mpz--live) .mpz__controls {
+  display: none;
+}
+
+/* --------------------------------------------------------------------------
+   REDUCED MOTION
+   Both halves matter: this kills the CSS-driven smooth scroll, and
+   initTestimonials() separately passes behavior: 'auto' to scrollTo(),
+   because scroll-behavior in CSS does not govern a scripted scroll that
+   names its own behavior.
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .mpz__track {
+    scroll-behavior: auto;
+  }
+
+  .mpz__arrow,
+  .mpz__dot {
+    transition: none;
+  }
+
+  .mpz__dot[aria-current="true"] {
+    transform: none;   /* the scale is the only cue left once transition is
+                          gone, so lean on colour alone rather than leaving
+                          an untransitioned pop */
+  }
+}

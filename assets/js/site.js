@@ -394,6 +394,178 @@
     return footer;
   }
 
+  /* ------------------------------------------------------------------------
+     5b. ABOUT PIN — pinned photograph + headline travelling on the x axis
+
+     The arrodz .about-home-section. The source pins with position: sticky and
+     drives the headline with GSAP ScrollTrigger (scrub: 1, x resolved to
+     -(scrollWidth - innerWidth) at refresh). Neither is available here:
+
+       - position: sticky IS DEAD ON THIS PAGE. base.css sets overflow-x:
+         hidden on both html and body, which makes body a scroll container, so
+         a sticky element resolves against a scrollport that never scrolls.
+         Measured: a probe with top:0, scrolled 800px past its host's top edge,
+         reports getBoundingClientRect().top === -800 where a working sticky
+         reports 0. (Same root cause as .nav not sticking. Unrelated and left
+         alone. If that is ever fixed with overflow-x: clip, this still works —
+         the stage's `position` is owned here outright and sticky is never
+         consulted.)
+       - No GSAP, so the travel distance is measured and written as a custom
+         property, and the transform itself stays in CSS on the compositor.
+
+     WHY THE PIN IS NOT position: sticky EVEN IF IT WORKED: the pin has to be
+     conditional on viewport height and on reduced motion, and the second of
+     those cannot be expressed in CSS alone without duplicating the decision.
+
+     Not applied at all when reduced motion is set. This is scroll-coupled
+     motion of a full-viewport image, which is the kind that makes people ill —
+     so it is skipped rather than shortened, and abt.css carries the same
+     decision in a media query so neither half can apply alone.
+     ------------------------------------------------------------------------ */
+
+  // Below this the pin is skipped: a fixed 100vh stage on a phone eats the
+  // whole screen, and the travel would be longer than the copy that follows.
+  var ABT_MIN_WIDTH = 768;
+  // A pinned 100vh stage needs somewhere to put the headline. Under this the
+  // frame is too short to hold the display line and the photo at once.
+  var ABT_MIN_HEIGHT = 520;
+
+  function initAboutPin() {
+    var section = document.querySelector('.abt');
+    if (!section) return;
+
+    var stage = section.querySelector('.abt__stage');
+    var runway = section.querySelector('.abt__runway');
+    var line = section.querySelector('.abt__line');
+    if (!stage || !runway || !line) return;
+
+    var pinned = false;
+    var travel = 0;
+
+    /* Undo everything measure() applies. Called when the section stops
+       qualifying (viewport too small, reduced motion switched on mid-visit) so
+       it can never be left half-pinned: a stage still fixed with no reserved
+       height under it, or a runway reserving scroll for motion that no longer
+       happens. Every property written below is removed here. */
+    function unpin() {
+      pinned = false;
+      /* Drops white-space: nowrap along with the pin, so the fallback is a
+         wrapped, fully legible heading rather than a single row truncated at
+         the viewport edge -- see the .abt__line comment in abt.css. */
+      section.classList.remove('abt--live');
+      stage.classList.remove('abt__stage--fixed', 'abt__stage--parked');
+      runway.style.minHeight = '';
+      section.style.removeProperty('--abt-travel');
+      section.style.removeProperty('--abt-progress');
+    }
+
+    function qualifies() {
+      return !reduceMotion() &&
+        window.innerWidth >= ABT_MIN_WIDTH &&
+        window.innerHeight >= ABT_MIN_HEIGHT;
+    }
+
+    /* Per-frame state. Three cases, and the two boundaries are the whole
+       reason this is not a single lerp: the stage is fixed only WHILE the
+       section is crossing the viewport. Before that it is in flow at the top of
+       the section; after, it is parked at the runway's bottom edge. Skipping
+       either boundary leaves the photo floating over the sections next to it.
+
+       Declared ABOVE measure() on purpose: measure() calls it on its last line
+       to paint the first frame, and `var update` would still be undefined at
+       that point if this sat below. */
+    var update = rafThrottle(function () {
+      if (!pinned) return;
+
+      var runwayBox = runway.getBoundingClientRect();
+
+      /* Progress is measured off the RUNWAY, not the section: the section also
+         contains the copy block, and including it would keep the line moving
+         for a screenful after the photo has gone. 0 when the runway's top
+         edge reaches the viewport top, 1 when its bottom edge does. */
+      var span = runwayBox.height - window.innerHeight;
+      var travelled = span > 0 ? (-runwayBox.top) / span : 0;
+      var progress = Math.min(1, Math.max(0, travelled));
+      section.style.setProperty('--abt-progress', String(progress));
+
+      /* Both boundaries come off the RUNWAY, which is the element that holds the
+         pin's flow height -- not off the section, whose top edge is the same
+         thing only until the copy block below changes height.
+
+         Fixed from the moment the runway's top edge reaches the viewport top
+         until its bottom edge does. Before: in flow. After: parked at the
+         runway's end, so the photo stops there instead of following the copy
+         down the page. */
+      var before = runwayBox.top > 0;
+      var after = runwayBox.bottom <= window.innerHeight;
+
+      stage.classList.toggle('abt__stage--fixed', !before && !after);
+      stage.classList.toggle('abt__stage--parked', after);
+    });
+
+    /* Measures the two numbers the effect needs and reserves the scroll for it.
+
+       TRAVEL is the source's -(scrollWidth - innerWidth): how far the line must
+       move for its last glyph to reach the right edge. scrollWidth is the
+       full unclipped width of the nowrap line; the padding on .abt__line-wrap
+       is what the line starts inset by, so it is added back or the line stops
+       a padding short of the edge. Clamped at 0 — a line shorter than the
+       viewport has nowhere to travel and must not move backwards.
+
+       RUNWAY HEIGHT is one viewport plus the travel: the viewport is the frame
+       the pin occupies, the travel is how much scrolling the line needs to
+       cross it. So progress reaches exactly 1 on the same frame the pin hands
+       off, at any width. The source hardcodes 300vh for this; a constant either
+       strands the line mid-travel on a narrow viewport or leaves dead scroll
+       after it has finished on a wide one.
+
+       The height goes on the runway rather than the stage because the stage
+       leaves flow when it pins -- see the wrapper comment in abt.css. */
+    function measure() {
+      if (!qualifies()) {
+        if (pinned) unpin();
+        return;
+      }
+
+      /* BEFORE measuring, not after: .abt--live is what applies
+         white-space: nowrap, and scrollWidth on a wrapped line is just the
+         container width -- it would report a travel of 0 and the line would
+         never move. Setting the class first forces the single-row layout that
+         the next read measures. */
+      section.classList.add('abt--live');
+
+      var pad = parseFloat(getComputedStyle(line.parentElement).paddingInlineStart) || 0;
+      travel = Math.max(0, line.scrollWidth + pad * 2 - window.innerWidth);
+
+      section.style.setProperty('--abt-travel', travel + 'px');
+      runway.style.minHeight = (window.innerHeight + travel) + 'px';
+
+      pinned = true;
+      update();
+    }
+
+    measure();
+
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', debounce(measure, 120), { passive: true });
+
+    /* Catches what resize does not: the display face landing late and
+       restepping the clamp, which changes scrollWidth and therefore the travel
+       and the runway together. */
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(debounce(measure, 120)).observe(line);
+    }
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(measure);
+    }
+
+    /* Mid-visit reduced-motion switch. qualifies() already gates on it, so
+       measure() does the right thing in both directions: unpins when it goes
+       on, re-measures and re-pins when it goes off. */
+    onMotionChange(measure);
+  }
+
   /* The closing band and the wordmark are ONE entrance, not two.
 
      The source runs both from a single GSAP timeline pinned to
@@ -986,6 +1158,170 @@
   }
 
   /* ------------------------------------------------------------------------
+     PARTNER TESTIMONIALS · .mpz
+     Arrows and pagination for the native scroll-snap rail. The SCROLLING
+     itself is the browser's -- drag, flick, trackpad, shift-wheel and arrow
+     keys all come from `overflow-x: auto` and need no JS. This only adds the
+     two affordances a scroll container has no native equivalent for: paged
+     arrows and a dot rail that reports position.
+
+     Nothing here is required for the section to be usable. With JS off the
+     rail still scrolls and snaps; the arrows stay hidden (mpz.css gates them
+     behind .mpz--live) and the dots stay empty, because a control with no
+     controller is a lie about what is clickable.
+     ------------------------------------------------------------------------ */
+
+  function initTestimonials() {
+    var section = document.querySelector('.mpz');
+    if (!section) return;
+
+    var track = section.querySelector('.mpz__track');
+    var dots = section.querySelector('.mpz__dots');
+    var prev = section.querySelector('.mpz__arrow--prev');
+    var next = section.querySelector('.mpz__arrow--next');
+    var slides = qsa('.mpz__slide', section);
+    if (!track || !slides.length) return;
+
+    var pages = [];
+
+    /* Reads the LIVE slide geometry rather than re-deriving the CSS
+       breakpoints in JS. Two sources of truth for slides-per-view would
+       drift the moment either side changes; measuring cannot. */
+    function perView() {
+      var slideWidth = slides[0].getBoundingClientRect().width;
+      if (slideWidth <= 0) return 1;
+      var cs = getComputedStyle(track);
+      var gap = parseFloat(cs.columnGap) || 0;
+      /* CONTENT width, not clientWidth: clientWidth includes the track's
+         inline padding (the bleed offset), which at a 50px shoulder inflates
+         the ratio by a quarter of a slide and can round the count up a whole
+         slide. The slides are laid out in the content box, so that is what
+         they have to be counted against. */
+      var inner = track.clientWidth
+        - (parseFloat(cs.paddingInlineStart) || 0)
+        - (parseFloat(cs.paddingInlineEnd) || 0);
+      /* +1 gap on both sides of the division: n slides carry (n - 1) gaps,
+         so adding one gap to each term makes the ratio come out whole
+         instead of landing just under and flooring down a slide. */
+      var n = Math.round((inner + gap) / (slideWidth + gap));
+      return Math.min(slides.length, Math.max(1, n));
+    }
+
+    /* Pages are keyed by scrollLeft, not by index: scroll-snap works in
+       pixels, and the last page is CLAMPED to maxScroll. Without the clamp a
+       6-slide / 3-up rail reports two pages but the second can never be
+       reached exactly -- scrollLeft stops at maxScroll while the target sits
+       past it, so the dot never lights and the next arrow looks broken. */
+    function buildPages() {
+      var n = perView();
+      var maxScroll = Math.max(0, track.scrollWidth - track.clientWidth);
+      var count = Math.max(1, Math.ceil(slides.length / n));
+      var offsets = [];
+      var trackRect = track.getBoundingClientRect();
+      var here = track.scrollLeft;
+      /* Subtracted, not ignored: the track sets scroll-padding-inline-start so
+         a snapped slide sits on the text column rather than the viewport edge.
+         Omitting it puts every target one shoulder (50px at full width) past
+         where snap will actually settle -- close enough that snap corrects it
+         and the rail still looks right, but currentPage() then compares live
+         scrollLeft against targets it can never equal. */
+      var snapPad = parseFloat(getComputedStyle(track).scrollPaddingInlineStart) || 0;
+
+      for (var i = 0; i < count; i += 1) {
+        var slide = slides[Math.min(slides.length - 1, i * n)];
+        /* Delta from the CURRENT scroll position, so this is correct whatever
+           the rail happens to be scrolled to when a resize re-measures it. */
+        var target = here + (slide.getBoundingClientRect().left - trackRect.left) - snapPad;
+        offsets.push(Math.min(Math.max(0, Math.round(target)), Math.round(maxScroll)));
+      }
+
+      /* Two pages whose clamped offsets collapse onto the same pixel are one
+         page. Dedupe, or the rail shows a dot that can never become current. */
+      pages = offsets.filter(function (value, i) {
+        return i === 0 || value !== offsets[i - 1];
+      });
+    }
+
+    function currentPage() {
+      var here = track.scrollLeft;
+      var best = 0;
+      var bestGap = Infinity;
+      for (var i = 0; i < pages.length; i += 1) {
+        var gap = Math.abs(pages[i] - here);
+        if (gap < bestGap) { bestGap = gap; best = i; }
+      }
+      return best;
+    }
+
+    function goTo(index) {
+      if (!pages.length) return;
+      /* Wraps both ways. The source runs Splide with `rewind: true`, whose
+         arrows wrap rather than travel onward, so this matches the reference
+         at the only point a visitor can tell the difference. */
+      var wrapped = (index + pages.length) % pages.length;
+      track.scrollTo({
+        left: pages[wrapped],
+        /* CSS scroll-behavior does NOT govern a scripted scroll that names
+           its own behavior, so reduced motion has to be honoured here too --
+           the media query in mpz.css alone would not cover this path. */
+        behavior: reduceMotion() ? 'auto' : 'smooth'
+      });
+    }
+
+    function renderDots() {
+      if (!dots) return;
+      dots.textContent = '';
+      if (pages.length < 2) return;   // one page needs no pagination
+
+      pages.forEach(function (offset, i) {
+        var li = document.createElement('li');
+        li.setAttribute('role', 'presentation');
+        var button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'mpz__dot';
+        button.setAttribute('role', 'tab');
+        button.setAttribute('aria-label', 'Go to testimonial page ' + (i + 1));
+        button.addEventListener('click', function () { goTo(i); });
+        li.appendChild(button);
+        dots.appendChild(li);
+      });
+      syncDots();
+    }
+
+    function syncDots() {
+      if (!dots) return;
+      var buttons = qsa('.mpz__dot', dots);
+      var active = currentPage();
+      buttons.forEach(function (button, i) {
+        var isActive = i === active;
+        button.setAttribute('aria-current', isActive ? 'true' : 'false');
+        button.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        /* Roving tabindex: the dot rail is one tab stop, not N. Arrow keys
+           inside a tablist are the expected way to move between tabs. */
+        button.tabIndex = isActive ? 0 : -1;
+      });
+    }
+
+    function measure() {
+      buildPages();
+      renderDots();
+    }
+
+    measure();
+    section.classList.add('mpz--live');   // reveals the arrows
+
+    if (prev) prev.addEventListener('click', function () { goTo(currentPage() - 1); });
+    if (next) next.addEventListener('click', function () { goTo(currentPage() + 1); });
+
+    track.addEventListener('scroll', rafThrottle(syncDots), { passive: true });
+    window.addEventListener('resize', debounce(measure, 120), { passive: true });
+
+    /* Slide heights and widths settle after webfont swap; a rail measured
+       against fallback metrics can be a slide out by the time Inter lands. */
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+  }
+
+  /* ------------------------------------------------------------------------
      BOOT
      ------------------------------------------------------------------------ */
 
@@ -997,6 +1333,8 @@
        anything against it, and initReveal's trigger needs to know whether the
        footer ended up pinned. */
     initReveal(initFooterPin());
+    initAboutPin();
+    initTestimonials();
     initCounters();
     initFilters();
     initFormSteps();

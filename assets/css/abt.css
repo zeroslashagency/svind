@@ -1,0 +1,398 @@
+/* ==========================================================================
+   abt.css -- pinned team image + horizontally-scrolling headline
+
+   The arrodz "about-home-section": a full-bleed photograph that holds still
+   while the page scrolls over it, a display line that travels sideways as it
+   passes, and a two-column copy block beneath. Copied in behaviour, not in
+   markup -- the source is Webflow + GSAP ScrollTrigger and neither is on this
+   page.
+
+   FOURTH DESIGN SYSTEM on index.html, and the third foreign one. The page now
+   runs: SVIND DNA (navy/gray, zero radii, full-bleed bands) -> FOC (charcoal +
+   orange, 72px display, 400px numeral) -> ABT (this file: black, edge-to-edge
+   photograph, 1 line of oversized uppercase moving on the x axis) -> ARZ
+   (wine/slate + beige, 6-8px radii, 155px condensed display). Each contradicts
+   the others deliberately and each is scoped so it cannot leak.
+
+   HOW THE SOURCE DOES IT, AND WHAT IS DIFFERENT HERE
+
+   The source's markup is:
+     .about-home-section
+       .about-image        -- position: sticky, the photo, plus a dark overlay
+         .about-bg-image-inner   -- transform: translate3d(0,-3.0768%,0) ...
+       .hero-about-section -- 300vh of scroll runway, the ScrollTrigger target
+         h2.about-sentance -- gsap.to x: -(scrollWidth - innerWidth), scrub: 1
+       .about-content-section  -- the copy that follows
+
+   Two of those cannot be reproduced literally:
+
+   1. THE SOURCE PINS WITH position: sticky. THAT IS DEAD ON THIS PAGE.
+      base.css sets `overflow-x: hidden` on BOTH html and body (lines 41 and
+      56), which makes body a scroll container, and a sticky element resolves
+      against the nearest scrollport -- so it never sticks. Measured, not
+      assumed: a sticky probe with top:0, scrolled 800px past its host's top
+      edge, reports getBoundingClientRect().top of -800. It should report 0.
+      Setting overflow-x: clip on both elements instead revives it (the same
+      probe then reports exactly 0), but that is a page-wide change to the
+      root scroll container and it is not this section's business to make it.
+
+      This is also why .nav does not stick today despite declaring
+      `position: sticky; inset-block-start: 0` at components.css:47 -- it reads
+      -1200 at scroll 1200. Pre-existing, unrelated to this section, left
+      alone. If it is ever fixed by switching those two declarations to
+      overflow-x: clip, THIS SECTION KEEPS WORKING: the JS below owns
+      `position` outright and never consults sticky.
+
+      So the pin here is `position: fixed`, driven from site.js, exactly as
+      .footer--pinned already does for exactly the same reason (see FOOTER
+      REVEAL in components.css, which documents the same sticky failure).
+
+   2. GSAP's x: -(scrollWidth - innerWidth) IS AN ABSOLUTE PIXEL DISTANCE
+      resolved at refresh time. There is no GSAP here, so the travel is
+      computed the same way in site.js from the real scrollWidth and written
+      to --abt-travel, and CSS applies it via a transform. invalidateOnRefresh
+      in the source == the ResizeObserver in site.js.
+
+   The source's 3.0768% image nudge is a Webflow parallax mid-flight value, not
+   a designed offset, so it is not copied.
+
+   FALLBACK IS THE WHOLE POINT, in both directions:
+     - No JS: nothing is fixed, nothing is offset, the photo sits in normal
+       flow at a fixed aspect ratio and the headline sits still at its start
+       position, fully legible. No blank space, no clipped copy.
+     - Reduced motion: same as no JS. The pin is motion tied to scroll, and it
+       is the kind that makes people ill, so it is not merely eased -- it is
+       not applied at all. Enforced in site.js AND in the media query at the
+       foot of this file, so neither alone can leave it half-applied.
+
+   SCOPING: every selector below is .abt or a descendant. No bare element
+   selectors. All custom properties carry an --abt- prefix so they cannot
+   collide with tokens.css, --foc- or --arz-.
+   ========================================================================== */
+
+.abt {
+  /* Ink is darker than --color-ink (#1A1D21): the photo is letterboxed against
+     it at narrow widths and a near-black reads as intentional there. */
+  --abt-black: #0B0D0F;
+  --abt-white: #FFFFFF;
+
+  /* The overlay the source puts over the photograph. Two stops rather than a
+     flat wash so the headline has ink under it at the bottom edge where it
+     travels, while the faces in the middle of the frame stay clear. */
+  --abt-veil-top: rgba(11, 13, 15, 0.28);
+  --abt-veil-bottom: rgba(11, 13, 15, 0.72);
+
+  /* Display line. Big, uppercase, tight. --font-display is Inter Tight, the
+     page's own face -- this section does NOT import a font, unlike foc.css and
+     arz.css, because the effect here is scale and motion, not a typeface. */
+  --abt-display: clamp(44px, 11vw, 168px);
+
+  --abt-pad-block: clamp(64px, 8.75vw, 112px);
+  --abt-pad-inline: clamp(24px, 5vw, 64px);
+
+  /* Written by site.js: the exact distance the headline has to travel so its
+     last glyph clears the right edge. 0 is the correct inert default -- with
+     no JS the line simply does not move. */
+  --abt-travel: 0px;
+
+  position: relative;
+  background-color: var(--abt-black);
+  color: var(--abt-white);
+}
+
+/* --------------------------------------------------------------------------
+   STAGE -- the photograph and the headline, together
+
+   THE HEADLINE LIVES INSIDE THE STAGE, not beside it, and that is the fix for
+   the first thing that went wrong here. It began as a sibling that scrolled
+   past a pinned photo -- which is how the source's markup reads, .about-image
+   and .hero-about-section being siblings. But the source's h2 is itself inside
+   a sticky context, and a plain sibling is not: measured, the line scrolled
+   straight up out of the frame while the photograph held still, so the two came
+   apart within one viewport of the entry. Nested, it is pinned by the same
+   `position: fixed` that holds the photo and needs no second mechanism -- one
+   pinned frame containing both, and the line moves only on x.
+
+   Unpinned (no JS, reduced motion, or narrow) the whole thing is an ordinary
+   block at a fixed aspect ratio with the line sitting still at the bottom of
+   it, which is legible and needs no fallback of its own.
+   -------------------------------------------------------------------------- */
+
+/* THE STAGE IS WRAPPED, and the wrapper is not decoration -- it is what keeps
+   the page from jolting.
+
+   A fixed element is out of flow, so on the frame the pin engages, the document
+   loses the stage's flow height. Measured before this wrapper existed: the
+   content below moved up by 720px and the section's height dropped by exactly
+   720 the instant .abt__stage--fixed landed -- a 720px lurch of everything
+   below it, at the exact moment the reader is looking at it.
+
+   So the wrapper holds the flow height and never moves. site.js writes that
+   height (one viewport plus the travel: the full distance the pin lasts), and
+   the stage inside is free to leave flow. This IS the runway -- the scroll
+   distance the pin is paid for with. The source hardcodes 300vh for it; here it
+   is measured, because the travel depends on the headline's scrollWidth and a
+   constant either strands the line mid-travel on a narrow viewport or leaves
+   dead scroll after it has finished on a wide one.
+
+   It is also the positioning ancestor for .abt__stage--parked. Without it,
+   `inset-block-end: 0` resolved against .abt -- which includes the copy block
+   -- and the photo parked a copy-block too low. Measured 481px out of place. */
+.abt__runway {
+  position: relative;
+  /* Inert unpinned: no reserved scroll, height comes from the stage's ratio.
+     site.js writes the real height only when it pins, so the reserve and the
+     pin cannot apply apart. */
+  min-height: 0;
+}
+
+.abt__stage {
+  position: relative;
+  overflow: hidden;
+  /* Only used unpinned. Once fixed, height comes from the inset properties
+     below and this is ignored. 16/9 keeps a 100+ person group photo readable
+     without cropping the ends off the row. */
+  aspect-ratio: 16 / 9;
+  background-color: var(--abt-black);
+  /* Holds the headline against the bottom edge, where the veil is darkest --
+     the source's placement. */
+  display: flex;
+  align-items: flex-end;
+}
+
+/* THE PIN. Applied by site.js only, never by a media query -- the decision
+   depends on viewport height and on reduced motion, and the second cannot be
+   expressed here at all.
+
+   z-index is deliberately absent: this must NOT create a competing stacking
+   context near .nav (--z-nav 100) or .mobile-bar (--z-mobile-bar 300). It sits
+   at the default level, below both. */
+.abt__stage--fixed {
+  position: fixed;
+  inset-inline: 0;
+  inset-block-start: 0;
+  height: 100vh;
+  /* Overrides the unpinned ratio: with an explicit height, aspect-ratio would
+     otherwise fight it and win on some engines. */
+  aspect-ratio: auto;
+}
+
+/* The stage stops being fixed and parks at the end of its travel. Absolute
+   against .abt__runway, whose height site.js has set to exactly the pinned
+   distance -- so `inset-block-end: 0` is the pin's last frame, and the photo
+   does not jump at the handoff. */
+.abt__stage--parked {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  height: 100vh;
+  aspect-ratio: auto;
+}
+
+.abt__img {
+  /* Absolute rather than a flex child: .abt__stage is now a flex container for
+     the headline, and a flex img would be stretched by align-items instead of
+     filling the frame. */
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* The group photo is 1702x924 and very wide. object-position centres on the
+     building and the front row, which is where the SVIND wordmark and the
+     faces are; a top or bottom bias loses one or the other. */
+  object-fit: cover;
+  object-position: center;
+}
+
+/* The source's .about-image-overlay. Over the photo, under the headline, and
+   what makes white type legible on a bright industrial shot. */
+.abt__veil {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+    to bottom,
+    var(--abt-veil-top) 0%,
+    rgba(11, 13, 15, 0.34) 46%,
+    var(--abt-veil-bottom) 100%
+  );
+  pointer-events: none;
+}
+
+/* The headline band. Relative + z-index so it paints over the veil and the
+   photograph, both of which are absolute siblings. */
+.abt__line-wrap {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  /* Deliberately NOT overflow: hidden. The line has to be allowed to sit
+     outside the box on both sides -- that is the effect. The section itself is
+     clipped by overflow-x: hidden on body, so nothing escapes the page. */
+  padding-block: var(--abt-pad-block);
+  padding-inline: var(--abt-pad-inline);
+}
+
+/* NOWRAP IS OPT-IN, applied by site.js (.abt--live) only when the pin is
+   actually running, and this is a correctness fix rather than a nicety.
+
+   The travel needs the line on one unbroken row -- that is the effect. But as a
+   STATIC default it truncates the sentence: measured with the JS state stripped
+   at 1280px, the text ran from x=64 to x=4109, so a no-JS reader saw
+   "A CRANE BUILDER THAT WORKS WI" and nothing else. overflow-x: hidden on body
+   means there is no horizontal scrollbar to recover the rest with, so the copy
+   was simply gone.
+
+   So the default wraps -- an ordinary multi-line heading, fully legible, which
+   is what both no-JS and reduced-motion get -- and nowrap arrives only with the
+   mechanism that needs it and that guarantees the line will be scrolled past
+   its own end. */
+.abt__line {
+  display: block;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--abt-display);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  /* text-wrap-STYLE, not the `text-wrap` shorthand. The shorthand also sets
+     text-wrap-mode, which is the same sub-property `white-space: nowrap` sets
+     below on .abt--live -- so `text-wrap: balance` here silently fought the
+     nowrap there and won on source order, and the line measured as wrapped
+     (scrollWidth == clientWidth == 1152, travel 0, nothing moved). Touching
+     only the style leaves the mode alone. */
+  text-wrap-style: balance;
+  color: var(--abt-white);
+  /* The travel. --abt-progress is written by site.js as a unitless 0->1 and
+     --abt-travel as the pixel distance, so the multiplication happens in CSS
+     and the JS only ever writes two numbers.
+
+     Both default inert: progress 0 x travel 0px = translate3d(0,0,0), which is
+     the readable start position. translate3d, not translateX, to keep the
+     glyphs on the compositor -- a 168px line repainting every frame is the one
+     thing here that can drop frames. */
+  transform: translate3d(calc(var(--abt-progress, 0) * var(--abt-travel, 0px) * -1), 0, 0);
+}
+
+/* The live state. site.js adds .abt--live to the section when it pins and
+   removes it whenever it unpins, so the single-row layout and the compositor
+   hint exist only while something is actually moving. Both are on the class,
+   not on .abt__line, so there is exactly one switch. */
+.abt--live .abt__line {
+  white-space: nowrap;
+  will-change: transform;
+}
+
+/* A wrapped heading should not run the full width of a wide viewport; a
+   travelling one must not be constrained at all. So the measure is capped only
+   in the fallback, where the line wraps.
+
+   An absolute length, not ch or em: both scale with this font-size, which is a
+   clamp reaching 168px, so 20ch resolved to ~1009px at a 700px viewport and
+   constrained nothing at all. */
+.abt:not(.abt--live) .abt__line {
+  max-width: min(100%, 720px);
+}
+
+/* --------------------------------------------------------------------------
+   COPY -- the source's .about-content-section
+
+   Two-column on desktop: the two emphasis lines left, the long body right.
+   One column below 768px. Ordinary flow, no pin, no motion of its own beyond
+   the page's existing .reveal.
+   -------------------------------------------------------------------------- */
+
+.abt__content {
+  position: relative;
+  /* Same layer as the runway so it paints over the fixed stage rather than
+     under it -- without this the photo shows through the copy during the
+     handoff frame. */
+  z-index: var(--z-raised);
+  background-color: var(--abt-black);
+  padding-block: var(--abt-pad-block);
+  padding-inline: var(--abt-pad-inline);
+}
+
+.abt__content-inner {
+  display: grid;
+  gap: clamp(32px, 4vw, 56px);
+  max-width: 1280px;
+  margin-inline: auto;
+}
+
+@media (min-width: 768px) {
+  .abt__content-inner {
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(40px, 5vw, 96px);
+  }
+}
+
+.abt__lead {
+  margin: 0;
+  font-size: clamp(20px, 2.1vw, 30px);
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -0.01em;
+  color: var(--abt-white);
+}
+
+.abt__lead + .abt__lead {
+  margin-block-start: clamp(20px, 2.2vw, 32px);
+}
+
+.abt__body {
+  margin: 0;
+  font-size: var(--text-body);
+  line-height: 1.7;
+  /* 0.74 of white on #0B0D0F is 11.4:1 -- well past AA for body copy, and the
+     drop from pure white is what keeps the two emphasis lines dominant. */
+  color: rgba(255, 255, 255, 0.74);
+}
+
+.abt__body + .abt__body {
+  margin-block-start: 1.2em;
+}
+
+/* --------------------------------------------------------------------------
+   REDUCED MOTION
+
+   The second half of a decision also enforced in site.js, which never applies
+   the pin when the query matches. Both, because either alone leaves a failure
+   mode: CSS alone would still let site.js write a runway height and reserve
+   blank scroll for motion that never happens; JS alone would break if these
+   rules were ever applied by some other path. With both, the section is a
+   photograph with a headline over it and the copy beneath -- which is the
+   content, intact.
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .abt__stage,
+  .abt__stage--fixed,
+  .abt__stage--parked {
+    position: relative;
+    inset: auto;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+
+  .abt__runway {
+    min-height: 0 !important;
+    margin-block-end: 0 !important;
+  }
+
+  /* .abt--live is also removed by site.js here, so this is belt-and-braces --
+     but it has to be, because the class and the media query are two independent
+     paths to the same state and nowrap without the travel is a truncated
+     sentence. */
+  .abt__line,
+  .abt--live .abt__line {
+    transform: none;
+    /* white-space, matching what .abt--live sets, so the two cannot disagree
+       about text-wrap-mode -- see the text-wrap-style note on .abt__line. */
+    white-space: normal;
+    will-change: auto;
+  }
+
+  .abt--live .abt__line {
+    max-width: 20ch;
+  }
+}

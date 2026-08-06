@@ -154,11 +154,16 @@
    --foc-ink (#3F3F3F), while this one wants pure BLACK type on white -- the
    same black/white pairing --ash uses, minus the grey fill.
 
-   Only .foc__head is overridden because the one section using this modifier
-   (Partners, index.html:856) holds a heading and the quote grid and nothing
-   else. .foc__lead and .foc__legacy-* hardcode --foc-white and would need
-   overrides too, but neither appears here; .foc__link is already color:
-   inherit. Add them when a section needs them, not before.
+   ⚠ CURRENTLY UNUSED. Its only consumer was the Partners section, which was
+   replaced by the .mpz carousel (assets/css/mpz.css, index.html). Kept
+   because it is a complete, documented variant and the .foc__quote rules
+   below are the measured-panel-on-white fix, which is worth not having to
+   re-derive; delete the three rules together if FOC is ever pruned.
+
+   Only .foc__head is overridden because the section that used this modifier
+   held a heading and the quote grid and nothing else. .foc__lead and
+   .foc__legacy-* hardcode --foc-white and would need overrides too;
+   .foc__link is already color: inherit. Add them when a section needs them.
 
    That does leave three light bands differing by two values each. If a fourth
    is ever wanted, collapse all of them into a fill/type custom-property pair
