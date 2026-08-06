@@ -1,0 +1,496 @@
+/* ==========================================================================
+   foc.css — Full Option Craft sections, exact copy
+
+   A FOREIGN DESIGN SYSTEM, deliberately. These four sections reproduce
+   www.fulloptioncraftreno.ca (a Wix site) and intentionally contradict
+   SVIND's DNA system: dark charcoal bands, an orange accent, a 400px
+   numeral, and 72px display headings. None of that is permitted above the
+   seam in index.html.
+
+   Every value here was MEASURED from the source rendered in Chrome via the
+   DevTools protocol -- getBoundingClientRect and getComputedStyle on the
+   live page -- not read off its stylesheet and not estimated. The source
+   ships ~600KB of generated Wix CSS whose declared custom properties
+   (--font_2: 42px Madefor, etc.) are NOT what actually renders; the theme
+   overrides them at runtime. Measuring the rendered result was the only way
+   to get this right, and an earlier attempt that trusted the declared
+   values was wrong on the typeface, the type scale, and every background.
+
+   DEPARTURE: Partners is no longer charcoal. By request it renders on white
+   with pure black type via the .foc--paper modifier below, so of the four
+   sections only Core Capabilities and Legacy still use a dark band. The
+   measured facts below describe the SOURCE, not what index.html renders.
+
+   MEASURED FACTS (desktop, 1280px viewport):
+     Section bands      #3F3F3F charcoal (Core Capabilities, Legacy, Partners)
+                        #FFFFFF white    (Excellence in Execution)
+     Headings           72px / 72px line-height, weight 400, WHITE on charcoal
+                        -2.88px to -3.6px letter-spacing (tight, ~ -0.04em)
+     Typeface           neue-haas-grotesk-display-pro (all text, one family)
+     Body               16px / 20.8px (1.3)
+     Lead               14px / 18.2px
+     Capability cards   361px wide, ~226px tall, WHITE fill, zero padding,
+                        zero radius, at x = 50 / 458 / 867  (408px pitch)
+     Card number/title  16px, #3F3F3F, weight 400, uppercase, NO letter-spacing
+     Project images     249 x 312  =>  4:5 PORTRAIT, not 4:3 landscape
+                        at x = 79 / 369 / 660 / 950  (290px pitch, 4-up)
+     Project title      18px / 23.4px   Location 14px / 18.2px, below title
+     The "50"           400px, rgb(255,81,0) ORANGE
+     "years of building" 72px WHITE, beside the numeral
+     Testimonial cards  354px wide, #F7F7F7 fill, at x = 63 / 463 / 858
+     Quote text         16px / 20.8px, #3F3F3F, font-style NORMAL (not italic)
+     Content column     1280px, first card edge x=50 => ~50px shoulder
+
+   SCOPING: every selector is a descendant of .foc. Nothing here may reach
+   the SVIND sections above the seam. No bare element selectors, and all
+   custom properties carry a --foc- prefix so they cannot collide with the
+   token names in tokens.css.
+
+   FONT CAVEAT: neue-haas-grotesk-display-pro is a licensed webfont served
+   by Wix and not present in the local copy. The stack falls back through
+   Helvetica Neue -> Arial, which is the closest widely-available grotesque
+   and is what the source itself degrades to. Metrics are near-identical at
+   these sizes; this is the one thing that cannot be reproduced exactly.
+   ========================================================================== */
+
+.foc {
+  /* Measured palette */
+  --foc-charcoal:  #3F3F3F;   /* srgb 0.247059 -> band fill */
+  --foc-white:     #FFFFFF;
+  --foc-panel:     #F7F7F7;   /* srgb 0.968627 -> testimonial card */
+  --foc-ink:       rgb(63, 63, 63);
+  --foc-orange:    rgb(255, 81, 0);
+  --foc-ash:       #E0E0E0;   /* --ash band fill, not from the source */
+  --foc-black:     #000000;   /* --ash type; deliberately not --foc-ink */
+  --foc-navy:      #1E3A6B;   /* --ash numeral; mirrors SVIND --color-navy */
+
+  --foc-font: "neue-haas-grotesk-display-pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  /* Measured type scale */
+  --foc-display:   72px;   /* section headings, "years of building" */
+  --foc-numeral:   400px;  /* the 50 */
+  --foc-title:     18px;   /* project titles */
+  --foc-body:      16px;   /* body, card numbers, links, quotes */
+  --foc-small:     14px;   /* lead paragraph, locations */
+
+  --foc-shoulder:  50px;   /* measured first-card edge */
+  --foc-max:       1280px;
+
+  font-family: var(--foc-font);
+  font-size: var(--foc-body);
+  line-height: 1.3;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scoped resets: the SVIND sheets already reset these globally, but this
+   file must stand alone if the load order ever changes.
+
+   :where() is load-bearing, not decoration. Written as `.foc h2, .foc p { ... }`
+   this reset scores 0,1,1 and therefore BEAT every single-class component rule
+   below it (0,1,0), silently killing every margin-block-start and
+   margin-inline in the file: the 24px lead offset, the legacy CTA gap, the
+   project title spacing, the cap-card copy. :where() contributes zero
+   specificity, so the whole thing scores 0,0,0 and anything can override it.
+   Do not flatten these selectors back out. */
+:where(.foc) :where(h2, h3, p, figure, figcaption, blockquote) {
+  margin: 0;
+}
+
+:where(.foc) img {
+  display: block;
+  max-width: 100%;
+}
+
+:where(.foc) a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* --------------------------------------------------------------------------
+   BANDS
+   Three of the four sections are charcoal; Excellence in Execution is white.
+   Vertical padding derives from the measured section heights (713px for a
+   band whose content runs ~460px) rather than a round number.
+   -------------------------------------------------------------------------- */
+
+.foc {
+  padding-block: clamp(56px, 7vw, 100px);
+  padding-inline: clamp(20px, 3.9vw, var(--foc-shoulder));
+  background-color: var(--foc-charcoal);
+  color: var(--foc-white);
+}
+
+.foc--light {
+  background-color: var(--foc-white);
+  color: var(--foc-ink);
+}
+
+/* Light-grey variant. Unlike --light (which is a measured source band), this
+   one is ours: #E0E0E0 with pure black type rather than the #3F3F3F ink used
+   everywhere else, so the two light variants stay visually distinct. The lead
+   gets 0.72 opacity instead of a lighter colour to keep one black in play. */
+.foc--ash {
+  background-color: var(--foc-ash);
+  color: var(--foc-black);
+}
+
+.foc--ash .foc__head,
+.foc--ash .foc__lead,
+.foc--ash .foc__legacy-unit,
+.foc--ash .foc__legacy-text {
+  color: var(--foc-black);
+}
+
+.foc--ash .foc__lead {
+  opacity: 0.72;
+}
+
+.foc--ash .foc__link {
+  color: var(--foc-black);
+}
+
+/* Third light variant, and ours rather than measured. --light is not a
+   substitute for it: --light is the source's white band and paints its heading
+   --foc-ink (#3F3F3F), while this one wants pure BLACK type on white -- the
+   same black/white pairing --ash uses, minus the grey fill.
+
+   Only .foc__head is overridden because the one section using this modifier
+   (Partners, index.html:856) holds a heading and the quote grid and nothing
+   else. .foc__lead and .foc__legacy-* hardcode --foc-white and would need
+   overrides too, but neither appears here; .foc__link is already color:
+   inherit. Add them when a section needs them, not before.
+
+   That does leave three light bands differing by two values each. If a fourth
+   is ever wanted, collapse all of them into a fill/type custom-property pair
+   on .foc rather than adding another modifier. */
+.foc--paper {
+  background-color: var(--foc-white);
+  color: var(--foc-black);
+}
+
+.foc--paper .foc__head {
+  color: var(--foc-black);
+}
+
+/* The measured #F7F7F7 quote card was drawn on charcoal, where it reads as a
+   panel. On white it is 1.07:1 against the band and the card edge vanishes.
+   The fill is kept -- it is a measured value -- and the edge is restored with
+   a hairline rather than by darkening the fill. */
+.foc--paper .foc__quote {
+  border: 1px solid #D2D2D2;
+}
+
+/* On ash the orange numeral goes navy — #1E3A6B, the SVIND accent from
+   tokens.css --color-navy, hardcoded here because foc.css must not depend on
+   the SVIND token layer. This is the one place the foreign design system
+   borrows a colour from the page above the seam. */
+.foc--ash .foc__numeral {
+  color: var(--foc-navy);
+}
+
+.foc__wrap {
+  max-width: var(--foc-max);
+  margin-inline: auto;
+}
+
+/* --------------------------------------------------------------------------
+   HEADINGS
+   72px with tight negative tracking is the source's single most
+   characteristic move. -2.88px at 72px is -0.04em, so it is expressed as em
+   to hold the ratio when the clamp scales the size down on narrow screens.
+   -------------------------------------------------------------------------- */
+
+.foc__head {
+  font-size: clamp(38px, 5.6vw, var(--foc-display));
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--foc-white);
+}
+
+.foc--light .foc__head {
+  color: var(--foc-ink);
+}
+
+.foc__lead {
+  max-width: 46ch;
+  margin-block-start: 24px;
+  font-size: var(--foc-small);
+  line-height: 1.3;
+  color: var(--foc-white);
+}
+
+/* --------------------------------------------------------------------------
+   LINK
+   16px, no underline, with the arrow the source animates on hover.
+   -------------------------------------------------------------------------- */
+
+.foc__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--foc-body);
+  line-height: 1.3;
+  color: inherit;
+  transition: color 200ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.foc__link-arrow {
+  width: 20px;
+  height: 1px;
+  background-color: currentColor;
+  transition: width 200ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.foc__link:hover {
+  color: var(--foc-orange);
+}
+
+.foc__link:hover .foc__link-arrow {
+  width: 36px;
+}
+
+/* --------------------------------------------------------------------------
+   CORE CAPABILITIES
+   Three WHITE cards on charcoal. Measured 361px wide at a 408px pitch,
+   which is a 3-column grid with a ~47px gutter. Cards have zero internal
+   padding in the source -- the text runs to the card edge with the card
+   itself inset -- so the padding here is what produces the measured
+   29px offset between card edge (x=50) and text (x=79).
+   -------------------------------------------------------------------------- */
+
+.foc__caps {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-block-start: 64px;
+}
+
+@media (min-width: 900px) {
+  .foc__caps {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 47px;
+  }
+}
+
+.foc__cap {
+  display: flex;
+  flex-direction: column;
+  min-height: 226px;
+  padding: 29px;
+  background-color: var(--foc-white);
+  color: var(--foc-ink);
+}
+
+.foc__cap-num {
+  font-size: var(--foc-body);
+  font-weight: 400;
+  line-height: 1.3;
+  text-transform: uppercase;
+  color: var(--foc-ink);
+}
+
+.foc__cap-text {
+  margin-block-start: 16px;
+  font-size: var(--foc-body);
+  line-height: 1.3;
+  color: var(--foc-ink);
+}
+
+.foc__cap .foc__link {
+  margin-block-start: auto;
+  padding-block-start: 24px;
+}
+
+/* Second card only, per the edit as given. The source has zero radius on all
+   three, so this is a one-card exception rather than a card style. */
+.foc--ash .foc__caps > .foc__cap:nth-of-type(2) {
+  border-radius: 30px;
+}
+
+.foc__caps-cta {
+  margin-block-start: 56px;
+}
+
+/* --------------------------------------------------------------------------
+   EXCELLENCE IN EXECUTION
+   The one white band. Heading and CTA share a row; four PORTRAIT cards
+   below. The 249x312 measurement is 4:5 -- an earlier version of this file
+   used 4:3 landscape, which was simply wrong.
+   -------------------------------------------------------------------------- */
+
+.foc__exec-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.foc__projects {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px 41px;
+  margin-block-start: 72px;
+}
+
+@media (min-width: 900px) {
+  .foc__projects {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.foc__shot {
+  display: block;
+  overflow: hidden;
+  background-color: var(--foc-panel);
+}
+
+.foc__shot img {
+  width: 100%;
+  aspect-ratio: 4 / 5;      /* measured 249 x 312 */
+  object-fit: cover;
+  transition: transform 640ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.foc__project:hover .foc__shot img {
+  transform: scale(1.04);
+}
+
+/* Title above location, which is the order the source renders. */
+.foc__project-title {
+  margin-block-start: 24px;
+  font-size: var(--foc-title);
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--foc-ink);
+}
+
+.foc__project-loc {
+  margin-block-start: 4px;
+  font-size: var(--foc-small);
+  line-height: 1.3;
+  color: var(--foc-ink);
+}
+
+/* --------------------------------------------------------------------------
+   LEGACY — the 400px orange numeral
+   The numeral is the whole composition: 400px orange, with "years of
+   building" set at the 72px display size beside it and the paragraph to
+   its right. line-height 0.8 crops the generous font ascent so the figure
+   optically aligns with the text block.
+   -------------------------------------------------------------------------- */
+
+.foc__legacy {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .foc__legacy {
+    grid-template-columns: auto 1fr;
+    gap: 64px;
+  }
+}
+
+.foc__numeral {
+  font-size: clamp(140px, 31vw, var(--foc-numeral));
+  font-weight: 400;
+  line-height: 0.8;
+  letter-spacing: -0.04em;
+  color: var(--foc-orange);
+}
+
+.foc__legacy-unit {
+  font-size: clamp(32px, 5.6vw, var(--foc-display));
+  font-weight: 400;
+  line-height: 1;
+  text-transform: capitalize;
+  color: var(--foc-white);
+}
+
+.foc__legacy-text {
+  max-width: 42ch;
+  margin-block-start: 24px;
+  font-size: var(--foc-body);
+  line-height: 1.3;
+  color: var(--foc-white);
+}
+
+.foc__legacy-cta {
+  margin-block-start: 32px;
+}
+
+/* --------------------------------------------------------------------------
+   WHAT OUR PARTNERS SAY
+   Three #F7F7F7 cards on charcoal, measured 354px wide at a 400px pitch.
+   Quote text is 16px and NOT italic -- the source sets font-style: normal,
+   which is worth stating because large italic quotes are the default
+   assumption and would be wrong here.
+   -------------------------------------------------------------------------- */
+
+.foc__quotes {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-block-start: 64px;
+}
+
+/* The testimonial row is inset ~13px further than the capability row in the
+   source: cards measured at x = 63 / 463 / 858 against the capability cards'
+   50 / 458 / 867. Reproduced with inline padding on the grid rather than a
+   different wrap width, so the heading above stays flush at x = 50. */
+@media (min-width: 900px) {
+  .foc__quotes {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 46px;
+    padding-inline: 13px;
+  }
+}
+
+.foc__quote {
+  display: flex;
+  flex-direction: column;
+  min-height: 163px;
+  padding: 30px 29px;
+  background-color: var(--foc-panel);
+  color: var(--foc-ink);
+}
+
+.foc__quote-text {
+  font-size: var(--foc-body);
+  font-style: normal;
+  line-height: 1.3;
+  color: var(--foc-ink);
+}
+
+.foc__quote-by {
+  margin-block-start: auto;
+  padding-block-start: 24px;
+  font-size: var(--foc-body);
+  font-style: normal;
+  line-height: 1.3;
+  color: var(--foc-ink);
+}
+
+.foc__quote-by cite {
+  font-style: normal;
+}
+
+/* --------------------------------------------------------------------------
+   REDUCED MOTION
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .foc__shot img,
+  .foc__link,
+  .foc__link-arrow {
+    transition: none;
+  }
+
+  .foc__project:hover .foc__shot img {
+    transform: none;
+  }
+}

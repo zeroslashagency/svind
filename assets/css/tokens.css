@@ -1,0 +1,304 @@
+/* ==========================================================================
+   SVIND v2 — tokens.css
+   Governing aesthetic: 01_DESIGN/07_DNA_RM_TEREX.md  (AUTHORITATIVE)
+   Supersedes 06_DESIGN_RECALIBRATION.md and DESIGN_SYSTEM.md on palette,
+   type, surfaces and ornament.
+
+   Cool gray field + white surfaces + ONE navy accent.
+   Concrete / copper / warm-white / watermark / hairline systems are RETIRED:
+   the legacy token NAMES are kept and remapped onto DNA values so that
+   existing pages inherit the new design language without per-page edits.
+   Structure comes from 4-8px gutters and fill changes, never from borders,
+   radii, shadows or gradients.
+
+   Plain CSS. No build step. Load this file first.
+   ========================================================================== */
+
+:root {
+  /* ---------------------------------------------------------------------
+     COLOUR — DNA base (canonical names)
+     --------------------------------------------------------------------- */
+  --color-canvas: #EFEFEF;           /* the field: every band sits on this */
+  --color-canvas-2: #E7E7E7;         /* second-step gray, insets, table stripes */
+  --color-surface: #FFFFFF;          /* card + content surfaces, knockout type */
+  --color-navy: #1E3A6B;             /* the ONE accent */
+  --color-navy-deep: #162C52;        /* numerals inside a filled navy panel */
+  --color-ink: #1A1D21;              /* headlines and body ink */
+  --color-ink-muted: #8A8F96;        /* metadata, inactive counter figures */
+  --color-knockout: #FFFFFF;         /* S1 / S5 decorative knockout type */
+
+  /* ---------------------------------------------------------------------
+     COLOUR — legacy names, remapped onto the DNA palette
+     Kept so components.css / the four built pages need no rename pass.
+     --------------------------------------------------------------------- */
+  --color-ink-2: #202429;            /* was elevated dark surface */
+  --color-ink-3: #2A2F35;
+  --color-steel: var(--color-navy);          /* technical panels → navy */
+  --color-concrete: var(--color-canvas);     /* warm field → cool gray field */
+  --color-concrete-2: var(--color-canvas-2);
+  --color-concrete-3: #DEDEDE;
+  --color-white: var(--color-surface);       /* now truly #FFFFFF */
+
+  /* Accent. Budget: max ONE inverted navy panel per row, never two adjacent. */
+  --color-copper: var(--color-navy);
+  --color-copper-hover: var(--color-navy-deep);
+  --color-copper-soft: rgba(30, 58, 107, 0.08);
+  --color-copper-wire: rgba(30, 58, 107, 0.28);
+
+  /* ---------------------------------------------------------------------
+     COLOUR — signal (status only, never decorative)
+     --------------------------------------------------------------------- */
+  --color-safe: #2F6F4E;
+  --color-warn: #8A6A1F;
+  --color-alert: #9E3535;
+
+  /* ---------------------------------------------------------------------
+     COLOUR — text
+     navy on canvas ≈ 8.9:1 · ink on canvas ≈ 15.4:1 · white on navy ≈ 8.6:1
+     --------------------------------------------------------------------- */
+  --color-text: var(--color-ink);
+  --color-text-secondary: #5A6067;
+  --color-text-muted: var(--color-ink-muted);
+  --color-text-on-dark: #FFFFFF;
+  --color-text-on-dark-muted: rgba(255, 255, 255, 0.68);
+  --color-text-on-accent: #FFFFFF;
+  --color-label: var(--color-navy);   /* S3 micro-caps band label */
+
+  /* ---------------------------------------------------------------------
+     COLOUR — line
+     DNA §4: no borders. Hairlines resolve to transparent; separation is
+     done with gutters and fill changes. Tokens retained so existing
+     `border: 1px solid var(--color-hairline)` rules simply disappear.
+     --------------------------------------------------------------------- */
+  --color-hairline: transparent;
+  --color-hairline-2: transparent;
+  --color-hairline-dark: transparent;
+  --color-rule: #B2B5C6;             /* the ONE 1px mark: S3 counter rule */
+
+  /* Ghost watermarks: revoked. Knockout type replaces them. */
+  --color-watermark-light: transparent;
+  --color-watermark-dark: transparent;
+  --color-outline-stroke: transparent;
+
+  /* No gradients in the DNA system. Kept as a no-op for legacy consumers. */
+  --overlay-image: none;
+
+  /* ---------------------------------------------------------------------
+     TYPOGRAPHY — families
+     Inter Tight everywhere. Mono is engineering data only.
+     --------------------------------------------------------------------- */
+  --font-sans: "Inter Tight", "Inter", system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-sans);
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* ---------------------------------------------------------------------
+     TYPOGRAPHY — weights. DNA display weight is 700.
+     --------------------------------------------------------------------- */
+  --weight-light: 400;
+  --weight-regular: 400;
+  --weight-medium: 600;
+  --weight-semibold: 700;
+  --weight-bold: 700;
+
+  /* ---------------------------------------------------------------------
+     TYPOGRAPHY — DNA scale
+     Max 3 non-decorative sizes visible per viewport.
+     --------------------------------------------------------------------- */
+
+  /* knockout-xl — S1 giant white wordmark on gray (decorative, aria-hidden) */
+  --text-knockout-xl: clamp(120px, 22vw, 320px);
+  --weight-knockout-xl: 700;
+  --lh-knockout-xl: 0.78;
+  --tracking-knockout-xl: -0.02em;
+
+  /* knockout-num — S4 panel numerals, S5 stat numerals */
+  --text-knockout-num: clamp(56px, 7vw, 96px);
+  --weight-knockout-num: 700;
+  --lh-knockout-num: 0.82;
+  --tracking-knockout-num: -0.01em;
+
+  /* display-l — real section headline (H1 / H2) */
+  --text-display-l: clamp(28px, 3.2vw, 44px);
+  --weight-display-l: 700;
+  --lh-display-l: 1.1;
+  --tracking-display-l: -0.02em;
+  --case-display-l: none;
+
+  /* Legacy display steps collapse onto the DNA ladder. */
+  --text-display-xxl: var(--text-knockout-num);
+  --weight-display-xxl: 700;
+  --lh-display-xxl: 0.94;
+  --tracking-display-xxl: -0.02em;
+  --case-display-xxl: none;
+
+  --text-display-xl: clamp(30px, 3.6vw, 52px);
+  --weight-display-xl: 700;
+  --lh-display-xl: 1.06;
+  --tracking-display-xl: -0.02em;
+  --case-display-xl: none;
+
+  /* title-m — card titles, H3 */
+  --text-title-m: 17px;
+  --weight-title-m: 700;
+  --lh-title-m: 1.3;
+  --text-display-m: var(--text-title-m);
+  --weight-display-m: var(--weight-title-m);
+  --lh-display-m: var(--lh-title-m);
+  --tracking-display-m: -0.01em;
+  --case-display-m: none;
+
+  /* stat — S5 lockups now use the knockout numeral, not a thin 300 face */
+  --text-stat: var(--text-knockout-num);
+  --weight-stat: 700;
+  --lh-stat: 0.82;
+  --tracking-stat: -0.01em;
+  --text-stat-numeral: var(--text-stat);
+  --weight-stat-numeral: var(--weight-stat);
+  --lh-stat-numeral: var(--lh-stat);
+  --tracking-stat-numeral: var(--tracking-stat);
+
+  /* index-numeral — S4 numbered rows */
+  --text-index-numeral: clamp(40px, 5vw, 64px);
+  --weight-index-numeral: 700;
+  --lh-index-numeral: 0.82;
+  --tracking-index-numeral: -0.01em;
+
+  /* lead — band intro paragraph */
+  --text-lead: clamp(16px, 1.3vw, 19px);
+  --weight-lead: 400;
+  --lh-lead: 1.55;
+
+  /* body — default. Max 3 lines inside a panel. */
+  --text-body: 15px;
+  --weight-body: 400;
+  --lh-body: 1.55;
+
+  --text-body-s: 14px;
+  --weight-body-s: 400;
+  --lh-body-s: 1.5;
+
+  /* micro-caps — ALL secondary metadata, no exceptions */
+  --text-micro-caps: 11px;
+  --weight-micro-caps: 600;
+  --lh-micro-caps: 1.3;
+  --tracking-micro-caps: 0.09em;
+  --case-micro-caps: uppercase;
+
+  /* spec-mono — capacity / span / duty readouts only */
+  --text-spec-mono: 13px;
+  --weight-spec-mono: 400;
+  --lh-spec-mono: 1.5;
+  --tracking-spec-mono: 0.02em;
+
+  /* ---------------------------------------------------------------------
+     SPACE — 8px base unit
+     --------------------------------------------------------------------- */
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --space-10: 128px;
+  --space-11: 160px;
+
+  /* Gutters ARE the ornament. 4-8px between panels, never a border. */
+  --gutter-hair: 4px;
+  --gutter-split: 8px;
+
+  /* Vertical rhythm */
+  --band-y: clamp(64px, 7vw, 112px);
+  --band-y-tight: clamp(32px, 4vw, 56px);
+  --gutter: clamp(20px, 4vw, 40px);
+  /* --band-pad-x is retired. It was the band's fixed inner padding, replaced
+     by the fluid --band-inset below. Left as an alias so any rule still
+     naming it keeps working rather than collapsing to 0. */
+  --band-pad-x: var(--band-inset);
+
+  /* Inline padding for every band. Bands are full-bleed, so this is what
+     positions the content column inside the edge-to-edge fill.
+
+     It scales with the viewport instead of pinning content to a fixed pixel
+     measure. A fixed cap here (it was --max-content, 1240px) left ~280px of
+     dead space per side at 1800px: the fill reached the edge but the content
+     did not follow, so the page read as a narrow column floating in a wide
+     frame. Every heading and paragraph already caps itself in `ch` units
+     (--dna-head 22ch, --dna-lead 46ch, --max-panel-text 30ch), so line
+     length is governed there, not here -- which is why the padding is free
+     to grow proportionally without stretching any text.
+
+     6.5vw keeps the left/right breathing room proportional at every size, and
+     --max-shoulder stops it running away on an ultrawide display. Layout
+     containment is asserted by 04_TEST/static/test_layout.py. */
+  --max-shoulder: 200px;
+  --band-inset: clamp(20px, 6.5vw, var(--max-shoulder));
+
+  /* ---------------------------------------------------------------------
+     LAYOUT
+     --------------------------------------------------------------------- */
+  --max-content: 1240px;
+  --max-text: 68ch;
+  --max-wide: 1600px;
+  --max-panel-text: 30ch;            /* forces the 3-line panel discipline */
+  --grid-cols: 12;
+  --grid-gap: clamp(16px, 2vw, 32px);
+
+  /* Breakpoints — reference values. Media queries must inline these numbers. */
+  --bp-sm: 480px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
+  --bp-xxl: 1600px;
+
+  /* Fixed chrome heights, used for sticky offsets and scroll padding */
+  --nav-h: 72px;
+  --nav-h-scrolled: 64px;
+  --mobile-bar-h: 56px;
+
+  /* ---------------------------------------------------------------------
+     RADIUS — zero everywhere. DNA §4: no rounded corners at all.
+     --------------------------------------------------------------------- */
+  --radius-none: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+
+  /* ---------------------------------------------------------------------
+     ELEVATION — flat. The only permitted shadow is a product ground shadow.
+     --------------------------------------------------------------------- */
+  --elevation-flat: none;
+  --elevation-card: none;
+  --elevation-float: none;
+  --shadow-ground: 0 26px 34px -26px rgba(26, 29, 33, 0.45);
+
+  /* ---------------------------------------------------------------------
+     MOTION — hover states are 160ms and barely there
+     --------------------------------------------------------------------- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 160ms;
+  --dur-base: 280ms;
+  --dur-slow: 560ms;
+  --dur-reveal: 640ms;
+
+  /* ---------------------------------------------------------------------
+     FOCUS — 2px navy ring, always visible
+     --------------------------------------------------------------------- */
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  --focus-ring-color: var(--color-navy);
+
+  /* ---------------------------------------------------------------------
+     Z-INDEX
+     --------------------------------------------------------------------- */
+  --z-base: 0;
+  --z-raised: 10;
+  --z-nav: 100;
+  --z-overlay: 200;
+  --z-mobile-bar: 300;
+  --z-progress: 400;
+  --z-skip: 500;
+}

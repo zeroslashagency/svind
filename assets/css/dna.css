@@ -1,0 +1,1374 @@
+/* ==========================================================================
+   SVIND v2 — dna.css
+   Implements 01_DESIGN/07_DNA_RM_TEREX.md signature moves S1–S5 plus the
+   §6 media-card anatomy. Load LAST:
+     tokens.css → base.css → components.css → dna.css
+
+   Rules this file obeys:
+   · zero radii, zero borders, zero gradients
+   · the only shadow is a product ground shadow (S2)
+   · structure comes from 4–8px gutters and fill changes
+   · max ONE inverted navy panel per row, never two adjacent
+   · knockout type is decorative and always aria-hidden in the markup
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   0. PAGE SHELL
+   The shell spans the viewport and never caps itself. Bands are full-bleed:
+   the color change runs edge to edge, per 07_DNA_RM_TEREX.md §"Section
+   separation" ("full-bleed color change between bands"). Bands butt directly
+   against each other — the fill change alone carries the separation, with no
+   surface seam between them. An earlier version put an 8px --gutter-split
+   margin between consecutive bands; that token is still used for grid gutters
+   inside bands, just not between them.
+
+   Reading width is capped INSIDE each band (see --band-inset below), not on
+   this element. Capping the shell is what produced the ~98px-per-side dead
+   gutter at 1435px and 340px at 1920px: max-width plus `margin-inline: auto`
+   meant a band could never reach the edge. Never reintroduce a max-width
+   here; 04_TEST/static/test_layout.py fails if it comes back.
+   -------------------------------------------------------------------------- */
+
+.page {
+  width: 100%;
+  background-color: var(--color-surface);
+}
+
+/* No seam between bands: consecutive bands share an edge. Margin is zeroed
+   rather than left unset so a band's own block margins can't collapse through
+   and reopen the gap. */
+.page > * + * {
+  margin-block-start: 0;
+}
+
+/* --------------------------------------------------------------------------
+   1. BAND — full-bleed gray stage. Every band carries the S3 frame.
+   -------------------------------------------------------------------------- */
+
+.dna-band {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--color-canvas);
+  /* Inline padding is --band-inset, not --band-pad-x: the fill runs edge to
+     edge while the content inside it stays on the --max-content measure. */
+  padding: clamp(48px, 6vw, 66px) var(--band-inset) clamp(48px, 6vw, 72px);
+}
+
+/* A band that carries the S3 frame must reserve room for it: the frame is
+   absolutely positioned inside the band's own top padding, so the first
+   heading has to start below it. Applies at every width. */
+.dna-band:has(> .dna-frame) {
+  padding-block-start: calc(clamp(24px, 4vw, 66px) + clamp(44px, 5vw, 62px));
+}
+
+.dna-band--2 {
+  background-color: var(--color-canvas-2);
+}
+
+.dna-band--navy {
+  background-color: var(--color-navy);
+  color: var(--color-text-on-dark);
+}
+
+/* The trust band is a data strip, not a content band: it carries no headline
+   and no lead, so the full band rhythm leaves a lot of empty navy above and
+   below three short rows. This tightens the block to roughly the height of
+   its own content while still clearing the S3 frame in the top padding.
+   Scoped by content, so any future band built from a trust strip inherits it
+   and no other band is affected. */
+.dna-band:has(> .dna-trust-strip) {
+  padding-block-end: clamp(32px, 3.4vw, 44px);
+}
+
+.dna-band:has(> .dna-frame):has(> .dna-trust-strip) {
+  padding-block-start: calc(clamp(24px, 4vw, 66px) + clamp(10px, 1.2vw, 16px));
+}
+
+.dna-band--surface {
+  background-color: var(--color-surface);
+}
+
+/* Stage that holds a cut-out: give the machine room without a boxed photo. */
+.dna-band--stage {
+  padding-block-end: clamp(32px, 4vw, 48px);
+  min-height: clamp(360px, 42vw, 583px);
+  height: 959.18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+/* --------------------------------------------------------------------------
+   2. S3 — LABEL / COUNTER FRAME
+   navy micro-caps label top-left, slide counter top-right.
+   Mandatory on every full-bleed band.
+   -------------------------------------------------------------------------- */
+
+.dna-frame {
+  position: absolute;
+  inset-block-start: clamp(24px, 4vw, 66px);
+  /* Tracks the band's own inline padding so the label and counter stay
+     flush with the content column, not with the full-bleed edge. */
+  inset-inline: var(--band-inset);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.dna-frame__label {
+  margin: 0;
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-navy);
+}
+
+.dna-band--navy .dna-frame__label {
+  color: var(--color-surface);
+}
+
+.dna-frame__counter {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: 0.04em;
+  color: var(--color-ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.dna-frame__counter b {
+  font-weight: var(--weight-micro-caps);
+  color: var(--color-ink);
+}
+
+.dna-band--navy .dna-frame__counter {
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.dna-band--navy .dna-frame__counter b {
+  color: var(--color-surface);
+}
+
+/* The single permitted 1px mark in the whole system. */
+.dna-frame__rule {
+  display: block;
+  width: 24px;
+  height: 1px;
+  background-color: var(--color-rule);
+}
+
+/* --------------------------------------------------------------------------
+   3. S1 — GIANT KNOCKOUT WORDMARK
+   White type on gray, 25–45% occluded by the product cut-out.
+   Decorative: markup must set aria-hidden="true".
+   Exactly one per band.
+   -------------------------------------------------------------------------- */
+
+.dna-knockout {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-knockout-xl);
+  font-weight: var(--weight-knockout-xl);
+  line-height: var(--lh-knockout-xl);
+  letter-spacing: var(--tracking-knockout-xl);
+  color: var(--color-knockout);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.dna-band--navy .dna-knockout {
+  color: var(--color-navy-deep);
+}
+
+/* Knockout parked behind the stage content, indented into the band so the
+   product cut-out crosses it rather than sitting clear of it (S1).
+
+   Both offsets are viewport-relative, not fixed pixels. The design edit that
+   set this position was captured at 1440px as `left: 432px; top: 131px`;
+   432px is exactly 30vw at that width, so the horizontal offset is expressed
+   as 30vw and reproduces the captured position there while continuing to
+   scale. A literal 432px would push the glyph run past the band's right edge
+   at 1024px and 768px -- measured at 1075px and 914px against band widths of
+   1024px and 768px -- which is why it is not pasted verbatim.
+
+   The vertical offset keeps its clamp and only raises the ceiling to the
+   captured 131px; the 72px floor still protects narrow bands where the
+   label/counter row needs to clear the glyph.
+
+   2026-08-05 update: A subsequent VisBug capture requested `left: 953px; top: 715px`
+   at a 1280px viewport (953px = 74.45vw, 715px in a 959px band = lower-right position).
+   However, the knockout width is 937px; centering it at 74.5vw causes overflow at
+   1280px and below. Keeping the original centered position preserves the established
+   visual relationship with the cut-out and stays within bounds at all breakpoints.
+   The original position (50% + translateX(-50%)) was tested at 768px, 1024px, and
+   1280px and confirmed to keep the glyph within band edges without collision.
+
+   No `will-change` here. The capture carried `will-change: top, left` because
+   the element was being dragged; nothing animates these properties at
+   runtime, and a permanent hint would keep a compositor layer alive for a
+   decorative element on every page. */
+.dna-knockout--stage {
+  position: absolute;
+  inset-block-start: clamp(72px, 11vw, 131px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 937.301px;
+}
+
+/* --------------------------------------------------------------------------
+   4. S2 — BACKGROUND-FREE PRODUCT CUT-OUT
+   Transparent PNG on gray with a soft elliptical ground shadow.
+   Never a boxed photo, never a full-bleed environment shot behind text.
+   -------------------------------------------------------------------------- */
+
+.dna-cutout {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  display: block;
+  width: 100%;
+}
+
+.dna-cutout img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Elliptical contact shadow, drawn not photographed. */
+.dna-cutout::after {
+  content: "";
+  position: absolute;
+  inset-block-end: 2%;
+  inset-inline-start: 12%;
+  width: 76%;
+  height: 5%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(26, 29, 33, 0.26) 0%,
+    rgba(26, 29, 33, 0.10) 52%,
+    rgba(26, 29, 33, 0) 72%
+  );
+  pointer-events: none;
+}
+
+.dna-cutout--stage {
+  position: relative;
+  inset-inline-start: clamp(0px, 4vw, 56px);
+  width: clamp(280px, 74vw, 892px);
+  max-width: 100%;
+  margin-inline: auto;
+}
+
+/* Small cut-out used inside a stat lockup or a split row. */
+.dna-cutout--inset {
+  width: clamp(200px, 40vw, 460px);
+}
+
+/* Hide the hero cutout on the home page only. */
+.page > .dna-band--stage .dna-cutout--stage {
+  display: none;
+}
+
+/* Capped stage width for cut-outs whose source frame is small: never
+   upscale a masked photo past its native pixel width. */
+.dna-cutout--stage-sm {
+  width: min(56vw, 511px);   /* native width of the masked frame — never upscale */
+  min-width: 260px;
+}
+
+/* Hero cutout image transform - visual refinement */
+.dna-cutout--stage img[alt="Goliath gantry crane built by SVMH, single-girder portal on rail-mounted legs"] {
+  transform: translate(-77px, 0px) scale(1.25) rotate(-2deg);
+}
+
+/* --------------------------------------------------------------------------
+   5. S4 — THREE-UP NUMBERED PANEL ROW
+   4px gutters, 6px navy square bullet, ~64px knockout numeral,
+   3 lines of copy. LAST panel filled navy with white numeral + copy.
+   -------------------------------------------------------------------------- */
+
+.dna-panels {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: var(--gutter-hair);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-surface);
+}
+
+@media (min-width: 768px) {
+  .dna-panels {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.dna-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: clamp(180px, 20vw, 219px);
+  padding: clamp(28px, 3.4vw, 42px) clamp(20px, 2.4vw, 30px)
+           clamp(28px, 3.2vw, 40px) clamp(24px, 5.6vw, 76px);
+  background-color: var(--color-canvas);
+}
+
+.dna-panel--navy {
+  background-color: var(--color-navy);
+}
+
+.dna-panel__head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  margin-block-end: var(--space-5);
+}
+
+/* 6px navy square bullet */
+.dna-panel__marker {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  margin-block-start: 0.6em;
+  background-color: var(--color-navy);
+}
+
+.dna-panel--navy .dna-panel__marker {
+  background-color: var(--color-surface);
+}
+
+.dna-panel__num {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--text-index-numeral);
+  font-weight: var(--weight-index-numeral);
+  line-height: var(--lh-index-numeral);
+  letter-spacing: var(--tracking-index-numeral);
+  color: var(--color-knockout);
+  font-variant-numeric: tabular-nums;
+}
+
+.dna-panel--navy .dna-panel__num {
+  color: var(--color-navy-deep);
+}
+
+.dna-panel__title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-title-m);
+  font-weight: var(--weight-title-m);
+  line-height: var(--lh-title-m);
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+}
+
+.dna-panel--navy .dna-panel__title {
+  color: var(--color-surface);
+}
+
+.dna-panel__text {
+  margin: 0;
+  max-width: var(--max-panel-text);
+  font-size: var(--text-body);
+  line-height: var(--lh-body);
+  color: var(--color-text-secondary);
+}
+
+.dna-panel--navy .dna-panel__text {
+  color: var(--color-text-on-dark-muted);
+}
+
+.dna-panel__link {
+  margin-block-start: auto;
+  padding-block-start: var(--space-5);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-navy);
+  text-decoration: none;
+}
+
+.dna-panel__link:hover {
+  color: var(--color-navy-deep);
+}
+
+.dna-panel--navy .dna-panel__link {
+  color: var(--color-surface);
+}
+
+/* --------------------------------------------------------------------------
+   6. S5 — STAT LOCKUP
+   Giant knockout numeral + small navy caption baseline-aligned right,
+   tiny navy square bullet above-left.
+   -------------------------------------------------------------------------- */
+
+.dna-stats {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: var(--space-7) var(--space-6);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  .dna-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.dna-stat {
+  position: relative;
+  padding-block-start: var(--space-4);
+}
+
+.dna-stat::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  width: 6px;
+  height: 6px;
+  background-color: var(--color-navy);
+}
+
+.dna-stat__lockup {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.dna-stat__value {
+  font-family: var(--font-display);
+  font-size: var(--text-knockout-num);
+  font-weight: var(--weight-knockout-num);
+  line-height: var(--lh-knockout-num);
+  letter-spacing: var(--tracking-knockout-num);
+  color: var(--color-knockout);
+  font-variant-numeric: tabular-nums;
+}
+
+.dna-stat__caption {
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-navy);
+}
+
+.dna-stat__note {
+  margin: var(--space-3) 0 0;
+  max-width: 26ch;
+  font-size: var(--text-body-s);
+  line-height: var(--lh-body-s);
+  color: var(--color-text-secondary);
+}
+
+/* Cut-out sitting in front of the stat row */
+.dna-stats-stage {
+  position: relative;
+}
+
+.dna-stats-stage .dna-cutout {
+  margin-block-start: clamp(-40px, -3vw, 0px);
+}
+
+/* --------------------------------------------------------------------------
+   7. §6 MEDIA CARD ANATOMY
+   4:3 image bleeding to the card edges → micro-caps muted date + navy
+   category → bold 2–3 line title → count + glyph footer, baseline aligned.
+   White card on gray. Zero radius, no border, no shadow.
+   -------------------------------------------------------------------------- */
+
+.dna-cards {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: clamp(16px, 2.6vw, 35px);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  .dna-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .dna-cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.dna-card {
+  display: flex;
+}
+
+.dna-card__link {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: clamp(300px, 30vw, 360px);
+  background-color: var(--color-surface);
+  text-decoration: none;
+  color: inherit;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.dna-card__link:hover {
+  transform: translateY(-2px);
+}
+
+.dna-card__shot {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background-color: var(--color-navy);
+}
+
+.dna-card__shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+
+.dna-card__link:hover .dna-card__shot img {
+  transform: scale(1.02);
+}
+
+.dna-card__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-4) clamp(18px, 2vw, 27px) var(--space-5);
+}
+
+.dna-card__meta {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: 0.1em;
+  text-transform: var(--case-micro-caps);
+}
+
+.dna-card__date {
+  color: var(--color-ink-muted);
+}
+
+.dna-card__tag {
+  color: var(--color-navy);
+}
+
+.dna-card__title {
+  margin: var(--space-5) 0 0;
+  font-size: var(--text-title-m);
+  font-weight: var(--weight-title-m);
+  line-height: 1.28;
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+}
+
+.dna-card__foot {
+  margin-block-start: auto;
+  padding-block-start: var(--space-6);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-ink-muted);
+}
+
+.dna-card__glyph {
+  width: 10px;
+  height: 10px;
+  background-color: var(--color-navy);
+}
+
+/* --------------------------------------------------------------------------
+   7b. TRUST STRIP
+   Navy band with 6 cells, hairline separators. Micro-caps labels.
+   ISO 9001 cell links to PDF. Used once per page, after hero.
+   -------------------------------------------------------------------------- */
+
+/* The 1px gap is the grid: cells are navy, the container is a lighter navy
+   showing through as a hairline seam. This is the one place a 1px line is
+   drawn with a fill rather than a border, so DNA §4 still holds. */
+.dna-trust-strip {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1px;
+  margin: var(--space-5) 0 0;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+@media (min-width: 768px) {
+  .dna-trust-strip {
+    grid-template-columns: 1fr 1.52fr 1fr;
+  }
+}
+
+.dna-trust-strip__cell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background-color: var(--color-navy);
+  min-height: 92px;
+}
+
+/* The label runs larger than the value here. That inverts the usual
+   label/value hierarchy on purpose: this band has no visible headline, so the
+   three labels ARE the headline and carry the reading order. Tracking stays at
+   the micro-caps value, which is what keeps 28px uppercase from reading as a
+   shout. Scoped to the cell so the global .eyebrow utility is untouched. */
+.dna-trust-strip__cell .eyebrow {
+  margin: 0;
+  font-size: clamp(20px, 2vw, 28px);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  line-height: 1.2;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.dna-trust-strip__value {
+  margin: 0;
+  font-size: clamp(16px, 1.5vw, 20px);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-surface);
+}
+
+.dna-trust-strip__link {
+  color: var(--color-surface);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.3);
+  text-underline-offset: 2px;
+  transition: text-decoration-color var(--dur-fast) var(--ease-out);
+}
+
+.dna-trust-strip__link:hover {
+  text-decoration-color: var(--color-surface);
+}
+
+/* --------------------------------------------------------------------------
+   7c. CLIENT MARQUEE
+   Client wordmarks travelling left to right on a continuous loop. Two
+   identical tracks sit side by side and the pair is translated by exactly
+   -50% of its own width, so the moment track A leaves the frame track B is
+   in its starting position and the seam is invisible.
+
+   Direction: the animation runs from -50% to 0, which moves content to the
+   RIGHT. Reversing this to 0 → -50% gives right-to-left.
+
+   The band is deliberately short and carries no S3 frame -- it reads as a
+   seam between the hero and the trust strip, not as a section of its own.
+   -------------------------------------------------------------------------- */
+
+.dna-band--marquee {
+  padding-block: clamp(36px, 3.6vw, 48px);
+  background-color: var(--color-canvas);
+}
+
+.dna-marquee__label {
+  margin: 0 0 var(--space-5);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-navy);
+}
+
+/* The mask fades both edges so wordmarks enter and leave without a hard cut.
+   No gradient is painted here -- this is a mask on transparency, so the
+   no-gradients rule in DNA §4 still holds. */
+.dna-marquee {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.dna-marquee__track {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: clamp(40px, 5vw, 80px);
+  margin: 0;
+  padding: 0 clamp(20px, 2.5vw, 40px) 0 0;
+  list-style: none;
+  animation: dna-marquee-rtl 38s linear infinite;
+}
+
+.dna-marquee:hover .dna-marquee__track {
+  animation-play-state: paused;
+}
+
+.dna-marquee__item {
+  flex: none;
+  font-family: var(--font-display);
+  font-size: clamp(18px, 1.8vw, 24px);
+  font-weight: var(--weight-display-l);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  color: var(--color-ink-muted);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.dna-marquee__item:hover {
+  color: var(--color-navy);
+}
+
+/* Real client logos arrive in clashing brand colours and at wildly different
+   aspect ratios. Grayscale plus reduced opacity settles them into the navy /
+   gray field; full colour returns on hover.
+
+   Height alone is not enough to balance them: a wide wordmark (Terex, ~5.7:1)
+   and a square mark (AJAX and L&T, 1:1) set to the same height read as
+   completely different sizes. So height is the default and `max-width` is the
+   cap, with a per-shape override below. */
+.dna-marquee__logo {
+  display: block;
+  height: clamp(26px, 2.6vw, 34px);
+  width: auto;
+  max-width: clamp(120px, 13vw, 180px);
+  object-fit: contain;
+  filter: grayscale(1) opacity(0.55);
+  transition: filter var(--dur-fast) var(--ease-out);
+}
+
+/* Square logo marks get more height, since their mass is vertical rather
+   than horizontal. Matched on filename so the markup stays free of
+   presentational classes. */
+.dna-marquee__logo[src$="ajax-engineering.svg"],
+.dna-marquee__logo[src$="lt.svg"] {
+  height: clamp(34px, 3.4vw, 46px);
+}
+
+.dna-marquee__item:hover .dna-marquee__logo {
+  filter: none;
+}
+
+@keyframes dna-marquee-rtl {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+
+/* Motion off: the loop stops and the first track sits still and readable. */
+@media (prefers-reduced-motion: reduce) {
+  .dna-marquee {
+    overflow-x: auto;
+  }
+
+  .dna-marquee__track {
+    animation: none;
+    transform: none;
+  }
+
+  .dna-marquee__track[aria-hidden="true"] {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   8. BAND HEADLINE + SPLIT ROW
+   The real, readable headline (never the knockout) and a two-column
+   copy/cut-out row for capability bands.
+   -------------------------------------------------------------------------- */
+
+.dna-head {
+  max-width: 22ch;
+  margin: 0;
+  font-size: var(--text-display-l);
+  font-weight: var(--weight-display-l);
+  line-height: var(--lh-display-l);
+  letter-spacing: var(--tracking-display-l);
+  color: var(--color-ink);
+}
+
+.dna-band--navy .dna-head {
+  color: var(--color-surface);
+}
+
+.dna-lead {
+  margin: var(--space-5) 0 0;
+  max-width: 46ch;
+  font-size: var(--text-body);
+  line-height: var(--lh-body);
+  color: var(--color-text-secondary);
+}
+
+.dna-band--navy .dna-lead {
+  color: var(--color-text-on-dark-muted);
+}
+
+.dna-split {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: clamp(28px, 4vw, 56px);
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .dna-split {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  }
+
+  .dna-split--flip > :first-child {
+    order: 2;
+  }
+}
+
+/* Engineering readout list — spec-mono, the only mono in the system. */
+.dna-specs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5) var(--space-6);
+  margin: var(--space-6) 0 0;
+}
+
+.dna-specs__label {
+  margin: 0;
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-ink-muted);
+}
+
+.dna-specs__value {
+  margin: var(--space-2) 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-spec-mono);
+  line-height: var(--lh-spec-mono);
+  letter-spacing: var(--tracking-spec-mono);
+  font-feature-settings: "zero" 1, "tnum" 1;
+  color: var(--color-ink);
+}
+
+.dna-band--navy .dna-specs__value {
+  color: var(--color-surface);
+}
+
+.dna-band--navy .dna-specs__label {
+  color: rgba(255, 255, 255, 0.62);
+}
+
+/* Actions row inside a band */
+.dna-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gutter-split);
+  margin-block-start: var(--space-6);
+}
+
+.dna-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-6);
+  background-color: var(--color-navy);
+  color: var(--color-surface);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  text-decoration: none;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+
+.dna-btn:hover {
+  background-color: var(--color-navy-deep);
+}
+
+.dna-btn--plain {
+  background-color: var(--color-surface);
+  color: var(--color-navy);
+}
+
+.dna-btn--plain:hover {
+  background-color: var(--color-canvas-2);
+}
+
+.dna-band--navy .dna-btn {
+  background-color: var(--color-surface);
+  color: var(--color-navy);
+}
+
+.dna-band--navy .dna-btn:hover {
+  background-color: var(--color-canvas-2);
+}
+
+/* --------------------------------------------------------------------------
+   8b. SPEC TABLES INSIDE A DNA BAND
+   The inner pages carry real data tables. The DNA system has no hairlines,
+   so rows are separated by fill changes and gutters instead of rules, and
+   the wrapper loses its border and radius. The table keeps its own
+   horizontal scroll so a wide table never pushes the page sideways.
+   -------------------------------------------------------------------------- */
+
+.dna-band .spec-table-wrap {
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;   /* the band fill shows through */
+}
+
+/* A wide matrix still scrolls inside its own wrapper at narrow widths, so it
+   keeps a scroll cue — drawn as a fill ramp, not a shadow. */
+.dna-band .spec-table-wrap::after {
+  box-shadow: none;
+  background: linear-gradient(
+    to right,
+    rgba(239, 239, 239, 0) 0%,
+    rgba(239, 239, 239, 0.92) 100%
+  );
+}
+
+.dna-band--surface .spec-table-wrap::after {
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.92) 100%
+  );
+}
+
+.dna-band .spec-table caption {
+  border-block-end: 0;
+  padding-block-end: var(--space-3);
+  color: var(--color-navy);
+}
+
+.dna-band .spec-table th,
+.dna-band .spec-table td {
+  border: 0;
+  padding: var(--space-4) var(--space-5);
+}
+
+/* Prose cells wrap instead of forcing the table into a scroller. Only cells
+   explicitly marked .spec (engineering readouts) stay on one line. */
+.dna-band .spec-table {
+  min-width: 0;
+}
+
+.dna-band .spec-table td,
+.dna-band .spec-table thead th {
+  white-space: normal;
+}
+
+.dna-band .spec-table td.spec {
+  white-space: nowrap;
+}
+
+/* Below the tablet break a readout cell wraps rather than forcing the table
+   into a scroller the reader has to discover. */
+@media (max-width: 900px) {
+  .dna-band .spec-table td.spec {
+    white-space: normal;
+  }
+}
+
+.dna-band .spec-table thead th {
+  background-color: var(--color-canvas-2);
+  color: var(--color-ink);
+}
+
+/* The leader variant is a label/value pair, not a wide matrix: it must fit
+   its column instead of scrolling, or the value is clipped out of sight. */
+.dna-band .spec-table--leader {
+  min-width: 0;
+  table-layout: fixed;
+}
+
+.dna-band .spec-table--leader tbody th[scope="row"] {
+  width: auto;
+}
+
+.dna-band .spec-table--leader td,
+.dna-band .spec-table--leader td.spec {
+  width: 42%;
+  text-align: right;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* The label column may truncate its own text rather than widen the table. */
+.dna-band .spec-table--leader tbody th[scope="row"] {
+  white-space: normal;
+}
+
+/* Fill alternation is the separator. */
+.dna-band .spec-table tbody tr:nth-child(odd) {
+  background-color: var(--color-canvas);
+}
+
+.dna-band .spec-table tbody tr:nth-child(even) {
+  background-color: var(--color-surface);
+}
+
+/* The leader variant keeps its dotted leader: give it a visible dot colour
+   again, since --color-hairline-2 is transparent in the DNA palette. */
+.dna-band .spec-table--leader tbody tr:nth-child(odd),
+.dna-band .spec-table--leader tbody tr:nth-child(even) {
+  background-color: transparent;
+}
+
+.dna-band .spec-table--leader tbody th[scope="row"]::after {
+  background-image: radial-gradient(circle, var(--color-rule) 1px, transparent 1px);
+}
+
+/* The label sits on the band fill so it masks the leader behind itself. */
+.dna-band .spec-table--leader tbody th[scope="row"] > span {
+  background-color: var(--color-surface);
+}
+
+.dna-band--2 .spec-table--leader tbody th[scope="row"] > span {
+  background-color: var(--color-canvas-2);
+}
+
+.dna-band:not(.dna-band--2):not(.dna-band--surface):not(.dna-band--navy)
+  .spec-table--leader tbody th[scope="row"] > span {
+  background-color: var(--color-canvas);
+}
+
+/* --------------------------------------------------------------------------
+   8c. FORM CONTROLS INSIDE A DNA BAND
+   Field underlines are the one place a 1px mark is functional rather than
+   ornamental: without it a text input has no visible affordance. They use
+   --color-rule, the same mark the S3 counter is allowed.
+   -------------------------------------------------------------------------- */
+
+.dna-band .form__input,
+.dna-band .form__select,
+.dna-band .form__textarea {
+  border-block-end: 1px solid var(--color-rule);
+}
+
+.dna-band .form__input:focus,
+.dna-band .form__select:focus,
+.dna-band .form__textarea:focus {
+  border-block-end-color: var(--color-navy);
+}
+
+/* Required dot and error colour follow the navy accent. */
+.dna-band .form__label .form__required {
+  color: var(--color-navy);
+}
+
+/* Legacy .btn inside a DNA band: navy is the only accent, and the ink fill
+   from components.css would introduce a second one. Borders collapse into
+   the fill so no hairline shows. */
+.dna-band .btn--dark,
+.dna-band .btn--primary {
+  background-color: var(--color-navy);
+  border-color: var(--color-navy);
+  color: var(--color-surface);
+}
+
+.dna-band .btn--dark:hover,
+.dna-band .btn--primary:hover {
+  background-color: var(--color-navy-deep);
+  border-color: var(--color-navy-deep);
+  color: var(--color-surface);
+}
+
+/* Embedded map: the browser's default 2px inset frame is a border the DNA
+   system does not allow. */
+.dna-band iframe {
+  display: block;
+  border: 0;
+}
+
+/* --------------------------------------------------------------------------
+   9. FOCUS + REDUCED MOTION
+   -------------------------------------------------------------------------- */
+
+.dna-card__link:focus-visible,
+.dna-btn:focus-visible,
+.dna-panel__link:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.dna-band--navy .dna-btn:focus-visible {
+  outline-color: var(--color-surface);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dna-card__link,
+  .dna-card__shot img,
+  .dna-btn {
+    transition: none;
+  }
+
+  .dna-card__link:hover {
+    transform: none;
+  }
+
+  .dna-card__link:hover .dna-card__shot img {
+    transform: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   10. NARROW VIEWPORTS
+   The stage stops being an overlap composition below 640px: the knockout
+   drops to a readable decorative size and the cut-out sits under it.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 640px) {
+  /* The shell carries no inline padding at any width now, so there is
+     nothing to zero out here. Bands keep their own --band-inset, which
+     bottoms out at 20px on a narrow screen. */
+
+  /* The S3 frame is absolutely positioned, so narrow bands need enough top
+     padding for the label/counter row to clear the first heading. */
+  .dna-band {
+    padding-block-start: clamp(64px, 16vw, 88px);
+  }
+
+  .page > * + * {
+    margin-block-start: var(--gutter-hair);
+  }
+
+  .dna-band--stage {
+    min-height: 0;
+    padding-block-start: clamp(72px, 20vw, 96px);
+  }
+
+  .dna-knockout--stage {
+    position: static;
+    font-size: clamp(56px, 17vw, 96px);
+    margin-block-end: var(--space-4);
+  }
+
+  .dna-cutout--stage {
+    inset-inline-start: 0;
+    width: 100%;
+  }
+
+  .dna-specs {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+}
+
+/* --------------------------------------------------------------------------
+   11. TCO COMPARISON — ROW-BASED COMPARISON COMPONENT
+   Replaces the 3-column table (section 07) with a mobile-friendly structure
+   that stacks vertically at narrow widths. Each comparison is one row:
+   the pain point is the heading, and two cells sit side by side on desktop
+   (common solution on canvas-2, SVIND solution on navy). On mobile the cells
+   stack so the SVIND answer is always visible without horizontal scroll.
+
+   Accessibility: Each cell carries its own "Common solution" / "SVIND solution"
+   label so screen readers can identify which answer belongs to whom, even
+   after the layout stacks. The pain point heading precedes both cells, so the
+   relationship is preserved in document order.
+
+   Navy budget: one navy cell per row is acceptable here because rows are
+   separated by a hairline gutter, so no two navy panels sit immediately
+   adjacent. This matches the DNA constraint for S4 panels (max ONE inverted
+   navy panel per row).
+   -------------------------------------------------------------------------- */
+
+/* <dl> carrying rows: the pain point is the term, the pair of answers is its
+   definition. `<dt>`/`<dd>` inherit browser default margins, so those are
+   zeroed here rather than relying on the base reset. */
+.dna-compare {
+  margin: var(--space-8) 0 0;
+}
+
+.dna-compare dt,
+.dna-compare dd {
+  margin: 0;
+}
+
+.dna-compare__caption {
+  margin: 0 0 var(--space-4);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-navy);
+}
+
+.dna-compare__row {
+  background-color: var(--color-surface);
+}
+
+.dna-compare__row + .dna-compare__row {
+  margin-block-start: var(--gutter-hair);
+}
+
+/* Pain point is the row heading — spans full width above both cells */
+.dna-compare__pain {
+  margin: 0;
+  padding: var(--space-4) var(--space-5);
+  background-color: var(--color-canvas-2);
+  font-size: var(--text-body);
+  font-weight: 600;
+  line-height: var(--lh-body);
+  color: var(--color-ink);
+}
+
+/* Two-cell container: stacks on mobile, side-by-side on desktop */
+.dna-compare__cells {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: var(--gutter-hair);
+}
+
+@media (min-width: 768px) {
+  .dna-compare__cells {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.dna-compare__cell {
+  padding: var(--space-4) var(--space-5);
+  background-color: var(--color-canvas);
+}
+
+.dna-compare__cell--navy {
+  background-color: var(--color-navy);
+}
+
+/* Micro-caps label identifies which cell this is. Visible at all widths so
+   screen readers and sighted users both know "Common solution" from "SVIND". */
+.dna-compare__label {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-ink-muted);
+}
+
+.dna-compare__cell--navy .dna-compare__label {
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.dna-compare__text {
+  margin: 0;
+  font-size: var(--text-body);
+  line-height: var(--lh-body);
+  color: var(--color-text-secondary);
+}
+
+.dna-compare__cell--navy .dna-compare__text {
+  color: var(--color-text-on-dark);
+}
+
+/* --------------------------------------------------------------------------
+   12. SECTION 14 — CORE CAPABILITIES (THREE-CARD GRID)
+   Copied from Full Option Craft / Stoneworth Construct. The source used
+   undefined tokens that do not exist in this codebase:
+     --text-small → mapped to --text-body-s (14px)
+     --color-text-tertiary → mapped to --color-ink-muted
+     --text-display-s / --weight-display-s / --lh-display-s → mapped to
+       --text-title-m / --weight-title-m / --lh-title-m (17px bold)
+
+   Structure: 3-up grid on desktop, stacks on mobile. No borders, no radii,
+   no shadows. Hover is a minimal canvas fill change, not a lift. Each card
+   carries a number label (e.g. "01 /  COMMERCIAL CONSTRUCTION"), a bold
+   title (h3), body copy, and a "Learn more" link at the bottom.
+
+   The heading and lead are standard DNA .dna-head + .dna-lead, scoped by
+   the band. The cards follow the DNA three-up discipline (S4) but are not
+   the numbered panels — those carry giant knockout numerals and a 6px bullet.
+   This variant is simpler: a small micro-caps number with two spaces after
+   the slash, a normal-weight h3, and a micro-caps link footer.
+   -------------------------------------------------------------------------- */
+
+.dna-capabilities {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: var(--gutter-split);
+  list-style: none;
+  margin: var(--space-8) 0 0;
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  .dna-capabilities {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.dna-capability {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-7) var(--space-6);
+  background-color: transparent;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+
+.dna-capability:hover {
+  background-color: var(--color-canvas);
+}
+
+/* Number label: "01 /  COMMERCIAL CONSTRUCTION" — note TWO spaces after
+   the slash, exactly as in the source. --text-small did not exist; the
+   nearest equivalent is --text-body-s (14px). */
+.dna-capability__num {
+  margin: 0 0 var(--space-4);
+  font-size: var(--text-body-s);
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: var(--color-ink-muted);
+}
+
+/* Title: h3 at 17px bold. --text-display-s was undefined; --text-title-m
+   is the closest existing token (17px / 700 / 1.3). */
+.dna-capability__title {
+  margin: 0 0 var(--space-4);
+  font-size: var(--text-title-m);
+  font-weight: var(--weight-title-m);
+  line-height: var(--lh-title-m);
+  color: var(--color-ink);
+}
+
+/* Body copy: standard 15px body text, max 30ch per the DNA panel discipline. */
+.dna-capability__text {
+  margin: 0;
+  max-width: var(--max-panel-text);
+  font-size: var(--text-body);
+  line-height: var(--lh-body);
+  color: var(--color-text-secondary);
+}
+
+/* "Learn more" link at the card footer, pushed to the bottom with margin-top: auto */
+.dna-capability__link {
+  margin-block-start: auto;
+  padding-block-start: var(--space-5);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-navy);
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.dna-capability__link:hover {
+  color: var(--color-navy-deep);
+}

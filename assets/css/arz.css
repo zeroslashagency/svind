@@ -1,0 +1,580 @@
+/* ==========================================================================
+   arz.css -- closing CTA + FAQ, exact copy of www.arrodz.com
+
+   A THIRD DESIGN SYSTEM on this page, deliberately, and the second foreign
+   one. index.html now runs: SVIND DNA (navy/gray, zero radii, full-bleed
+   bands) -> FOC (charcoal + orange, 72px display, 400px numeral) -> ARZ
+   (wine + beige, 6-8px radii, 155px condensed uppercase display). Each
+   contradicts the others on purpose and each is scoped so it cannot leak.
+
+   Every value here was MEASURED from the source rendered in Chrome via the
+   DevTools protocol -- getBoundingClientRect and getComputedStyle on the live
+   page at 1280px, 1440px, 992px, 900px and 500px -- not read off its
+   stylesheet. The source
+   is Webflow, so the class names below (.cta-component, .faq_accordion) are
+   generated and its scroll-reveal animations leave several elements at
+   opacity 0 until triggered; the first pass at measuring caught them mid
+   reveal and reported white text as transparent. Everything here was
+   re-measured after scrolling each block into view.
+
+   MEASURED FACTS (desktop, 1280px viewport):
+     CTA band        rgb(110,42,42) wine, no background image
+     FAQ band        #FFFFFF white
+     Section padding 112px 64px   (64px 25px at 500px)
+     CTA container   1024px, centred        FAQ container 1440px
+     Display face    Passionone, 400 weight, uppercase, line-height = size
+     Body face       Open Sans
+     CTA eyebrow     14px pill, 10px 16px, radius 6px,
+                     1px solid rgba(245,242,232,0.3) on wine
+     CTA heading     48px / 48px  uppercase white, centred
+     CTA big line    155.2px / 155.2px uppercase white, centred (64px at 500)
+     CTA bottom row  flex space-between, max-width 928px; copy left at 560px
+                     14px / 21px, button right
+     Button          #F5F2E8 fill, #222523 text, 15px / 600, 16px 24px,
+                     radius 8px, with a 12px note beneath it
+     FAQ eyebrow     same pill inverted: #F5F2E8 fill, #6E2A2A text, no border
+     FAQ heading     56px / 56px uppercase, one clause in wine
+     FAQ grid        2fr 1fr, gap 128px       left column gap 56px
+                     collapses to one column at exactly 992px
+     FAQ card slot   align-self: end -- the card hangs from the bottom of the
+                     grid, it does not sit at the top beside the heading
+     FAQ row         padding 20px 0, border-TOP 1px #F9F9F7, no bottom border
+     Question        20px / 30px, weight 700
+     Answer          14px / 21px, 24px below the block
+     Icon            32px box: 2x16 bar + 16x2 bar, radius 150px, and a 5px
+                     45deg dot that fades out on open
+     FAQ side card   #F5F2E8, 40px padding, radius 8px, 341px wide, no
+                     min-height; inner gap 240px above 992px and 32px below,
+                     which is what produces the 488px height at the source's
+                     copy length. 18px / 27px weight 600 copy,
+                     40px / 60px wine link
+
+   SCOPING: every selector is a descendant of .arz. No bare element selectors,
+   and all custom properties carry an --arz- prefix so they cannot collide
+   with tokens.css or with the --foc- names in foc.css.
+
+   FONT CAVEAT: the source serves Passion One as "Passionone". It is on Google
+   Fonts as Passion One, imported in base.css alongside Open Sans, so unlike
+   the licensed Neue Haas in foc.css this one is reproduced exactly.
+
+   DEPARTURES FROM THE MEASURED PALETTE. Four surfaces no longer match the
+   MEASURED FACTS above, by request, so the list is no longer a description of
+   what renders:
+     CTA band       rgb(42,85,111) slate, not rgb(110,42,42) wine
+     FAQ heading em rgb(60,130,195) blue, not wine
+     FAQ card fill  rgb(227,227,227) grey, not #F5F2E8 beige
+     FAQ card link  rgb(60,148,154) teal, not wine
+   Everything else, including all geometry and type, is still the measured
+   value. --arz-wine survives because it also paints the FAQ eyebrow pill and
+   the question hover and focus states, which were not part of the change.
+   ========================================================================== */
+
+.arz {
+  /* Measured palette */
+  --arz-wine:    rgb(110, 42, 42);
+  --arz-beige:   #F5F2E8;
+  --arz-ink:     #222523;
+  --arz-white:   #FFFFFF;
+  --arz-rule:    #F9F9F7;   /* row hairline, near-white by design */
+
+  /* OURS, not measured -- see DEPARTURES in the header. A cool set that
+     replaces wine on four surfaces. --arz-wine itself is untouched because it
+     still paints the FAQ pill text and the question hover/focus states. */
+  --arz-slate:   rgb(42, 85, 111);    /* CTA band fill, was --arz-wine */
+  --arz-blue:    rgb(60, 130, 195);   /* FAQ heading <em>, was --arz-wine */
+  --arz-teal:    rgb(60, 148, 154);   /* FAQ card link text, was --arz-wine */
+  --arz-card:    rgb(227, 227, 227);  /* FAQ side card fill, was --arz-beige */
+
+  /* Measured contrast after the swap, so a later edit does not have to
+     rediscover it. Both new light-on-light pairs sit below where the wine
+     originals were:
+       white on --arz-slate      7.99:1  (was 10.36 on wine)      passes
+       --arz-blue on white       4.06:1  (was 10.36)  56px display, passes 3:1
+       --arz-teal on --arz-card  2.78:1  (was 9.25 on beige)      BELOW 3:1
+     The teal link is 40px, so large-text 3:1 is the bar that applies and it
+     misses by 0.22. The hover rule below drops it to 2.00:1. rgb(45,111,116)
+     is the same hue at 4.5:1 if this is ever revisited; the requested value is
+     kept as specified. */
+
+  --arz-font-body: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --arz-font-display: "Passion One", "Arial Narrow", Impact, sans-serif;
+
+  /* Measured type scale. Line-height equals font-size on every display size,
+     which is what gives the condensed face its stacked look. */
+  --arz-display-big: clamp(64px, 12.1vw, 155.2px);   /* 155.2 at 1280 and up */
+  --arz-display-h2:  clamp(32px, 3.75vw, 48px);      /* CTA heading */
+  --arz-display-faq: clamp(32px, 4.375vw, 56px);     /* FAQ heading */
+  --arz-question:    20px;
+  --arz-body:        16px;
+  --arz-small:       14px;
+  --arz-tiny:        12px;
+
+  --arz-pad-block:  clamp(64px, 8.75vw, 112px);
+  --arz-pad-inline: clamp(25px, 5vw, 64px);
+
+  font-family: var(--arz-font-body);
+  font-size: var(--arz-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scoped resets. :where() so they carry zero specificity and every component
+   rule below can override them. Writing these as `.arz h2, .arz p { margin: 0 }`
+   would score 0,1,1 and silently beat every single-class rule in this file --
+   the exact bug that was live in foc.css. */
+:where(.arz) :where(h2, h3, p, div, figure, blockquote) {
+  margin: 0;
+}
+
+:where(.arz) a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.arz {
+  padding-block: var(--arz-pad-block);
+  padding-inline: var(--arz-pad-inline);
+}
+
+/* --------------------------------------------------------------------------
+   BANDS
+   -------------------------------------------------------------------------- */
+
+/* Slate, not the measured wine. The class name is kept: it is the band's
+   identity in the markup and on three sibling selectors below, and renaming it
+   would touch index.html for no gain. */
+.arz--wine {
+  background-color: var(--arz-slate);
+  color: var(--arz-white);
+}
+
+.arz--paper {
+  background-color: var(--arz-white);
+  color: var(--arz-ink);
+}
+
+/* Two container widths, measured: the CTA is held to 1024 and centred, the
+   FAQ runs out to 1440. */
+.arz__wrap {
+  max-width: 1024px;
+  margin-inline: auto;
+}
+
+.arz__wrap--wide {
+  max-width: 1440px;
+}
+
+/* --------------------------------------------------------------------------
+   EYEBROW PILL
+   The one place this system uses a radius on text. Two variants: outlined on
+   wine, filled on paper.
+   -------------------------------------------------------------------------- */
+
+.arz__eyebrow {
+  display: inline-block;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: var(--arz-small);
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.arz--wine .arz__eyebrow {
+  border: 1px solid rgba(245, 242, 232, 0.3);
+  color: var(--arz-beige);
+}
+
+.arz--paper .arz__eyebrow {
+  background-color: var(--arz-beige);
+  color: var(--arz-wine);
+}
+
+/* --------------------------------------------------------------------------
+   CLOSING CTA
+   Column of three: pill, title block, bottom row. Everything centred except
+   the bottom row, which splits left copy against the right button.
+   -------------------------------------------------------------------------- */
+
+.arz__cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(32px, 3.1vw, 40px);
+}
+
+.arz__cta-titles {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* Both display lines: line-height equal to font-size, uppercase, no tracking
+   adjustment. The face is already condensed so it needs none. */
+.arz__cta-head,
+.arz__cta-big {
+  font-family: var(--arz-font-display);
+  font-weight: 400;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--arz-white);
+}
+
+.arz__cta-head {
+  font-size: var(--arz-display-h2);
+  line-height: 1;
+}
+
+.arz__cta-big {
+  font-size: var(--arz-display-big);
+  line-height: 1;
+}
+
+.arz__cta-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  width: 100%;
+  max-width: 928px;
+}
+
+/* The split only engages where there is room for it; below that the copy and
+   the button stack centred, which is what the source does at 500px. */
+@media (min-width: 768px) {
+  .arz__cta-bottom {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+  }
+}
+
+.arz__cta-text {
+  max-width: 560px;
+  font-size: var(--arz-small);
+  line-height: 1.5;
+  text-align: center;
+  color: var(--arz-white);
+}
+
+@media (min-width: 768px) {
+  .arz__cta-text {
+    text-align: left;
+  }
+}
+
+.arz__cta-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+}
+
+/* --------------------------------------------------------------------------
+   BUTTON
+   Beige fill, ink text, 8px radius. The border is measured as the same colour
+   as the fill, which is what lets the hover swap to an outline without the
+   button changing size.
+   -------------------------------------------------------------------------- */
+
+.arz__btn {
+  display: inline-block;
+  padding: 16px 24px;
+  border: 1px solid var(--arz-beige);
+  border-radius: 8px;
+  background-color: var(--arz-beige);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--arz-ink);
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+.arz__btn:hover {
+  background-color: transparent;
+  color: var(--arz-beige);
+}
+
+.arz--paper .arz__btn {
+  border-color: var(--arz-wine);
+  background-color: var(--arz-wine);
+  color: var(--arz-beige);
+}
+
+.arz--paper .arz__btn:hover {
+  background-color: transparent;
+  color: var(--arz-wine);
+}
+
+.arz__btn:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.arz__cta-note {
+  font-size: var(--arz-tiny);
+  line-height: 1.5;
+  color: var(--arz-beige);
+}
+
+/* --------------------------------------------------------------------------
+   FAQ
+   2fr / 1fr with a 128px gutter. The left column carries the heading block
+   and the rows; the right carries the contact card.
+   -------------------------------------------------------------------------- */
+
+/* No align-items here on purpose: the tracks stretch, and the card wrapper
+   opts out on its own with align-self. */
+.arz__faq {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 48px;
+}
+
+@media (min-width: 992px) {
+  .arz__faq {
+    grid-template-columns: 2fr 1fr;
+    gap: 128px;
+  }
+}
+
+.arz__faq-left {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(40px, 4.4vw, 56px);
+  min-width: 0;
+}
+
+.arz__faq-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.arz__faq-titles {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.arz__faq-head {
+  font-family: var(--arz-font-display);
+  font-size: var(--arz-display-faq);
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--arz-ink);
+}
+
+/* One clause of the heading goes blue. In the source this is a hand-placed
+   span, not a rule, so it is markup here too -- the <em> at index.html:927.
+   The source paints it wine; ours is --arz-blue. */
+.arz__faq-head em {
+  font-style: normal;
+  color: var(--arz-blue);
+}
+
+.arz__faq-lead {
+  max-width: 560px;
+  font-size: var(--arz-small);
+  line-height: 1.5;
+}
+
+/* --------------------------------------------------------------------------
+   FAQ ROWS
+   Native <details>, so the accordion works with no JavaScript and stays
+   keyboard-operable and findable by in-page search. The source runs a Webflow
+   interaction that animates height from 0; interpolate-size reproduces that in
+   CSS. Where it is unsupported the row simply opens instantly, which is the
+   correct degradation.
+
+   Rule is border-TOP on every row and nothing on the bottom, so the last row
+   closes without a line. Measured, and it is also why this does not read as
+   the border-top-plus-border-bottom-per-row pattern.
+   -------------------------------------------------------------------------- */
+
+.arz__faq-list {
+  interpolate-size: allow-keywords;
+}
+
+.arz__faq-item {
+  border-block-start: 1px solid var(--arz-rule);
+}
+
+.arz__faq-q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-block: 20px;
+  font-size: var(--arz-question);
+  font-weight: 700;
+  line-height: 1.5;
+  cursor: pointer;
+  list-style: none;
+  transition: color 200ms ease;
+}
+
+.arz__faq-q::-webkit-details-marker {
+  display: none;
+}
+
+.arz__faq-q:hover {
+  color: var(--arz-wine);
+}
+
+.arz__faq-q:focus-visible {
+  outline: 2px solid var(--arz-wine);
+  outline-offset: 4px;
+}
+
+/* 32px box holding two 2px bars. The vertical one rotates onto the horizontal
+   to make the minus; radius 150px on a 2px bar just rounds the caps.
+   The source builds this from three divs, not two: there is a 5px square
+   rotated 45deg sitting at the crossing, visible while the row is closed and
+   faded out on open, which is what makes the closed plus read slightly heavier
+   at the centre. It needs its own box because both pseudo-elements here are
+   already spent on the bars, hence the inner span in the markup. */
+.arz__faq-icon {
+  position: relative;
+  flex: none;
+  width: 32px;
+  height: 32px;
+}
+
+.arz__faq-icon::before,
+.arz__faq-icon::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 15px;
+  inset-inline-start: 8px;
+  width: 16px;
+  height: 2px;
+  border-radius: 150px;
+  background-color: currentColor;
+}
+
+.arz__faq-icon::after {
+  rotate: 90deg;
+  transition: rotate 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.arz__faq-item[open] .arz__faq-icon::after {
+  rotate: 0deg;
+}
+
+/* Square, not round: the source measures border-radius 0 here, so the 45deg
+   rotation is what makes it a diamond. */
+.arz__faq-dot {
+  position: absolute;
+  inset-block-start: 13.5px;
+  inset-inline-start: 13.5px;
+  width: 5px;
+  height: 5px;
+  rotate: 45deg;
+  background-color: currentColor;
+  transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.arz__faq-item[open] .arz__faq-dot {
+  opacity: 0;
+}
+
+.arz__faq-a {
+  height: 0;
+  overflow: hidden;
+  transition: height 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.arz__faq-item[open] .arz__faq-a {
+  height: auto;
+}
+
+.arz__faq-a p {
+  padding-block-end: 24px;
+  font-size: var(--arz-small);
+  line-height: 1.5;
+}
+
+/* --------------------------------------------------------------------------
+   FAQ SIDE CARD
+   Beige panel, copy at the top and an oversized wine link at the bottom.
+
+   The gap is the whole mechanism and it is measured, not chosen: 240px above
+   992px, 32px below it, with no min-height anywhere. The card's 488px desktop
+   height is therefore a RESULT (80px padding + 108px copy + 240px gap + 60px
+   link), not a constraint. Setting a min-height and using space-between
+   instead renders the same at this copy length and then drifts as soon as the
+   copy rewraps to a different number of lines, so the fixed gap is the
+   faithful reproduction.
+
+   The wrapper is align-self: end, so on desktop the card hangs from the BOTTOM
+   of the FAQ grid rather than sitting at the top beside the heading.
+   -------------------------------------------------------------------------- */
+
+.arz__faq-card-wrap {
+  align-self: end;
+}
+
+.arz__faq-card {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 40px;
+  border-radius: 8px;
+  background-color: var(--arz-card);
+  color: var(--arz-ink);
+}
+
+@media (min-width: 992px) {
+  .arz__faq-card {
+    gap: 240px;
+  }
+}
+
+.arz__faq-card-text {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.arz__faq-card-link {
+  font-family: var(--arz-font-display);
+  font-size: 40px;
+  font-weight: 400;
+  line-height: 1.5;
+  text-transform: uppercase;
+  color: var(--arz-teal);
+  transition: opacity 200ms ease;
+}
+
+/* Measured from the source and kept as-is, but note what it now costs: at 0.7
+   over --arz-card the link computes to rgb(110,172,176), which is 2.00:1. On
+   the original beige/wine pairing the same rule still held 4.26:1. */
+.arz__faq-card:hover .arz__faq-card-link {
+  opacity: 0.7;
+}
+
+.arz__faq-card:focus-visible {
+  outline: 2px solid var(--arz-wine);
+  outline-offset: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   REDUCED MOTION
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .arz__btn,
+  .arz__faq-q,
+  .arz__faq-icon::after,
+  .arz__faq-dot,
+  .arz__faq-a,
+  .arz__faq-card-link {
+    transition: none;
+  }
+}

@@ -1,0 +1,2546 @@
+/* ==========================================================================
+   SVIND v2 — components.css
+   Depends on tokens.css + base.css. Load third.
+   Governing aesthetic: 01_DESIGN/06_DESIGN_RECALIBRATION.md (clean minimal).
+   Rules honoured throughout:
+     • copper ≤ 3 appearances per viewport   • hairlines only, no shadows
+     • radii ≤ 4px, no gradients on UI       • never #FFFFFF
+     • mobile-first, min-width queries only  • hover ≤ 160ms and subtle
+   Every block is preceded by a comment naming its purpose.
+   Full class + ARIA contract: ./COMPONENT_CONTRACT.md
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   PROGRESS BAR
+   .progress-bar — 2px copper scroll hairline pinned to the top of the
+   viewport. Width driven by JS (--progress-scale, 0–1). Decorative:
+   aria-hidden in markup. This is copper appearance #1 and it is 2px tall.
+   -------------------------------------------------------------------------- */
+
+.progress-bar {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: var(--z-progress);
+  height: 2px;
+  background-color: transparent;
+  pointer-events: none;
+}
+
+.progress-bar__fill {
+  height: 100%;
+  width: 100%;
+  background-color: var(--color-copper);
+  transform: scaleX(var(--progress-scale, 0));
+  transform-origin: 0 50%;
+  will-change: transform;
+}
+
+/* --------------------------------------------------------------------------
+   NAV — hairline-celled sticky header
+   .nav is a full-width bar split into cells by 1px hairlines. Logo cell
+   left, link cells centre, right-most cell solid copper holding the quote
+   CTA. Sticky; collapses on scroll via .is-scrolled.
+   -------------------------------------------------------------------------- */
+
+.nav {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--z-nav);
+  background-color: var(--color-concrete);
+  border-block-end: 1px solid var(--color-hairline);
+  transition: background-color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out);
+}
+
+/* Inner rail: holds the cells, full-bleed hairlines at the outer edges */
+.nav__inner {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 0;
+  min-height: var(--nav-h);
+  transition: min-height var(--dur-fast) var(--ease-out);
+}
+
+/* Brand cell — wordmark + one-line descriptor */
+.nav__brand {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  padding-inline-end: var(--space-5);
+  text-decoration: none;
+}
+
+.nav__brand:hover {
+  color: var(--color-text);
+}
+
+.nav__wordmark {
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  font-weight: var(--weight-semibold);
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  color: var(--color-text);
+}
+
+.nav__descriptor {
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  line-height: var(--lh-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+}
+
+/* Link cell group — hidden below 1024px, replaced by the overlay */
+.nav__menu {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .nav__menu {
+    display: flex;
+    align-items: stretch;
+    margin-inline-start: auto;
+  }
+}
+
+/* One nav cell. Hairline on the leading edge is what builds the grid. */
+.nav__link {
+  display: flex;
+  align-items: center;
+  padding-inline: var(--space-5);
+  border-inline-start: 1px solid var(--color-hairline);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  transition: color var(--dur-fast) var(--ease-out),
+              background-color var(--dur-fast) var(--ease-out);
+}
+
+.nav__link:hover {
+  color: var(--color-text);
+  background-color: var(--color-concrete-2);
+}
+
+/* Current page: ink text + 2px ink underline. Not copper — the accent
+   budget belongs to the CTA cell. */
+.nav__link[aria-current="page"] {
+  color: var(--color-text);
+  box-shadow: inset 0 -2px 0 0 var(--color-ink);
+}
+
+/* Copper CTA cell — the right-most cell. Copper appearance #2.
+
+   The hide/show pair is scoped `.nav .nav__cta` rather than `.nav__cta` on
+   purpose. Three of the four built pages write `class="btn nav__cta"`, and
+   `.btn` further down this file sets `display: inline-flex`. A bare
+   `.nav__cta` ties with `.btn` on specificity and loses on source order, so
+   the mobile hide silently failed: at 390px the CTA stayed in the header,
+   wrapped onto two lines and crowded the burger, while duplicating the quote
+   action already present in .mobile-bar and the overlay foot. Both rules carry
+   the same scope so the pair stays symmetrical -- change one, change the
+   other. 04_TEST/static/test_layout.py fails if either loses its scope. */
+.nav .nav__cta {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .nav .nav__cta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding-inline: var(--space-6);
+    border-inline-start: 1px solid var(--color-hairline);
+    background-color: var(--color-copper);
+    color: var(--color-text-on-accent);
+    font-size: var(--text-micro-caps);
+    font-weight: var(--weight-micro-caps);
+    letter-spacing: var(--tracking-micro-caps);
+    text-transform: var(--case-micro-caps);
+    white-space: nowrap;
+    transition: background-color var(--dur-fast) var(--ease-out);
+  }
+
+  .nav .nav__cta:hover {
+    background-color: var(--color-copper-hover);
+    color: var(--color-text-on-accent);
+  }
+}
+
+/* Scrolled state — collapse height, switch field to white, tighten line */
+.nav.is-scrolled {
+  background-color: var(--color-white);
+  border-block-end-color: var(--color-hairline-2);
+}
+
+.nav.is-scrolled .nav__inner {
+  min-height: var(--nav-h-scrolled);
+}
+
+.nav.is-scrolled .nav__descriptor {
+  display: none;
+}
+
+/* Hamburger — three 1px rules, becomes an X while the overlay is open */
+.nav__toggle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 48px;
+  min-height: 48px;
+  padding-inline: var(--space-4);
+  border-inline-start: 1px solid var(--color-hairline);
+  margin-inline-start: auto;
+}
+
+@media (min-width: 1024px) {
+  .nav__toggle {
+    display: none;
+  }
+}
+
+.nav__toggle-bar {
+  display: block;
+  width: 20px;
+  height: 1px;
+  background-color: var(--color-text);
+  transition: transform var(--dur-fast) var(--ease-out),
+              opacity var(--dur-fast) var(--ease-out);
+}
+
+.nav__toggle[aria-expanded="true"] .nav__toggle-bar:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.nav__toggle[aria-expanded="true"] .nav__toggle-bar:nth-child(2) {
+  opacity: 0;
+}
+
+.nav__toggle[aria-expanded="true"] .nav__toggle-bar:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+/* Full-screen mobile menu. Hidden from AT and pointer until .is-open. */
+.nav__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  display: flex;
+  flex-direction: column;
+  padding: calc(var(--nav-h) + var(--space-6)) var(--gutter) var(--space-8);
+  background-color: var(--color-ink);
+  color: var(--color-text-on-dark);
+  overflow-y: auto;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: opacity var(--dur-base) var(--ease-out),
+              transform var(--dur-base) var(--ease-out),
+              visibility var(--dur-base) var(--ease-out);
+}
+
+.nav__overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+@media (min-width: 1024px) {
+  .nav__overlay {
+    display: none;
+  }
+}
+
+/* Overlay link list — display-m scale, hairline between rows */
+.nav__overlay-list {
+  display: flex;
+  flex-direction: column;
+  border-block-start: 1px solid var(--color-hairline-dark);
+}
+
+.nav__overlay-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block: var(--space-5);
+  border-block-end: 1px solid var(--color-hairline-dark);
+  font-size: var(--text-display-m);
+  font-weight: var(--weight-display-m);
+  letter-spacing: var(--tracking-display-m);
+  color: var(--color-text-on-dark);
+}
+
+.nav__overlay-link[aria-current="page"] {
+  color: var(--color-copper);
+}
+
+/* Overlay footer — phone + email in mono, metadata in micro-caps */
+.nav__overlay-foot {
+  margin-block-start: auto;
+  padding-block-start: var(--space-7);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-spec-mono);
+  letter-spacing: var(--tracking-spec-mono);
+  color: var(--color-text-on-dark-muted);
+}
+
+/* --------------------------------------------------------------------------
+   MOBILE BAR
+   .mobile-bar — fixed bottom Call / WhatsApp / Quote bar. Below 768px only.
+   Three equal cells divided by hairlines; the Quote cell is copper.
+   -------------------------------------------------------------------------- */
+
+.mobile-bar {
+  display: none;
+}
+
+@media (max-width: 767.98px) {
+  .mobile-bar {
+    position: fixed;
+    inset-block-end: 0;
+    inset-inline: 0;
+    z-index: var(--z-mobile-bar);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    min-height: var(--mobile-bar-h);
+    background-color: var(--color-white);
+    border-block-start: 1px solid var(--color-hairline-2);
+    padding-block-end: env(safe-area-inset-bottom, 0px);
+  }
+}
+
+.mobile-bar__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--mobile-bar-h);
+  border-inline-start: 1px solid var(--color-hairline);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text);
+}
+
+.mobile-bar__item:first-child {
+  border-inline-start: 0;
+}
+
+.mobile-bar__item svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+
+/* The single accent cell in the bar */
+.mobile-bar__item--accent {
+  background-color: var(--color-copper);
+  color: var(--color-text-on-accent);
+  border-inline-start-color: var(--color-copper);
+}
+
+.mobile-bar__item--accent:hover {
+  color: var(--color-text-on-accent);
+}
+
+/* --------------------------------------------------------------------------
+   HERO
+   .hero — first screen. Eyebrow → H1 → lead → spec row → actions, with an
+   optional media column on the 7/5 split. NO ghost watermark: decorative
+   type is revoked by the recalibration.
+   -------------------------------------------------------------------------- */
+
+.hero {
+  position: relative;
+  padding-block: clamp(56px, 9vw, 120px) clamp(48px, 7vw, 96px);
+  background-color: var(--color-concrete);
+}
+
+/* Hero on the one dark band of the page */
+.hero--ink {
+  background-color: var(--color-ink);
+  color: var(--color-text-on-dark);
+}
+
+.hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-7);
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .hero__grid {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: clamp(32px, 5vw, 96px);
+  }
+}
+
+.hero__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-5);
+}
+
+/* micro-caps kicker above the H1 — category, location, or niche */
+.hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  line-height: var(--lh-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+}
+
+/* 1px rule that separates eyebrow segments */
+.hero__eyebrow::after {
+  content: "";
+  width: clamp(24px, 5vw, 64px);
+  height: 1px;
+  background-color: var(--color-hairline-2);
+}
+
+.hero--ink .hero__eyebrow {
+  color: var(--color-text-on-dark-muted);
+}
+
+.hero--ink .hero__eyebrow::after {
+  background-color: var(--color-hairline-dark);
+}
+
+/* The single H1. Sentence case, weight 600, display-xxl. */
+.hero__title {
+  font-family: var(--font-display);
+  font-size: var(--text-display-xxl);
+  font-weight: var(--weight-display-xxl);
+  line-height: var(--lh-display-xxl);
+  letter-spacing: var(--tracking-display-xxl);
+  text-transform: var(--case-display-xxl);
+  max-width: 20ch;
+  text-wrap: balance;
+}
+
+/* Optional single copper word inside the H1 — counts against the budget */
+.hero__title em {
+  font-style: normal;
+  color: var(--color-copper);
+}
+
+.hero__lead {
+  font-size: var(--text-lead);
+  font-weight: var(--weight-lead);
+  line-height: var(--lh-lead);
+  color: var(--color-text-secondary);
+  max-width: 52ch;
+}
+
+.hero--ink .hero__lead {
+  color: var(--color-text-on-dark-muted);
+}
+
+/* Engineering readout under the lead: capacity · span · duty, mono, in a
+   hairline-topped row. This is the ornament — data as decoration. */
+.hero__specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-6);
+  width: 100%;
+  margin-block-start: var(--space-2);
+  padding-block-start: var(--space-5);
+  border-block-start: 1px solid var(--color-hairline);
+}
+
+.hero--ink .hero__specs {
+  border-block-start-color: var(--color-hairline-dark);
+}
+
+.hero__spec {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.hero__spec-label {
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+}
+
+.hero__spec-value {
+  font-family: var(--font-mono);
+  font-size: var(--text-spec-mono);
+  font-weight: var(--weight-spec-mono);
+  line-height: var(--lh-spec-mono);
+  letter-spacing: var(--tracking-spec-mono);
+  font-feature-settings: "zero" 1, "tnum" 1;
+  color: var(--color-text);
+}
+
+.hero--ink .hero__spec-value {
+  color: var(--color-text-on-dark);
+}
+
+/* One primary + one secondary. Never two primaries. */
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  margin-block-start: var(--space-2);
+}
+
+/* Media column. Plain image, generous margin, 4px radius max, no overlay
+   unless text sits on top (.hero__media--overlay). */
+.hero__media {
+  position: relative;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background-color: var(--color-concrete-2);
+}
+
+.hero__media img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.hero__media--overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--overlay-image);
+  pointer-events: none;
+}
+
+/* Caption strip pinned under the media — alt-grade spec text */
+.hero__media-caption {
+  position: relative;
+  z-index: 1;
+  display: block;
+  padding: var(--space-3) var(--space-4);
+  border-block-start: 1px solid var(--color-hairline);
+  background-color: var(--color-white);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   TRUST STRIP
+   .trust-strip — credentials above the first fold break. Hairline-bordered
+   on concrete (not the old solid ink slab). micro-caps labels with mono
+   values, one cell per credential, hairline dividers.
+   -------------------------------------------------------------------------- */
+
+.trust-strip {
+  background-color: var(--color-concrete);
+  border-block: 1px solid var(--color-hairline);
+}
+
+.trust-strip__list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  .trust-strip__list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .trust-strip__list {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+/* One credential cell. Hairlines are drawn on two edges then trimmed. */
+.trust-strip__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-5) var(--space-4);
+  border-inline-start: 1px solid var(--color-hairline);
+  border-block-start: 1px solid var(--color-hairline);
+}
+
+.trust-strip__item:nth-child(-n + 2) {
+  border-block-start: 0;
+}
+
+.trust-strip__item:nth-child(odd) {
+  border-inline-start: 0;
+  padding-inline-start: 0;
+}
+
+@media (min-width: 768px) {
+  .trust-strip__item {
+    border-block-start: 1px solid var(--color-hairline);
+    border-inline-start: 1px solid var(--color-hairline);
+    padding-inline-start: var(--space-4);
+  }
+
+  .trust-strip__item:nth-child(-n + 3) {
+    border-block-start: 0;
+  }
+
+  .trust-strip__item:nth-child(3n + 1) {
+    border-inline-start: 0;
+    padding-inline-start: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .trust-strip__item,
+  .trust-strip__item:nth-child(-n + 3) {
+    border-block-start: 0;
+  }
+
+  .trust-strip__item:nth-child(3n + 1) {
+    border-inline-start: 1px solid var(--color-hairline);
+    padding-inline-start: var(--space-4);
+  }
+
+  .trust-strip__item:first-child {
+    border-inline-start: 0;
+    padding-inline-start: 0;
+  }
+}
+
+.trust-strip__label {
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  line-height: var(--lh-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+}
+
+.trust-strip__value {
+  font-family: var(--font-mono);
+  font-size: var(--text-spec-mono);
+  font-weight: var(--weight-spec-mono);
+  line-height: var(--lh-spec-mono);
+  letter-spacing: var(--tracking-spec-mono);
+  font-feature-settings: "zero" 1, "tnum" 1;
+  color: var(--color-text);
+}
+
+/* Certified / verified marker. Signal green, never decorative. */
+.trust-strip__value--verified {
+  color: var(--color-safe);
+}
+
+/* --------------------------------------------------------------------------
+   BUTTONS
+   .btn — base: small, flat, micro-caps, 2px radius. Deliberately quiet
+   against the headline. Variants: --primary (copper), --ghost (copper-wire
+   1px border), --dark (ink).
+   -------------------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 14px 26px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  line-height: 1;
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  text-align: center;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out),
+              transform var(--dur-fast) var(--ease-out);
+}
+
+/* Trailing glyph (↗) sits inside the button as its own span */
+.btn__glyph {
+  display: inline-block;
+  font-size: 1em;
+  line-height: 1;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.btn:hover .btn__glyph {
+  transform: translate(1px, -1px);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn[disabled],
+.btn[aria-disabled="true"] {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* Solid copper. One per viewport — this is the accent budget's main line. */
+.btn--primary {
+  background-color: var(--color-copper);
+  color: var(--color-text-on-accent);
+  border-color: var(--color-copper);
+}
+
+.btn--primary:hover {
+  background-color: var(--color-copper-hover);
+  border-color: var(--color-copper-hover);
+  color: var(--color-text-on-accent);
+}
+
+/* 1px copper-wire border, transparent field. Secondary action. */
+.btn--ghost {
+  background-color: transparent;
+  border-color: var(--color-copper-wire);
+  color: var(--color-text);
+}
+
+.btn--ghost:hover {
+  border-color: var(--color-copper);
+  color: var(--color-copper);
+}
+
+.band--ink .btn--ghost,
+.hero--ink .btn--ghost,
+.nav__overlay .btn--ghost,
+.footer .btn--ghost {
+  color: var(--color-text-on-dark);
+}
+
+/* Solid ink. Used where copper would exceed the per-viewport budget. */
+.btn--dark {
+  background-color: var(--color-ink);
+  color: var(--color-text-on-dark);
+  border-color: var(--color-ink);
+}
+
+.btn--dark:hover {
+  background-color: var(--color-ink-2);
+  border-color: var(--color-ink-2);
+  color: var(--color-text-on-dark);
+}
+
+.band--ink .btn--dark,
+.hero--ink .btn--dark {
+  background-color: var(--color-white);
+  border-color: var(--color-white);
+  color: var(--color-text);
+}
+
+.band--ink .btn--dark:hover,
+.hero--ink .btn--dark:hover {
+  background-color: var(--color-concrete);
+  border-color: var(--color-concrete);
+  color: var(--color-text);
+}
+
+/* Text-only tertiary: micro-caps with an ink underline that goes copper */
+.btn--link {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-block-end: 1px solid var(--color-hairline-2);
+  border-radius: 0;
+  color: var(--color-text);
+}
+
+.btn--link:hover {
+  border-block-end-color: var(--color-copper);
+  color: var(--color-copper);
+}
+
+.btn--block {
+  width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   CARD
+   .card — white surface on concrete, 1px hairline, 4px radius.
+   .card--product adds the numbered index, media slot and pinned spec foot.
+   Hover is ONLY: border → hairline-2, title → copper, 1px lift, 160ms.
+   No colour flood anywhere.
+   -------------------------------------------------------------------------- */
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  background-color: var(--color-white);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+  transition: border-color var(--dur-fast) var(--ease-out),
+              transform var(--dur-fast) var(--ease-out);
+}
+
+@media (min-width: 768px) {
+  .card {
+    padding: var(--space-6);
+  }
+}
+
+.card:hover,
+.card:focus-within {
+  border-color: var(--color-hairline-2);
+  transform: translateY(-1px);
+}
+
+.card__index {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  font-feature-settings: "zero" 1, "tnum" 1;
+  color: var(--color-text-muted);
+}
+
+.card__title {
+  font-family: var(--font-display);
+  font-size: var(--text-display-m);
+  font-weight: var(--weight-display-m);
+  line-height: var(--lh-display-m);
+  letter-spacing: var(--tracking-display-m);
+  color: var(--color-text);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.card:hover .card__title,
+.card:focus-within .card__title {
+  color: var(--color-copper);
+}
+
+.card__text {
+  font-size: var(--text-body-s);
+  line-height: var(--lh-body-s);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* Media slot. Contained — no frame-breaking cut-outs by default. */
+.card__media {
+  order: -1;
+  margin: calc(var(--space-5) * -1) calc(var(--space-5) * -1) 0;
+  border-block-end: 1px solid var(--color-hairline);
+  background-color: var(--color-concrete-2);
+  overflow: hidden;
+  border-start-start-radius: var(--radius-md);
+  border-start-end-radius: var(--radius-md);
+}
+
+@media (min-width: 768px) {
+  .card__media {
+    margin: calc(var(--space-6) * -1) calc(var(--space-6) * -1) 0;
+  }
+}
+
+.card__media img {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+/* Bottom-pinned foot: hairline above, spec row or ghost CTA inside */
+.card__foot {
+  margin-block-start: auto;
+  padding-block-start: var(--space-4);
+  border-block-start: 1px solid var(--color-hairline);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.card__spec {
+  font-family: var(--font-mono);
+  font-size: var(--text-spec-mono);
+  font-weight: var(--weight-spec-mono);
+  line-height: var(--lh-spec-mono);
+  letter-spacing: var(--tracking-spec-mono);
+  font-feature-settings: "zero" 1, "tnum" 1;
+  color: var(--color-text-secondary);
+}
+
+/* Stretched link makes the whole card clickable without nesting anchors */
+.card__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-md);
+}
+
+.card--product {
+  min-height: 100%;
+}
+
+/* Cards on the dark band */
+.band--ink .card {
+  background-color: var(--color-ink-2);
+  border-color: var(--color-ink-3);
+}
+
+.band--ink .card:hover,
+.band--ink .card:focus-within {
+  border-color: var(--color-hairline-dark);
+}
+
+.band--ink .card__title {
+  color: var(--color-text-on-dark);
+}
+
+.band--ink .card__text,
+.band--ink .card__spec {
+  color: var(--color-text-on-dark-muted);
+}
+
+/* --------------------------------------------------------------------------
+   INDEX ROW
+   .index-row — numbered accordion. Replaces icon bullets entirely.
+   mono numeral | display-m label | +/− expander, 1px hairline between rows.
+   Button carries aria-expanded + aria-controls; panel is the controlled id.
+   -------------------------------------------------------------------------- */
+
+.index-list {
+  border-block-start: 1px solid var(--color-hairline);
+}
+
+.index-row {
+  border-block-end: 1px solid var(--color-hairline);
+}
+
+.band--ink .index-list,
+.band--ink .index-row {
+  border-color: var(--color-hairline-dark);
+}
+
+/* The clickable header row */
+.index-row__trigger {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  padding-block: var(--space-5);
+  text-align: left;
+  color: var(--color-text);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+@media (min-width: 768px) {
+  .index-row__trigger {
+    gap: var(--space-6);
+    padding-block: var(--space-6);
+  }
+}
+
+.index-row__trigger:hover {
+  color: var(--color-copper);
+}
+
+.band--ink .index-row__trigger {
+  color: var(--color-text-on-dark);
+}
+
+/* 01 / 02 / 03 — thin mono numeral, slashed zero */
+.index-row__num {
+  font-family: var(--font-mono);
+  font-size: var(--text-index-numeral);
+  font-weight: var(--weight-index-numeral);
+  line-height: var(--lh-index-numeral);
+  letter-spacing: var(--tracking-index-numeral);
+  font-feature-settings: "zero" 1, "tnum" 1;
+  color: var(--color-text-muted);
+  min-width: 2.5em;
+}
+
+.index-row__label {
+  font-family: var(--font-display);
+  font-size: var(--text-display-m);
+  font-weight: var(--weight-display-m);
+  line-height: var(--lh-display-m);
+  letter-spacing: var(--tracking-display-m);
+  text-wrap: balance;
+}
+
+/* +/− expander built from two 1px rules; the vertical one collapses on open */
+.index-row__icon {
+  position: relative;
+  flex: none;
+  width: 20px;
+  height: 20px;
+}
+
+.index-row__icon::before,
+.index-row__icon::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 0;
+  width: 100%;
+  height: 1px;
+  background-color: currentColor;
+  transition: transform var(--dur-fast) var(--ease-out),
+              opacity var(--dur-fast) var(--ease-out);
+}
+
+.index-row__icon::after {
+  transform: rotate(90deg);
+}
+
+.index-row__trigger[aria-expanded="true"] {
+  color: var(--color-copper);
+}
+
+.index-row__trigger[aria-expanded="true"] .index-row__icon::after {
+  transform: rotate(0deg);
+  opacity: 0;
+}
+
+.index-row__trigger[aria-expanded="true"] .index-row__num {
+  color: var(--color-copper);
+}
+
+/* Panel. Closed state uses [hidden] in markup; open state gets the padding. */
+.index-row__panel {
+  padding-block-end: var(--space-6);
+  padding-inline-start: 0;
+}
+
+@media (min-width: 768px) {
+  .index-row__panel {
+    /* Optically align the panel copy with the label column */
+    padding-inline-start: calc(2.5em + var(--space-6));
+  }
+}
+
+.index-row__panel > * + * {
+  margin-block-start: var(--space-4);
+}
+
+.index-row__panel p {
+  font-size: var(--text-body);
+  line-height: var(--lh-body);
+  color: var(--color-text-secondary);
+  max-width: var(--max-text);
+}
+
+.band--ink .index-row__panel p {
+  color: var(--color-text-on-dark-muted);
+}
+
+/* --------------------------------------------------------------------------
+   STAT
+   .stat — proof-point lockup: thin numeral + micro-caps caption stacked
+   below it, on a plain hairline grid. No outline strokes, no photo overlay.
+   -------------------------------------------------------------------------- */
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-block-start: var(--space-4);
+  border-block-start: 1px solid var(--color-hairline);
+}
+
+.band--ink .stat {
+  border-block-start-color: var(--color-hairline-dark);
+}
+
+.stat__value {
+  font-family: var(--font-mono);
+  font-size: var(--text-stat);
+  font-weight: var(--weight-stat);
+  line-height: var(--lh-stat);
+  letter-spacing: var(--tracking-stat);
+  font-feature-settings: "zero" 1, "tnum" 1;
+  color: var(--color-text);
+}
+
+.band--ink .stat__value {
+  color: var(--color-text-on-dark);
+}
+
+/* Unit suffix rides smaller alongside the numeral */
+.stat__unit {
+  font-size: 0.42em;
+  font-weight: var(--weight-regular);
+  letter-spacing: 0.04em;
+  margin-inline-start: 0.2em;
+  color: var(--color-text-muted);
+}
+
+.stat__caption {
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  line-height: var(--lh-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+  max-width: 22ch;
+}
+
+.band--ink .stat__caption {
+  color: var(--color-text-on-dark-muted);
+}
+
+/* One stat per row of the grid may be highlighted — use at most once */
+.stat--accent .stat__value {
+  color: var(--color-copper);
+}
+
+/* Stat row: hairline grid, 2-up on mobile, 4-up from lg */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-6) var(--grid-gap);
+}
+
+@media (min-width: 1024px) {
+  .stat-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* --------------------------------------------------------------------------
+   SPEC TABLE
+   .spec-table — hairline grid, mono values, dotted-leader alignment between
+   label and value, horizontal scroll with a shadow affordance on mobile.
+   Requires <caption>, scope on every header cell.
+   -------------------------------------------------------------------------- */
+
+/* Scroll shell. The right-edge fade is the only permitted UI gradient and
+   it is an affordance, not decoration. */
+.spec-table-wrap {
+  position: relative;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+  background-color: var(--color-white);
+}
+
+.spec-table-wrap::after {
+  content: "";
+  position: sticky;
+  inset-inline-end: 0;
+  top: 0;
+  float: right;
+  width: 24px;
+  height: 100%;
+  box-shadow: inset -14px 0 12px -12px rgba(14, 20, 24, 0.22);
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .spec-table-wrap::after {
+    display: none;
+  }
+}
+
+.spec-table {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+  font-size: var(--text-body-s);
+}
+
+.spec-table caption {
+  padding: var(--space-4) var(--space-5);
+  text-align: left;
+  border-block-end: 1px solid var(--color-hairline);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+}
+
+.spec-table th,
+.spec-table td {
+  padding: var(--space-3) var(--space-4);
+  border-block-end: 1px solid var(--color-hairline);
+  border-inline-start: 1px solid var(--color-hairline);
+  vertical-align: baseline;
+  text-align: left;
+}
+
+.spec-table th:first-child,
+.spec-table td:first-child {
+  border-inline-start: 0;
+}
+
+.spec-table tr:last-child td {
+  border-block-end: 0;
+}
+
+.spec-table thead th {
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+/* Row-header cells stay sentence case and sit in body weight */
+.spec-table tbody th[scope="row"] {
+  font-size: var(--text-body-s);
+  font-weight: var(--weight-medium);
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--color-text);
+}
+
+.spec-table td {
+  font-family: var(--font-mono);
+  font-size: var(--text-spec-mono);
+  line-height: var(--lh-spec-mono);
+  letter-spacing: var(--tracking-spec-mono);
+  font-feature-settings: "zero" 1, "tnum" 1;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.spec-table tbody tr:nth-child(even) {
+  background-color: var(--color-concrete);
+}
+
+/* Two-column label/value variant with a dotted leader between the pair.
+   Markup: <tr><th scope="row"><span>Label</span></th><td>Value</td></tr>
+   inside .spec-table--leader. */
+.spec-table--leader {
+  min-width: 0;
+}
+
+.spec-table--leader tbody tr {
+  background-color: transparent;
+}
+
+.spec-table--leader tbody th[scope="row"] {
+  width: 100%;
+  border-inline-start: 0;
+  position: relative;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* The leader itself: repeating dots filling the gap to the value column */
+.spec-table--leader tbody th[scope="row"]::after {
+  content: "";
+  position: absolute;
+  inset-block-end: 0.42em;
+  inset-inline-start: 0;
+  width: 100%;
+  height: 1px;
+  margin-inline-start: 0.5em;
+  background-image: radial-gradient(circle, var(--color-hairline-2) 1px, transparent 1px);
+  background-size: 5px 1px;
+  background-repeat: repeat-x;
+  z-index: 0;
+}
+
+.spec-table--leader tbody th[scope="row"] > span {
+  position: relative;
+  z-index: 1;
+  padding-inline-end: var(--space-2);
+  background-color: var(--color-white);
+}
+
+.spec-table--leader tbody td {
+  border-inline-start: 0;
+  text-align: right;
+  color: var(--color-text);
+}
+
+/* Footnote under a table — tolerances, standards, revision */
+.spec-table__note {
+  margin-block-start: var(--space-3);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   COMPARE TABLE
+   .compare-table — 3 columns: pain / common solution / SVIND solution.
+   The SVIND column carries the copper-soft wash and a copper top rule.
+   Requires <caption> and scope="col" on all three headers.
+   -------------------------------------------------------------------------- */
+
+.compare-table-wrap {
+  position: relative;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+  background-color: var(--color-white);
+}
+
+.compare-table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+  font-size: var(--text-body-s);
+}
+
+.compare-table caption {
+  padding: var(--space-4) var(--space-5);
+  text-align: left;
+  border-block-end: 1px solid var(--color-hairline);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+}
+
+.compare-table th,
+.compare-table td {
+  padding: var(--space-4) var(--space-5);
+  border-block-end: 1px solid var(--color-hairline);
+  border-inline-start: 1px solid var(--color-hairline);
+  text-align: left;
+  vertical-align: top;
+}
+
+.compare-table th:first-child,
+.compare-table td:first-child {
+  border-inline-start: 0;
+}
+
+.compare-table thead th {
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.compare-table tbody th[scope="row"] {
+  font-size: var(--text-body-s);
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+  width: 30%;
+}
+
+.compare-table td {
+  color: var(--color-text-secondary);
+}
+
+.compare-table tr:last-child th,
+.compare-table tr:last-child td {
+  border-block-end: 0;
+}
+
+/* The SVIND column. Wash + copper header text + 2px copper top rule. */
+.compare-table__SVIND {
+  background-color: var(--color-copper-soft);
+  color: var(--color-text);
+}
+
+.compare-table thead .compare-table__SVIND {
+  color: var(--color-copper);
+  box-shadow: inset 0 2px 0 0 var(--color-copper);
+}
+
+/* Engineering value inside a comparison cell */
+.compare-table__spec {
+  display: block;
+  margin-block-start: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-spec-mono);
+  letter-spacing: var(--tracking-spec-mono);
+  font-feature-settings: "zero" 1, "tnum" 1;
+  color: var(--color-text);
+}
+
+/* --------------------------------------------------------------------------
+   CHIPS
+   .chips — process pill chips with chevron separators. Wraps to as many
+   rows as needed. Ordered list in markup; separators are CSS-generated and
+   therefore decorative only.
+   -------------------------------------------------------------------------- */
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.chips__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* The pill. 999px radius is permitted here: a pill is not a UI surface
+   panel, and the token set's dark-pill precedent covers it. */
+.chips__label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 8px 14px;
+  border: 1px solid var(--color-hairline-2);
+  border-radius: 999px;
+  background-color: var(--color-white);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  line-height: var(--lh-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+/* Chevron separator between steps, suppressed after the last chip */
+.chips__item::after {
+  content: "\203A\203A";
+  font-size: var(--text-micro-caps);
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+}
+
+.chips__item:last-child::after {
+  content: none;
+}
+
+/* Mono step counter inside a chip */
+.chips__num {
+  font-family: var(--font-mono);
+  font-weight: var(--weight-regular);
+  font-feature-settings: "zero" 1, "tnum" 1;
+  color: var(--color-text-muted);
+}
+
+/* Current process step — at most one per viewport */
+.chips__item--active .chips__label {
+  border-color: var(--color-copper-wire);
+  color: var(--color-copper);
+}
+
+.chips__item--active .chips__num {
+  color: var(--color-copper);
+}
+
+.band--ink .chips__label {
+  background-color: var(--color-ink-2);
+  border-color: var(--color-ink-3);
+  color: var(--color-text-on-dark);
+}
+
+.band--ink .chips__item::after,
+.band--ink .chips__num {
+  color: var(--color-text-on-dark-muted);
+}
+
+/* --------------------------------------------------------------------------
+   FORM
+   .form — RFQ. Label-less underline inputs: the <label> is visually the
+   placeholder-position caption and floats to micro-caps on focus/fill.
+   Stepped progress 01 — 04. Error + required states included.
+   -------------------------------------------------------------------------- */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* Progress readout: 01 — 04 in mono plus a 1px track */
+.form__step {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--text-spec-mono);
+  letter-spacing: var(--tracking-spec-mono);
+  font-feature-settings: "zero" 1, "tnum" 1;
+  color: var(--color-text-muted);
+}
+
+.form__step-track {
+  position: relative;
+  flex: 1;
+  height: 1px;
+  background-color: var(--color-hairline-2);
+}
+
+.form__step-track::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  height: 1px;
+  width: var(--step-progress, 25%);
+  background-color: var(--color-copper);
+  transition: width var(--dur-base) var(--ease-out);
+}
+
+.form__step-current {
+  color: var(--color-text);
+}
+
+/* Fieldset group with a micro-caps legend */
+.form__group {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.form__legend {
+  padding: 0;
+  margin-block-end: var(--space-2);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+}
+
+/* Two-up field row from md */
+.form__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-6);
+}
+
+@media (min-width: 768px) {
+  .form__row--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* One field. position:relative anchors the floating label. */
+.form__field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The label sits on the input line and floats up on focus or fill.
+   It is a real <label for>, never a placeholder attribute. */
+.form__label {
+  position: absolute;
+  inset-block-start: 18px;
+  inset-inline-start: 0;
+  font-size: var(--text-body);
+  color: var(--color-text-muted);
+  pointer-events: none;
+  transform-origin: 0 0;
+  transition: transform var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out);
+}
+
+.form__input,
+.form__select,
+.form__textarea {
+  width: 100%;
+  padding: 18px 0 10px;
+  background-color: transparent;
+  border: 0;
+  border-block-end: 1px solid var(--color-hairline-2);
+  border-radius: 0;
+  font-size: var(--text-body);
+  color: var(--color-text);
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+
+.form__textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.form__select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--color-text-secondary) 50%),
+                    linear-gradient(135deg, var(--color-text-secondary) 50%, transparent 50%);
+  background-position: right 8px center, right 3px center;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-inline-end: var(--space-6);
+}
+
+.form__input:focus,
+.form__select:focus,
+.form__textarea:focus {
+  outline: none;
+  border-block-end-color: var(--color-copper);
+}
+
+.form__input:focus-visible,
+.form__select:focus-visible,
+.form__textarea:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Float the label: on focus, or when the control holds a value.
+   :placeholder-shown requires a placeholder=" " on text inputs. */
+.form__input:focus + .form__label,
+.form__input:not(:placeholder-shown) + .form__label,
+.form__textarea:focus + .form__label,
+.form__textarea:not(:placeholder-shown) + .form__label,
+.form__select:focus + .form__label,
+.form__select[data-filled="true"] + .form__label {
+  transform: translateY(-18px) scale(0.6875);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+}
+
+/* Required marker — a dot, not an asterisk soup */
+.form__label .form__required {
+  color: var(--color-copper);
+  margin-inline-start: 2px;
+}
+
+/* Helper text under a field */
+.form__hint {
+  margin-block-start: var(--space-2);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+}
+
+/* Error state. Driven by aria-invalid on the control; the message element
+   is referenced by aria-describedby and lives in a role="alert". */
+.form__input[aria-invalid="true"],
+.form__select[aria-invalid="true"],
+.form__textarea[aria-invalid="true"] {
+  border-block-end-color: var(--color-alert);
+}
+
+.form__error {
+  margin-block-start: var(--space-2);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-alert);
+}
+
+.form__field--error .form__label {
+  color: var(--color-alert);
+}
+
+/* Checkbox / radio row — square 16px control, 2px radius */
+.form__check {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  font-size: var(--text-body-s);
+  color: var(--color-text-secondary);
+}
+
+.form__check input[type="checkbox"],
+.form__check input[type="radio"] {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-block-start: 3px;
+  accent-color: var(--color-copper);
+}
+
+/* Actions row: submit + a mono reassurance line */
+.form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  padding-block-start: var(--space-4);
+  border-block-start: 1px solid var(--color-hairline);
+}
+
+.form__note {
+  font-family: var(--font-mono);
+  font-size: var(--text-spec-mono);
+  letter-spacing: var(--tracking-spec-mono);
+  color: var(--color-text-muted);
+}
+
+/* Submission feedback, role="status" in markup */
+.form__status {
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-white);
+  font-size: var(--text-body-s);
+  color: var(--color-text-secondary);
+}
+
+.form__status--ok {
+  border-inline-start: 2px solid var(--color-safe);
+}
+
+.form__status--error {
+  border-inline-start: 2px solid var(--color-alert);
+}
+
+/* Honeypot — off-screen, never focusable by design */
+.form__trap {
+  position: absolute;
+  inset-inline-start: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Form on the dark band */
+.band--ink .form__input,
+.band--ink .form__select,
+.band--ink .form__textarea {
+  border-block-end-color: var(--color-hairline-dark);
+  color: var(--color-text-on-dark);
+}
+
+.band--ink .form__label,
+.band--ink .form__hint,
+.band--ink .form__note,
+.band--ink .form__legend {
+  color: var(--color-text-on-dark-muted);
+}
+
+.band--ink .form__actions {
+  border-block-start-color: var(--color-hairline-dark);
+}
+
+/* --------------------------------------------------------------------------
+   TEXT-LEVEL UTILITIES
+   .eyebrow — micro-caps kicker for any band or block.
+   .spec     — mono engineering readout, inline.
+   -------------------------------------------------------------------------- */
+
+.eyebrow {
+  display: block;
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  line-height: var(--lh-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-muted);
+}
+
+/* Rule-prefixed variant for band heads */
+.eyebrow--rule {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.eyebrow--rule::before {
+  content: "";
+  width: 24px;
+  height: 1px;
+  background-color: var(--color-hairline-2);
+  flex: none;
+}
+
+.band--ink .eyebrow {
+  color: var(--color-text-on-dark-muted);
+}
+
+.band--ink .eyebrow--rule::before {
+  background-color: var(--color-hairline-dark);
+}
+
+.spec {
+  font-family: var(--font-mono);
+  font-size: var(--text-spec-mono);
+  font-weight: var(--weight-spec-mono);
+  line-height: var(--lh-spec-mono);
+  letter-spacing: var(--tracking-spec-mono);
+  font-feature-settings: "zero" 1, "tnum" 1;
+  color: var(--color-text-secondary);
+}
+
+.band--ink .spec {
+  color: var(--color-text-on-dark-muted);
+}
+
+/* Hairline-boxed spec pill, for a single highlighted readout */
+.spec--boxed {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 6px 10px;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+}
+
+/* --------------------------------------------------------------------------
+   REVEAL
+   .reveal — IntersectionObserver entrance: opacity 0→1, translateY 20px→0,
+   640ms --ease-out. JS adds .is-visible. Final state kept under
+   prefers-reduced-motion (see base.css §13).
+   -------------------------------------------------------------------------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity var(--dur-reveal) var(--ease-out),
+              transform var(--dur-reveal) var(--ease-out);
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered children, 80ms apart, six steps max */
+.reveal--stagger.is-visible > *:nth-child(1) { transition-delay: 0ms; }
+.reveal--stagger.is-visible > *:nth-child(2) { transition-delay: 80ms; }
+.reveal--stagger.is-visible > *:nth-child(3) { transition-delay: 160ms; }
+.reveal--stagger.is-visible > *:nth-child(4) { transition-delay: 240ms; }
+.reveal--stagger.is-visible > *:nth-child(5) { transition-delay: 320ms; }
+.reveal--stagger.is-visible > *:nth-child(6) { transition-delay: 400ms; }
+
+/* --------------------------------------------------------------------------
+   FOOTER
+   .footer — ink band: 4 columns (brand + 3 link groups) over a legal bar.
+   This is the second and last colour band on any page.
+   -------------------------------------------------------------------------- */
+
+.footer {
+  background-color: var(--color-ink);
+  color: var(--color-text-on-dark);
+  padding-block-start: var(--band-y-tight);
+}
+
+.footer__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-7);
+  padding-block-end: var(--space-8);
+}
+
+@media (min-width: 640px) {
+  .footer__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .footer__grid {
+    grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
+    gap: var(--grid-gap);
+  }
+}
+
+.footer__col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.footer__heading {
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  line-height: var(--lh-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-on-dark-muted);
+}
+
+.footer__brand {
+  font-size: var(--text-display-m);
+  font-weight: var(--weight-display-m);
+  letter-spacing: var(--tracking-display-m);
+  color: var(--color-text-on-dark);
+}
+
+.footer__blurb {
+  font-size: var(--text-body-s);
+  line-height: var(--lh-body-s);
+  color: var(--color-text-on-dark-muted);
+  max-width: 40ch;
+}
+
+.footer__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footer__link {
+  font-size: var(--text-body-s);
+  color: var(--color-text-on-dark-muted);
+}
+
+.footer__link:hover {
+  color: var(--color-text-on-dark);
+}
+
+/* Address / phone / GST block in mono */
+.footer__address {
+  font-family: var(--font-mono);
+  font-size: var(--text-spec-mono);
+  font-style: normal;
+  line-height: 1.7;
+  letter-spacing: var(--tracking-spec-mono);
+  font-feature-settings: "zero" 1, "tnum" 1;
+  color: var(--color-text-on-dark-muted);
+}
+
+/* Legal bar — hairline above, micro-caps both sides */
+.footer__legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block: var(--space-5);
+  border-block-start: 1px solid var(--color-hairline-dark);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-text-on-dark-muted);
+}
+
+.footer__legal-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 767.98px) {
+  /* Clear the fixed mobile bar */
+  .footer__legal {
+    padding-block-end: var(--space-6);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   FOOTER WORDMARK + BASELINE
+   .footer__mark — the giant brand word cropped flush to its cap height, the
+   letters rising from below the crop one after another. .footer__baseline —
+   the pale legal strip that closes the page under it.
+
+   Both are copied from the bottom of www.arrodz.com, measured in Chrome via
+   the DevTools protocol at 1440, 1280, 992, 991, 767 and 500px. They are
+   OPT-IN: no page gets them without the markup, so the thirteen pages that
+   still close on .footer__legal are untouched.
+
+   MEASURED FACTS (source, 1280px viewport):
+     Wordmark band  full-bleed, outside the container inset, overflow hidden
+     Letters        one <img> per letter, 243px tall, natural widths, 20px
+                    apart, centred as a group. Their total is 1358.9px, so
+                    below ~1359px of viewport the group hangs off BOTH edges
+                    and is clipped -- the first letter starts at -39px at
+                    1280 and at +41px at 1440. Clipping is the intended look.
+     Baseline strip #F5F2E8 fill, #222523 text, 12px / 18px, 16px block
+                    padding, space-between, stacking below 992px
+     Timeline       GSAP, triggered at body bottom-=200. Letters come from
+                    yPercent 100 at opacity 1 -- they slide, they do not
+                    fade -- over 1s on power4.out, 0.10s apart.
+
+   TWO DELIBERATE DEPARTURES, both because our word is live text and theirs
+   is six cropped SVGs of a logotype:
+
+   1. SIZED BY WIDTH, NOT HEIGHT. Their letterforms are about 1.9x wider than
+      Passion One's at the same cap height, so ARRODZ is a 5.59:1 block while
+      SVIND is 3.55:1. Matching their 243px cap height would leave our word
+      863px wide on a 1280 viewport -- centred, with 200px of dead air each
+      side, nothing like the source. Matching their full-bleed width instead
+      keeps the signature and costs a taller band. The alternative was a
+      scaleX to force the ratio, which distorts the typeface. Hence the
+      41.5vw below: 5 advances (2.277em) + 4 gaps (0.033em) = 2.409em, and
+      2.409 x 41.5vw = 100vw. The clamp caps it at 1440, past which the group
+      stops growing and takes side margins, exactly as the source does.
+
+   2. CROPPED WITH NEGATIVE MARGINS. Their SVGs are trimmed to the ink, so
+      the band is precisely as tall as the letters. Live text carries font
+      slack instead: Passion One reports ascent 0.835em, descent 0.266em, so
+      at line-height 1 the half-leading is -0.0505em and the baseline lands
+      0.7845em down the line box. The tallest ink is the S at 0.631em above
+      the baseline and 0.010em below it, which leaves 0.1535em of slack above
+      and 0.2055em below. Pulling exactly those two figures off leaves a
+      0.641em band that is all letter -- and because they are em, the crop
+      holds at every clamp step. Cropping to the flat cap (0.621em) instead
+      would shave the S's overshoot.
+   -------------------------------------------------------------------------- */
+
+/* Measured off the source. Local to the footer on purpose: this is not an
+   --arz- name, so the wordmark carries no dependency on arz.css and works on
+   a page that never loads it. Declared on .footer rather than on the two
+   blocks that first needed it, because .footer__close needs it too and a
+   var() that resolves nowhere is not an error -- background-color silently
+   computes to transparent and border-color falls back to currentColor, which
+   is exactly how the beige button first shipped invisible. */
+.footer {
+  --footer-beige: #F5F2E8;
+}
+
+/* Full-bleed: a child of <footer>, never of .container, so the letters can
+   run past the band inset and off the screen edges. */
+.footer__mark {
+  overflow: hidden;
+  color: var(--footer-beige);
+}
+
+/* .reveal is on this element only to borrow the IntersectionObserver in
+   site.js -- the band itself must not fade or slide, so its own animated
+   state is cancelled here and the letters carry the motion. Specificity
+   0,2,0 beats .reveal at 0,1,0. */
+.footer__mark.reveal {
+  opacity: 1;
+  transform: none;
+  transition: none;
+  will-change: auto;
+}
+
+.footer__mark-row {
+  display: flex;
+  justify-content: center;
+  gap: 0.033em;
+  margin-block-start: -0.1535em;
+  margin-block-end: -0.2055em;
+  font-family: "Passion One", "Arial Narrow", Impact, sans-serif;
+  /* 41.5vw fills the width exactly; see departure 1 above. */
+  font-size: clamp(96px, 41.5vw, 598px);
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.footer__mark-letter {
+  display: block;
+}
+
+/* The parked position is opt-IN, via .is-armed from site.js, and the default
+   above is the finished wordmark. That direction is deliberate: the observer
+   that adds .is-visible lives in the same file that adds .is-armed, so if the
+   script 404s, throws early or is blocked, the letters are simply already
+   home. Arming in CSS instead -- including behind @media (scripting: enabled),
+   which reports what the BROWSER can do and not whether our script ran --
+   leaves a 340px empty band in exactly those cases. Verified by loading the
+   page with the <script> tag stripped. */
+.footer__mark.is-armed .footer__mark-letter {
+  /* 100% of the letter's own line box = 1em, and the band is 0.641em, so a
+     letter parked here sits entirely below the crop. */
+  transform: translateY(100%);
+  /* 1s power4.out in the source. GSAP power4 is quintic, which is what
+     --ease-out already is: cubic-bezier(0.22, 1, 0.36, 1). */
+  transition: transform 1000ms var(--ease-out);
+  will-change: transform;
+}
+
+.footer__mark.is-armed.is-visible .footer__mark-letter {
+  transform: translateY(0);
+}
+
+/* 0.10s apart, in order. The delays live on the visible state so the
+   wordmark would drop back without staggering. */
+.footer__mark.is-armed.is-visible .footer__mark-letter:nth-child(1) { transition-delay: 0ms; }
+.footer__mark.is-armed.is-visible .footer__mark-letter:nth-child(2) { transition-delay: 100ms; }
+.footer__mark.is-armed.is-visible .footer__mark-letter:nth-child(3) { transition-delay: 200ms; }
+.footer__mark.is-armed.is-visible .footer__mark-letter:nth-child(4) { transition-delay: 300ms; }
+.footer__mark.is-armed.is-visible .footer__mark-letter:nth-child(5) { transition-delay: 400ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* site.js does not arm in this mode, so this only has to cover the reader
+     who switches the preference on mid-visit. */
+  .footer__mark-letter {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Pale strip. Full-bleed fill with the inner row back on the container
+   inset, so the legal line stays on the same vertical as the columns. */
+.footer__baseline {
+  background-color: var(--footer-beige);
+  color: #222523;
+}
+
+.footer__baseline-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block: 16px;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+/* .footer__link is 68% white for the ink band above; on the pale strip it
+   would be all but gone. */
+.footer__baseline .footer__link {
+  font-size: inherit;
+  color: inherit;
+}
+
+.footer__baseline .footer__link:hover {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.footer__baseline .footer__legal-links {
+  gap: 40px;
+}
+
+/* The source stacks and centres the strip here. */
+@media (max-width: 991.98px) {
+  .footer__baseline-row {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+
+  .footer__baseline .footer__legal-links {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 767.98px) {
+  /* Last thing on the page now, so it owes the fixed mobile bar the
+     clearance .footer__legal used to give. */
+  .footer__baseline-row {
+    padding-block-end: var(--space-6);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   FOOTER CLOSE — the upper half of the arrodz footer
+   The band above the wordmark: a giant display headline on the left, and on
+   the right a two-column nav / CTA block over a partner strip. Measured from
+   www.arrodz.com in Chrome via the DevTools protocol at 1700, 1280, 991, 767
+   and 390px, same method as the wordmark block above.
+
+   OPT-IN, like the wordmark: no page renders this without the markup, so the
+   three other pages carrying .footer are untouched.
+
+   MEASURED FACTS (source):
+     Band pad       80px 64px 0   (56px 19.5px 0 at 390)
+     Outer grid     1.4fr-ish two columns -- really 553.6px / 830.4px inside
+                    a 1440px measure, i.e. 40155/59845. One column at 991.
+     Left           64px / 64px Passion One uppercase (48px at 767 and below)
+     Right grid     331.9px / 442.5px of 830.4 => 42.5/57.5, gap 56px.
+                    One column at 767, gap 32px.
+     Nav link       15px / 22.5px, 8px block padding -- 39px rows
+     CTA title      20px / 30px weight 700 (18px at 390)
+     Button         #F5F2E8 fill, #222523 ink, 15px / 600, 16px 24px,
+                    radius 8px
+     Social row     64px above, 32px apart, 16px icon + 8px gap, 14.4px / 600
+     Partner strip  1px rgba(255,255,255,0.2) top rule, 32px above the title,
+                    24px title-to-logos, logos 80px apart (24px at 390)
+     Partner title  20px / 30px weight 700
+     Logos          greyed, mixed heights around 30-56px
+     Band bottom    63px under the grid (72px at 991, 48px at 767)
+
+   THREE DEPARTURES, all forced by this being our site and not theirs:
+
+   1. The band keeps .footer's own ink, not #222523. Our footer is one colour
+      band already and re-tinting it would seam against the columns above.
+      The beige/ink pair on the button and the pale strip below still come
+      from the source, so the contrast that carries the look survives.
+
+   2. The source's right column is nav + CTA + socials + partners. Ours has
+      four nav columns of its own directly above, so repeating a link list
+      here would duplicate them. The right column carries the CTA, the
+      socials and the partner strip; the left carries the headline. That is
+      the arrodz composition minus the one part we already have.
+
+   3. Type sizes ride our own clamps rather than the source's fixed px, so
+      this band scales with the rest of the page instead of stepping at
+      Webflow's breakpoints. The caps match the measured values.
+   -------------------------------------------------------------------------- */
+
+.footer__close {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-7);
+  padding-block-end: 63px;
+}
+
+@media (min-width: 992px) {
+  .footer__close {
+    /* 553.6 / 830.4 of the measured 1440px measure. */
+    grid-template-columns: minmax(0, 40.155fr) minmax(0, 59.845fr);
+    gap: 56px;
+  }
+}
+
+/* Left: the display headline. Passion One at line-height 1, which is what
+   gives the source its tight stacked clause. */
+.footer__close-heading {
+  font-family: "Passion One", "Arial Narrow", Impact, sans-serif;
+  font-size: clamp(40px, 5vw, 64px);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--color-text-on-dark);
+  /* No max-width: the grid column is the measure. A 12ch cap here broke the
+     clause onto seven lines inside a column wide enough for three, because
+     ch on a condensed face is far narrower than the column it sits in. */
+}
+
+.footer__close-right {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-6);
+  align-content: start;
+}
+
+@media (min-width: 768px) {
+  .footer__close-right {
+    /* The source splits this row 331.9 / 442.5 because its left cell holds a
+       nav list we do not repeat here (see departure 2). With only the CTA and
+       the socials in it, the ratio is inverted: the CTA cell takes the larger
+       share so its question and button each get a usable half, and the
+       remainder is empty as the source's own right edge is. 442.5 / 331.9
+       of the same measure. */
+    grid-template-columns: minmax(0, 57.5fr) minmax(0, 42.5fr);
+    gap: 56px;
+  }
+}
+
+/* The CTA question sits left of its button on the source, both on one row,
+   each taking half the cell. */
+.footer__close-cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: start;
+  gap: var(--space-5);
+}
+
+/* Question left, button right on one row, as the source's 171.9 / 171.9 grid
+   does. Not a 50/50 split though: an even division put the button at 154px
+   and broke "Request a quote" across two lines. The question takes the
+   remaining space and the button takes exactly what its label needs, so the
+   row stays one line deep at every width down to the 768 wrap. */
+.footer__close-cta-title {
+  flex: 1 1 auto;
+  min-width: 8ch;
+  font-size: clamp(18px, 1.6vw, 20px);
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--color-text-on-dark);
+}
+
+/* The one beige element in the ink band, straight off the source. Not a
+   .btn--* variant: every one of those is tokenised to the DNA palette and
+   zero radius, and this needs the arrodz beige and its 8px corner without
+   dragging a --arz- dependency onto three pages that never load arz.css. */
+.footer__close-btn {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 24px;
+  border: 1px solid var(--footer-beige);
+  border-radius: 8px;
+  background-color: var(--footer-beige);
+  color: #222523;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 21px;
+  text-align: center;
+  transition: background-color var(--dur-base) var(--ease-out),
+              color var(--dur-base) var(--ease-out);
+}
+
+.footer__close-btn:hover {
+  background-color: transparent;
+  color: var(--footer-beige);
+}
+
+/* 64px above the socials in the source, and they belong to the CTA cell. */
+.footer__close-social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  margin-block-start: var(--space-8);
+  list-style: none;
+  margin-inline: 0;
+  padding: 0;
+}
+
+.footer__close-social a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14.4px;
+  font-weight: 600;
+  line-height: 21.6px;
+  color: var(--color-text-on-dark);
+}
+
+.footer__close-social a:hover {
+  color: var(--footer-beige);
+}
+
+/* currentColor so the glyph tracks the label on hover without a second rule. */
+.footer__close-social svg {
+  display: block;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+/* Partner strip. Spans the right column under the nav/CTA row, which is why
+   it is a grid child of .footer__close-right rather than a sibling. */
+.footer__close-partners {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-block-start: 32px;
+  border-block-start: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@media (min-width: 768px) {
+  .footer__close-partners {
+    grid-column: 1 / -1;
+  }
+}
+
+.footer__close-partners-title {
+  font-size: clamp(18px, 1.6vw, 20px);
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--color-text-on-dark);
+}
+
+/* The source lays its five logos on one row at a fixed 80px gap. We have six,
+   which is why this is an explicit column count and not auto-fit: auto-fit
+   packed five across and left the sixth alone on a second row. Three and two
+   both divide six evenly, so the strip is always a full rectangle. */
+.footer__close-partners-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  gap: 24px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  .footer__close-partners-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* The source's logos are pre-greyed files. Ours are solid-fill brand SVGs on
+   a light ground, so they need inverting to read on ink at all -- brightness
+   flattens each to white, then opacity takes them back to the muted weight
+   the source has, and hover returns them.
+
+   SIZING: fit each into a fixed box rather than setting height alone. These
+   six range from 1:1 (L&T, Ajax) to 5.7:1 (Terex); a flat 30px height put
+   Terex at 171px beside a 30px L&T, so the wide marks read as six times the
+   weight of the square ones. A common box with object-fit: contain gives
+   every ratio the same area to fill, which is what the source's own
+   pre-trimmed files already have. */
+.footer__close-partners img {
+  display: block;
+  width: 100px;
+  height: 40px;
+  object-fit: contain;
+  object-position: left center;
+  filter: brightness(0) invert(1);
+  opacity: 0.55;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+
+.footer__close-partners img:hover {
+  opacity: 1;
+}
+
+@media (max-width: 991.98px) {
+  .footer__close {
+    padding-block-end: 72px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .footer__close {
+    padding-block-end: 48px;
+  }
+
+  .footer__close-right {
+    gap: 32px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   FOOTER CLOSE — entrance
+   The source runs one GSAP timeline for the whole footer, triggered at
+   `body bottom-=200`:
+
+     .from(".footer-links-wrapper", {y: 30, opacity: 0, duration: 0.4,
+                                     ease: "power2.out"})
+     .from(".loogo-footer-bottom-logo", {yPercent: 100, opacity: 1,
+                                         duration: 1, ease: "power4.out",
+                                         stagger: 0.10}, "-=0.4")
+
+   NOTE ON THE OFFSET: the source comments this second tween as starting 0.4s
+   after the links. It does not. "-=0.4" pulls it back by the full 0.4s the
+   first tween lasts, so both start at t=0 and run together. Reproduced as
+   measured, not as commented -- the letters and the band rise as one.
+
+   y: 30 / power2.out is our .reveal almost exactly (20px, --ease-out), so the
+   band reuses .reveal's transition and only overrides the distance and the
+   duration rather than carrying a second one of its own.
+
+   ARMED, NOT PARKED BY DEFAULT -- same reasoning as the wordmark above, and
+   the same bug found the same way. Bare .reveal starts at opacity 0, so if
+   site.js never runs there is nothing to add .is-visible and the whole band
+   stays invisible: heading, CTA, socials and partners, about 450px of empty
+   ink. Verified by loading the page with the <script> tag stripped. So the
+   finished state is the default here too, and .is-armed -- added by site.js
+   only on the path where it will also release it -- is what opts into the
+   motion. .footer__close.reveal is 0,2,0 and beats .reveal at 0,1,0.
+   -------------------------------------------------------------------------- */
+
+.footer__close.reveal {
+  opacity: 1;
+  transform: none;
+}
+
+.footer__close.reveal.is-armed {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 400ms var(--ease-out), transform 400ms var(--ease-out);
+}
+
+.footer__close.reveal.is-armed.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --------------------------------------------------------------------------
+   FOOTER REVEAL — the footer is pinned and the page slides off it
+   The source parks the footer at the bottom of the viewport and lets the last
+   section travel up and off it, so the footer is uncovered from its top edge
+   down rather than scrolling in from below. Measured on www.arrodz.com: the
+   footer element is fixed to the bottom, the scrolling column above reserves
+   its height as trailing space, and nothing about the footer itself moves.
+
+   WHY NOT position: sticky. Sticky needs slack inside a scroll container to
+   travel through. The footer is the last in-flow element on the page, so its
+   containing block ends exactly where it does and there is nowhere to stick:
+   measured at five scroll positions with `sticky; bottom: 0` applied, the
+   footer's viewport top read 12372 / 6372 / 672 / 372 / 4 -- identical to
+   static, i.e. no pinning at any point. Fixed plus reserved space is the only
+   version that holds.
+
+   OPT-IN, like the wordmark and the closing band above. Only a page carrying
+   .footer--pinned gets this; the three other pages with .footer render it
+   in normal flow and are untouched.
+   -------------------------------------------------------------------------- */
+
+/* The offsets are unconditional; only `position` is switched, by the state
+   class below. With position static all three are inert, so the unpinned case
+   needs nothing undone. */
+.footer--pinned {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* Under the page, over nothing. .page is opaque (--color-surface, dna.css)
+     which is what actually hides the footer; z-index only settles the order
+     for the two in the same stacking context. Below --z-nav (100) so the
+     sticky header still wins, and below --z-mobile-bar (300). */
+  z-index: var(--z-base);
+}
+
+/* Both halves of the mechanism ride on ONE class, so the reserve and the layer
+   lift can never be applied apart -- either would break alone. The reserve
+   without the lift leaves a footer-height gap of blank page; the lift without
+   the reserve shortens the document by a footer and the last section never
+   clears the viewport.
+
+   A class rather than a sibling selector: main precedes footer in the DOM, so
+   `.footer--pinned ~ main` cannot match, and :has() is avoidable here.
+
+   The reserve itself is in the media query below, not here: it must appear
+   only where the footer is actually pinned, or it would add a footer-height
+   band of blank page under a footer that still occupies its own space. */
+.page--footer-reserve {
+  position: relative;
+  z-index: var(--z-raised);
+}
+
+/* SHORT-VIEWPORT FALLBACK. The footer is 865-896px tall through the range and
+   only just fits a 900px viewport (840 against 844 at 390px -- 4px of slack).
+   Below that it cannot be uncovered at all: a fixed element taller than the
+   viewport has its overflow permanently off-screen, and .footer__baseline,
+   the last 50px, would be unreachable. Measured at 1024x600 the footer is
+   865px, 265px past the viewport.
+
+   So the pin is conditional on the viewport being tall enough to show the
+   whole footer. 920px is 896 (the tallest measured) plus a 24px margin. Under
+   that the footer is static and scrolls normally -- the ordinary behaviour,
+   which is correct, just without the reveal. Written as a min-height query so
+   the static case needs no undoing, and the default stays the safe one. */
+@media (min-height: 920px) {
+  .footer--pinned {
+    position: fixed;
+  }
+
+  .page--footer-reserve {
+    margin-block-end: var(--footer-h, 0px);
+  }
+}
+
+/* REDUCED MOTION. The pin is not an animation -- nothing eases, and the
+   footer never moves -- so it is kept. It is the same finished layout either
+   way; only the page's own scroll uncovers it. */
