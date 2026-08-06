@@ -2074,14 +2074,26 @@
   /* 100% of the letter's own line box = 1em, and the band is 0.641em, so a
      letter parked here sits entirely below the crop. */
   transform: translateY(100%);
-  /* 1s power4.out in the source. GSAP power4 is quintic, which is what
-     --ease-out already is: cubic-bezier(0.22, 1, 0.36, 1). */
-  transition: transform 1000ms var(--ease-out);
   will-change: transform;
 }
 
+/* THE TRANSITION IS ON THE VISIBLE STATE, NOT THE PARKED ONE, and the
+   direction is the whole point. A transition is read from the state being
+   moved TO, so declaring it here animates the rise and leaves the return
+   instant.
+
+   That asymmetry is what the pinned footer needs. Because it is fixed, it is
+   re-covered rather than left behind, so site.js re-parks the letters for the
+   next approach (see initFooterEntrance). The re-park happens only once the
+   band is fully hidden, so the drop is never on screen -- but a 1s eased drop
+   is still 1s of animation the reader can outrun by scrolling back down, which
+   arrives mid-fall. Instant, hidden, and ready.
+
+   1s power4.out in the source. GSAP power4 is quintic, which is what
+   --ease-out already is: cubic-bezier(0.22, 1, 0.36, 1). */
 .footer__mark.is-armed.is-visible .footer__mark-letter {
   transform: translateY(0);
+  transition: transform 1000ms var(--ease-out);
 }
 
 /* 0.10s apart, in order. The delays live on the visible state so the
@@ -2459,12 +2471,17 @@
 .footer__close.reveal.is-armed {
   opacity: 0;
   transform: translateY(30px);
-  transition: opacity 400ms var(--ease-out), transform 400ms var(--ease-out);
 }
 
+/* Transition on the visible state for the same reason as the wordmark above:
+   the rise is eased, the re-park is instant. Both halves of the entrance are
+   released together and re-parked together, so they have to agree about this or
+   the band would still be fading out under the page while the letters were
+   already home. */
 .footer__close.reveal.is-armed.is-visible {
   opacity: 1;
   transform: translateY(0);
+  transition: opacity 400ms var(--ease-out), transform 400ms var(--ease-out);
 }
 
 /* --------------------------------------------------------------------------
@@ -2519,28 +2536,71 @@
   z-index: var(--z-raised);
 }
 
-/* SHORT-VIEWPORT FALLBACK. The footer is 865-896px tall through the range and
-   only just fits a 900px viewport (840 against 844 at 390px -- 4px of slack).
-   Below that it cannot be uncovered at all: a fixed element taller than the
-   viewport has its overflow permanently off-screen, and .footer__baseline,
-   the last 50px, would be unreachable. Measured at 1024x600 the footer is
-   865px, 265px past the viewport.
+/* SHORT-VIEWPORT FALLBACK, and why it is a class and not a media query.
 
-   So the pin is conditional on the viewport being tall enough to show the
-   whole footer. 920px is 896 (the tallest measured) plus a 24px margin. Under
-   that the footer is static and scrolls normally -- the ordinary behaviour,
-   which is correct, just without the reveal. Written as a min-height query so
-   the static case needs no undoing, and the default stays the safe one. */
-@media (min-height: 920px) {
-  .footer--pinned {
-    position: fixed;
-  }
+   A fixed element taller than the viewport has its overflow permanently
+   off-screen: it cannot be scrolled to, because it is not in the flow. If the
+   footer is 865px in a 600px viewport, the last 265px -- .footer__baseline
+   with the copyright and the legal links among it -- is unreachable at every
+   scroll position. So the pin is only safe while the whole footer fits.
 
-  .page--footer-reserve {
-    margin-block-end: var(--footer-h, 0px);
-  }
+   That comparison cannot be written in CSS. The threshold is the footer's own
+   rendered height, which varies with width and with the wordmark's clamped
+   type (896px at 1280, 865px at 1024, 840px at 390) -- a media query would
+   have to hardcode one number for all of them. A first pass used
+   `min-height: 920px`, 896 plus margin, and it excluded a 900px viewport that
+   fits the 896px footer perfectly.
+
+   So site.js, which already measures the footer for --footer-h, compares that
+   against the viewport and toggles .footer--pinned-active. CSS applies the
+   result. Default is unpinned: no JS, no pin, footer in normal flow. */
+.footer--pinned-active {
+  position: fixed;
 }
 
-/* REDUCED MOTION. The pin is not an animation -- nothing eases, and the
-   footer never moves -- so it is kept. It is the same finished layout either
-   way; only the page's own scroll uncovers it. */
+/* Both halves hang off ONE root flag, set in the same place as the class
+   above, so the pin and the reserve cannot apply apart -- and either half
+   alone is a bug: reserve without pin adds a footer-height band of blank page,
+   pin without reserve shortens the document by a footer so the last section
+   never clears the viewport.
+
+   On the root and not a sibling selector, because <main> PRECEDES <footer>:
+   `.footer--pinned-active ~ .page--footer-reserve` cannot match in that
+   direction, and :has() would work but reads worse than a flag both rules
+   share. */
+.has-pinned-footer .page--footer-reserve {
+  margin-block-end: var(--footer-h, 0px);
+}
+
+/* NO PIN UNDER 768px, because .mobile-bar owns the bottom edge of the viewport
+   and that is precisely where a pinned footer has to live. The bar is fixed at
+   inset-block-end: 0 with z-index 300; the footer pins to the same edge at
+   z-index 0, so the bar's 56px lands on top of the footer's last 56px --
+   measured at 390x844 with the pin on, the bar's top edge is at 787 and
+   .footer__legal-links runs to 812. The legal row sits behind the bar.
+
+   `body { padding-block-end: var(--mobile-bar-h) }` in base.css is what
+   normally prevents this, but it can only move IN-FLOW content -- a fixed
+   footer is positioned against the viewport and cannot see it.
+
+   Padding the footer instead does clear the row, but it cannot be made to pay:
+   the pin needs the footer to FIT the viewport, and 56px of clearance is
+   exactly what a phone does not have. Measured at 390x844: 840px of footer
+   clears the bar at 896px, which no longer fits 844 and correctly unpins
+   itself -- the clearance and the pin cannot both be satisfied. Keying the
+   padding to the active state instead of the opt-in makes it worse than
+   useless: 840 fits so it pins, the padding takes it to 896 so it unpins, the
+   padding goes and it fits again, and the ResizeObserver on the footer runs
+   that cycle for as long as the page is open.
+
+   So the pin is a desktop behaviour. Below 768px the footer scrolls in
+   normally, which is the ordinary correct layout, and the bar keeps its edge.
+
+   Enforced in site.js (PIN_MAX_WIDTH) rather than by a media query here. The
+   fits-the-viewport test is already there and already un-expressible in CSS,
+   so both halves of one decision stay in one place -- a media query would only
+   be a second, overridable opinion about the same thing. */
+
+/* REDUCED MOTION. The pin is not an animation -- nothing eases and the footer
+   never moves -- so it is kept. Both settings get the same finished layout;
+   only the page's own scroll uncovers it. */

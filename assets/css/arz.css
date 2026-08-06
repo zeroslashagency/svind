@@ -485,13 +485,26 @@
 }
 
 .arz__faq-a {
-  height: 0;
   overflow: hidden;
-  transition: height 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.arz__faq-item[open] .arz__faq-a {
+/* Smooth open/close on click. Native <details> clips its content instantly via
+   ::details-content { content-visibility }, so the height transition has to
+   live on that pseudo-element, not on .arz__faq-a. interpolate-size (set on
+   .arz__faq-list) lets height animate to/from the keyword `auto`, and
+   `content-visibility` is transitioned with allow-discrete so it flips at the
+   end of the close and the start of the open instead of snapping. */
+.arz__faq-item::details-content {
+  height: 0;
+  overflow: hidden;
+  content-visibility: hidden;
+  transition: height 300ms cubic-bezier(0.4, 0, 0.2, 1),
+    content-visibility 300ms allow-discrete;
+}
+
+.arz__faq-item[open]::details-content {
   height: auto;
+  content-visibility: visible;
 }
 
 .arz__faq-a p {
@@ -528,11 +541,21 @@
   border-radius: 8px;
   background-color: var(--arz-card);
   color: var(--arz-ink);
+  transition: background-color 250ms ease, color 250ms ease;
 }
 
+/* On desktop the link hangs from the bottom (large gap keeps the card tall).
+   The card size never changes on hover -- instead CONTACT US slides UP via a
+   transform, which does not affect layout. 208px = the 240px rest gap minus
+   the 32px it should sit below the question text. */
 @media (min-width: 992px) {
   .arz__faq-card {
     gap: 240px;
+  }
+
+  .arz__faq-card:hover .arz__faq-card-link,
+  .arz__faq-card:focus-visible .arz__faq-card-link {
+    transform: translateY(-208px);
   }
 }
 
@@ -549,14 +572,24 @@
   line-height: 1.5;
   text-transform: uppercase;
   color: var(--arz-teal);
-  transition: opacity 200ms ease;
+  transition: color 250ms ease,
+    transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
 }
 
-/* Measured from the source and kept as-is, but note what it now costs: at 0.7
-   over --arz-card the link computes to rgb(110,172,176), which is 2.00:1. On
-   the original beige/wine pairing the same rule still held 4.26:1. */
-.arz__faq-card:hover .arz__faq-card-link {
-  opacity: 0.7;
+/* Hover / focus reveal: the whole card fills wine and its text turns beige,
+   matching the source's rollover. Colours are the measured brand tokens, so
+   --arz-beige (#F5F2E8) on --arz-wine (rgb(110,42,42)) holds ~9.2:1 for both
+   the body copy and the CONTACT US link. */
+.arz__faq-card:hover,
+.arz__faq-card:focus-visible {
+  background-color: var(--arz-wine);
+  color: var(--arz-beige);
+}
+
+.arz__faq-card:hover .arz__faq-card-link,
+.arz__faq-card:focus-visible .arz__faq-card-link {
+  color: var(--arz-beige);
 }
 
 .arz__faq-card:focus-visible {
@@ -573,8 +606,12 @@
   .arz__faq-q,
   .arz__faq-icon::after,
   .arz__faq-dot,
-  .arz__faq-a,
+  .arz__faq-card,
   .arz__faq-card-link {
+    transition: none;
+  }
+
+  .arz__faq-item::details-content {
     transition: none;
   }
 }

@@ -333,7 +333,9 @@
      reduced-motion check.
      ------------------------------------------------------------------------ */
 
-  var PIN_MIN_HEIGHT = 920; // keep in step with the @media in components.css
+  // Matches the .mobile-bar breakpoint in components.css: below this the bar
+  // owns the bottom edge of the viewport and the footer cannot pin to it.
+  var PIN_MAX_WIDTH = 767.98;
 
   function footerIsPinned(footer) {
     return getComputedStyle(footer).position === 'fixed';
@@ -344,25 +346,45 @@
     if (!footer) return null;
 
     var root = document.documentElement;
-    var last = null;
+    var lastH = null;
+    var lastFits = null;
 
     function measure() {
-      /* Read the height even when static: the viewport can cross
-         PIN_MIN_HEIGHT without a resize of the footer itself, and the value
-         must already be correct when it does. offsetHeight rounds to an
-         integer, which is what a margin wants -- a fractional reserve leaves a
-         sub-pixel seam of page under the footer. */
+      /* Measure UNPINNED. While the footer is fixed its own height is
+         independent of the reserve, so reading it in place is safe -- but on
+         the first pass the class is not applied yet and this is the flow
+         height either way. offsetHeight rounds to an integer, which is what
+         the margin wants: a fractional reserve leaves a sub-pixel seam of page
+         showing under the footer. */
       var h = footer.offsetHeight;
-      if (h === last) return;
-      last = h;
-      root.style.setProperty('--footer-h', h + 'px');
+      if (h !== lastH) {
+        lastH = h;
+        root.style.setProperty('--footer-h', h + 'px');
+      }
+
+      /* Two conditions, both measured, both explained in the FOOTER REVEAL
+         comment in components.css:
+
+         1. The whole footer must fit the viewport. A fixed element taller than
+            the viewport keeps its overflow permanently off-screen, so
+            .footer__baseline would be unreachable at every scroll position.
+         2. Not under 768px, where .mobile-bar is fixed to the same bottom edge
+            at z-index 300 and would cover the footer's last 56px. Clearing it
+            with padding costs 56px the phone does not have -- 840px of footer
+            becomes 896 and stops fitting 844. */
+      var ok = h <= window.innerHeight && window.innerWidth > PIN_MAX_WIDTH;
+      if (ok === lastFits) return;
+      lastFits = ok;
+      footer.classList.toggle('footer--pinned-active', ok);
+      root.classList.toggle('has-pinned-footer', ok);
     }
 
     measure();
 
-    /* Width changes reflow the footer; ResizeObserver catches the rest --
-       fonts landing late, the wordmark's clamp restepping, an image settling.
-       Both funnel through the same idempotent measure(). */
+    /* Width changes reflow the footer and height changes move the fits
+       threshold, so both need the resize. ResizeObserver catches what resize
+       does not: fonts landing late, the wordmark's clamp restepping, an image
+       settling. Both funnel through the same idempotent measure(). */
     window.addEventListener('resize', debounce(measure, 120), { passive: true });
 
     if ('ResizeObserver' in window) {
@@ -391,6 +413,14 @@
       group.forEach(function (el) { el.classList.add('is-visible'); });
     }
 
+    /* Only reachable on the pinned path. The unpinned observer below never
+       calls it -- a footer that scrolls in normally is gone from the viewport
+       once it leaves, so re-parking it would be motion nobody can see, and the
+       one-shot IO is still the right shape there. */
+    function repark() {
+      group.forEach(function (el) { el.classList.remove('is-visible'); });
+    }
+
     /* A pinned footer is INSIDE the viewport from the first paint, so an
        IntersectionObserver on it reports isIntersecting immediately and the
        entrance would play at scroll 0, behind the page, and be over before
@@ -398,30 +428,74 @@
        .footer__close ratio 0.553, .footer__mark ratio 1.0 -- IO ignores
        occlusion, so both read as fully visible under an opaque page.
 
-       So when pinned, the trigger is the page's own travel instead: fire once
-       the reserved space at the end of <main> starts entering the viewport,
-       which is the moment the footer begins to be uncovered. TRIGGER_SLACK
-       reproduces the source's `body bottom-=200`. */
+       So when pinned, the trigger is OCCLUSION rather than intersection. The
+       page's own bottom edge is the thing doing the covering, so the test is
+       how close that edge has come to the element being revealed.
+
+       Measured against .footer__mark, not the footer's top edge. The footer is
+       896px tall and the wordmark sits 509px down it, so a trigger on the
+       footer's edge fires 591px of scrolling before the letters are uncovered
+       -- they finish rising behind the page and arrive already static.
+       Screenshotted at 1280x900 to confirm: 228px of footer showing, the
+       entrance long since complete, nothing moving.
+
+       TRIGGER_LEAD keeps the source's early start (`body bottom-=200`), now
+       relative to the wordmark: the rise begins 200px before its top edge
+       clears, so the letters are already in motion as they appear. */
     var main = document.querySelector('.page--footer-reserve');
+    var revealTarget = document.querySelector('.footer__mark') || pinnedFooter;
 
     if (pinnedFooter && main && footerIsPinned(pinnedFooter)) {
-      var TRIGGER_SLACK = 200;
-      var fired = false;
+      var TRIGGER_LEAD = 200;
+      var shown = false;
+      var handedBack = false;
 
+      /* REPLAYS, unlike every other reveal on the page.
+         A pinned footer is not consumed by being passed: it stays at the bottom
+         edge for the whole visit, and scrolling back up covers it again rather
+         than leaving it behind. So the letters go home when it is uncovered and
+         return under the crop when it is covered, and the entrance plays again
+         on the next approach -- which is what the reference does. One-shot
+         reveals stay one-shot; see repark() above for why this is the only
+         group that gets it.
+
+         THE RE-PARK POINT IS NOT THE RELEASE POINT. Reset while any part of the
+         wordmark is on screen and the letters visibly snap down, so the trigger
+         is asymmetric: release when the page's edge comes within TRIGGER_LEAD
+         of the wordmark's TOP, re-park only once it has passed the wordmark's
+         BOTTOM and the whole band is hidden again. Both edges are measured, so
+         the gap scales with the type instead of being a guessed constant -- at
+         1280 the band is 340px, so the two thresholds sit ~540px of scroll
+         apart and nothing near the boundary can oscillate. */
       var check = rafThrottle(function () {
-        if (fired) return;
+        if (handedBack) return;
         /* If the viewport shrinks below the pin threshold mid-visit the footer
            goes static and this trigger no longer describes anything; hand back
-           to the ordinary case by firing, so the band cannot be stranded. */
+           to the ordinary case by releasing for good, so the band cannot be
+           stranded parked with nothing left to un-park it. */
         if (!footerIsPinned(pinnedFooter)) {
-          fired = true;
+          handedBack = true;
+          shown = true;
+          release();
+          window.removeEventListener('scroll', check);
+          return;
+        }
+        /* All three rects are viewport-relative. The footer is fixed, so the
+           wordmark does not move; main's bottom rises through it as the page
+           scrolls. */
+        var covering = main.getBoundingClientRect().bottom;
+        var box = revealTarget.getBoundingClientRect();
+
+        if (!shown) {
+          if (covering - box.top > TRIGGER_LEAD) return;
+          shown = true;
           release();
           return;
         }
-        if (main.getBoundingClientRect().bottom - TRIGGER_SLACK > window.innerHeight) return;
-        fired = true;
-        release();
-        window.removeEventListener('scroll', check);
+
+        if (covering < box.bottom) return;
+        shown = false;
+        repark();
       });
 
       window.addEventListener('scroll', check, { passive: true });
