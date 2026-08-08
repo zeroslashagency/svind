@@ -166,7 +166,8 @@
 /* The real accessible opener, restyled to the reference's treatment: heavy,
    uppercase, tight. Still ONE of the three permitted visible sizes -- it
    takes display-l's slot, it does not add a fourth step. */
-.hro .dna-lockup__h1 {
+.hro .dna-lockup__h1,
+.hero-home-title {
   max-width: 22ch;
   margin: 0;
   font-family: var(--font-display);
@@ -177,6 +178,26 @@
   text-transform: uppercase;
   color: var(--color-surface);
 }
+
+/* Arrodz layout helpers — mapped onto existing tokens */
+.hero-home-content-wrapper { position: relative; z-index: 3; display: flex; flex-direction: column; gap: clamp(32px, 6vw, 88px); }
+.hero-home-top-content { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr); gap: clamp(20px, 3vw, 56px); align-items: start; }
+.max-width-small { max-width: 32ch; }
+.text-size-small { font-size: var(--text-body-s); line-height: var(--lh-body-s); }
+.text-color-white { color: var(--color-text-on-dark); }
+.button-group.hide-desktop { display: none; }
+.hero-logo-wrapper { position: relative; z-index: 3; display: flex; flex-direction: column; gap: var(--space-4); }
+.hero-a-wrapper { display: flex; gap: clamp(2px,0.6vw,12px); }
+.hero-logo-letter { font-family: var(--font-display); font-weight: 700; line-height: 0.78; }
+.hero-logo-cta { display: flex; align-items: center; }
+.hero-logo-cta.is-o { gap: clamp(6px,1vw,16px); }
+.hero-o-cta { display: inline-flex; align-items: center; background: var(--color-navy); color: var(--color-surface); text-decoration: none; }
+.hero-o-cta-content { display: inline-flex; align-items: center; gap: var(--space-3); font-size: var(--text-micro-caps); letter-spacing: var(--tracking-micro-caps); text-transform: var(--case-micro-caps); }
+.icon-embed-xsmall { width: 18px; height: 18px; display: flex; }
+.hero-h1 { margin: 0; font-size: var(--text-micro-caps); letter-spacing: var(--tracking-micro-caps); text-transform: var(--case-micro-caps); color: rgba(255,255,255,0.72); display: flex; gap: var(--space-4); flex-wrap: wrap; }
+.hero-h1-span-1, .hero-h1-span-2 { display: inline; }
+
+@media (max-width: 900px) { .hero-home-top-content { grid-template-columns: 1fr; } .button-group.hide-desktop { display: flex; } }
 
 .hro__lead {
   grid-column: 2;
@@ -252,16 +273,16 @@
    the S starts on the band's shoulder and the disc ends on it, at every
    width, with no magic numbers. */
 .hro .dna-lockup__wordmark {
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: clamp(8px, 1.4vw, 28px);
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
   flex-wrap: nowrap;
 }
 
 .hro .dna-lockup__letters {
-  flex: 1 1 auto;
-  justify-content: space-between;
-  gap: clamp(2px, 0.6vw, 16px);
+  flex: 0 0 auto;
+  justify-content: flex-start;
+  gap: 8px;
 }
 
 .hro .dna-lockup__letter {
@@ -273,27 +294,53 @@
   color: var(--color-surface);
 }
 
-/* The disc scales with the letters or it stops being their optical equal.
-   Width and height off the SAME clamp so it stays a circle -- the ellipse
-   trap dna.css §4b documents. */
+/* D plain solid hero — no hole, same size, hidden glyph */
 .hro .dna-lockup__cta-letter {
-  width: clamp(56px, 13.5vw, 218px);
-  height: clamp(56px, 13.5vw, 218px);
+  width: auto;
+  height: auto;
+  padding-inline: 0.08em;
   font-size: clamp(64px, 18.5vw, 300px);
   line-height: 0.78;
+  transform: none;
+  color: transparent;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .hro .dna-lockup__cta {
   flex: none;
-  padding: clamp(8px, 1vw, 20px);
+  width: auto;
+  min-width: clamp(56px, 13.5vw, 190px);
+  min-height: clamp(56px, 13.5vw, 219px);
+  padding: 0;
+  transition: min-width var(--dur-base) var(--ease-out),
+              padding var(--dur-base) var(--ease-out),
+              background-color var(--dur-fast) var(--ease-out),
+              border-radius var(--dur-base) var(--ease-out);
 }
 
-/* The open state is inherited from dna.css. Only the closed radius needs a
-   step up here, because the disc is much larger than the stock one and the
-   squared-off open radius has to stay proportional to it. */
+/* Litter fix — arrodz hero uses icon-embed-xsmall 20x20 inside hero-o-cta-content, hide outer DNA 18x16 arrow in hero to keep one container */
+.hro .dna-lockup__cta-arrow { display: none; }
+
+/* D-pill keeps flat left spine when open — same D stretched, VisBug 374.398×219.285 */
 .hro .dna-lockup__cta:hover,
 .hro .dna-lockup__cta:focus-visible {
-  border-radius: clamp(28px, 5vw, 84px);
+  border-radius: 0 clamp(28px, 5vw, 84px) clamp(28px, 5vw, 84px) 0;
+}
+
+.hro .dna-lockup.is-cta-open .dna-lockup__cta {
+  min-width: clamp(180px, 28vw, 374px);
+  border-radius: 0 clamp(28px, 5vw, 84px) clamp(28px, 5vw, 84px) 0;
+  background-color: var(--color-navy);
+  transform: none;
+  justify-content: flex-end;
+  padding-inline-end: clamp(18px, 2vw, 30px);
+}
+
+/* plain D alignment — gap 8 only, SVIND same format, D pill right-aligned like screenshot */
+div.hero-logo-cta.dna-lockup__wordmark {
+  row-gap: 8px;
+  column-gap: 8px;
 }
 
 .hro .dna-lockup__cta:focus-visible {
@@ -402,14 +449,16 @@
   }
 
   .hro .dna-lockup__wordmark {
-    flex-wrap: wrap;
-    align-items: flex-start;
+    flex-wrap: nowrap;
+    align-items: center;
     justify-content: flex-start;
+    gap: 8px;
   }
 
   .hro .dna-lockup__letters {
-    flex: 0 1 auto;
+    flex: 0 0 auto;
     justify-content: flex-start;
+    gap: 8px;
   }
 
   .hro .dna-lockup__letter,
@@ -418,8 +467,8 @@
   }
 
   .hro .dna-lockup__cta-letter {
-    width: clamp(44px, 15vw, 72px);
-    height: clamp(44px, 15vw, 72px);
+    width: auto;
+    height: auto;
   }
 
   /* The negative overlap is tuned to a 300px cap. At phone sizes the letters
@@ -430,5 +479,49 @@
 
   .hro__bottom {
     margin-block-start: clamp(32px, 9vw, 56px);
+  }
+
+  .hro .dna-lockup__cta {
+    width: auto;
+    height: auto;
+    transform: none;
+  }
+
+  .hro .dna-lockup__cta-letter {
+    width: auto;
+    height: auto;
+    transform: none;
+  }
+
+  .hro .dna-lockup.is-cta-open .dna-lockup__cta {
+    width: auto;
+    height: auto;
+    transform: none;
+  }
+
+  /* VisBug desktop nudges off on phone — stacked wordmark would clip */
+  div.hero-logo-cta.dna-lockup__wordmark,
+  span.dna-lockup__letters.hero-a-wrapper > span:nth-of-type(2),
+  span.dna-lockup__letters.hero-a-wrapper > span:nth-of-type(3),
+  span.dna-lockup__letters.hero-a-wrapper > span:nth-of-type(4),
+  a.dna-lockup__cta.hero-o-cta.w-inline-block {
+    row-gap: initial;
+    column-gap: initial;
+    transform: none;
+  }
+}
+
+/* Loader narrow — keep SVIND word stacked readable on phone */
+@media (max-width: 640px) {
+  .site-loader__letter {
+    font-size: clamp(48px, 18vw, 88px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-loader,
+  .site-loader__letter,
+  .site-loader__tag {
+    transition: none !important;
   }
 }

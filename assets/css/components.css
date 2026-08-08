@@ -2060,6 +2060,10 @@
 
 .footer__mark-letter {
   display: block;
+  width: auto;
+  height: auto;
+  transform: none;
+  letter-spacing: 0;
 }
 
 /* The parked position is opt-IN, via .is-armed from site.js, and the default

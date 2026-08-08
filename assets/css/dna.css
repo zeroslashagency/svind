@@ -400,25 +400,31 @@
 .dna-lockup__cta {
   display: inline-flex;
   align-items: center;
-  padding: clamp(10px, 1.2vw, 18px);
-  border-radius: 50%;                     /* documented exception, see above */
+  justify-content: center;
+  width: auto;
+  height: auto;
+  min-width: clamp(48px, 18vw, 88px);
+  min-height: clamp(48px, 18vw, 88px);
+  padding: 0.08em 0.12em 0.08em 0.08em;
+  /* plain D solid — responsive, no hole, same cap-height as S V I N, flat left spine keeps format on every screen */
+  border-radius: 0 clamp(42px, 6vw, 116px) clamp(42px, 6vw, 116px) 0 / 0 50% 50% 0;
   background-color: var(--color-navy);
-  color: var(--color-surface);            /* white on navy ≈ 8.6:1 */
+  color: var(--color-surface);
   text-decoration: none;
-  transition: background-color var(--dur-fast) var(--ease-out),
-              border-radius var(--dur-base) var(--ease-out),
-              padding var(--dur-base) var(--ease-out);
+  transition: min-width var(--dur-base) var(--ease-out),
+              padding var(--dur-base) var(--ease-out),
+              background-color var(--dur-fast) var(--ease-out),
+              border-radius var(--dur-base) var(--ease-out);
 }
 
 .dna-lockup__cta:hover {
   background-color: var(--color-navy-deep);
 }
 
-/* Square off as it opens: a pill radius on a wide box would read as a button
-   from another design system. */
+/* D-pill opens: keep flat left spine so the expanded shape is the same D stretched */
 .dna-lockup__cta:hover,
 .dna-lockup__cta:focus-visible {
-  border-radius: clamp(28px, 4vw, 56px);
+  border-radius: 0 clamp(28px, 4vw, 56px) clamp(28px, 4vw, 56px) 0;
   padding-inline-end: clamp(18px, 2vw, 30px);
 }
 
@@ -427,22 +433,24 @@
   outline-offset: calc(var(--focus-ring-offset) + 2px);
 }
 
-/* The letter itself, drawn white inside the disc. Fixed square so the disc is
-   a circle and not an ellipse, whatever the glyph's own advance width is. */
+/* D plain solid — no hole: glyph hidden, single navy D-shaped DIV is the letter itself, same metrics as S V I N */
 .dna-lockup__cta-letter {
   flex: none;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  /* Scaled with the enlarged letter run so the disc reads as one of the
-     glyphs, not a button parked beside them. */
-  width: clamp(72px, 14vw, 232px);
-  height: clamp(72px, 14vw, 232px);
+  width: auto;
+  height: auto;
+  padding-inline: 0.08em;
   font-family: var(--font-display);
   font-size: clamp(88px, 20vw, 320px);
   font-weight: 700;
   line-height: 0.82;
   letter-spacing: 0;
+  transform: none;
+  color: transparent;
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* max-width, not display or visibility: the label stays in the accessibility
@@ -479,17 +487,28 @@
 }
 
 .dna-lockup__cta:hover .dna-lockup__cta-label,
-.dna-lockup__cta:focus-visible .dna-lockup__cta-label {
+.dna-lockup__cta:focus-visible .dna-lockup__cta-label,
+.dna-lockup.is-cta-open .dna-lockup__cta-label {
   max-width: 22ch;
   margin-inline-start: var(--space-4);
   opacity: 1;
 }
 
 .dna-lockup__cta:hover .dna-lockup__cta-arrow,
-.dna-lockup__cta:focus-visible .dna-lockup__cta-arrow {
+.dna-lockup__cta:focus-visible .dna-lockup__cta-arrow,
+.dna-lockup.is-cta-open .dna-lockup__cta-arrow {
   width: 18px;
   margin-inline-start: var(--space-3);
   opacity: 1;
+}
+
+/* AUTO-OPEN — one container D-pill — same height as closed, only min-width grows, fully responsive */
+.dna-lockup.is-cta-open .dna-lockup__cta {
+  min-width: clamp(180px, 28vw, 374px);
+  background-color: var(--color-navy);
+  border-radius: 0 clamp(28px, 4vw, 56px) clamp(28px, 4vw, 56px) 0;
+  padding-inline-end: clamp(18px, 2vw, 30px);
+  transform: none;
 }
 
 /* ENTRANCE. Default is the finished state; .is-armed parks it and .is-in
@@ -537,6 +556,109 @@
   .dna-lockup__cta-arrow {
     transition: none;
   }
+
+  .site-loader,
+  .site-loader__letter,
+  .site-loader__tag {
+    transition: none !important;
+  }
+
+  .dna-lockup.is-cta-open .dna-lockup__cta,
+  .dna-lockup.is-cta-open .dna-lockup__cta-label,
+  .dna-lockup.is-cta-open .dna-lockup__cta-arrow {
+    transition: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   4c. SITE LOADER — ARRODZ-style opening (full-bleed navy, SVIND knockout)
+   Mirrors arrodz.com home-loader: one full-viewport plate with giant display
+   letters that rise from below, then curtain slides up. No JS transform here;
+   JS only toggles is-in / is-exit.
+   -------------------------------------------------------------------------- */
+
+.site-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-navy);
+  color: var(--color-surface);
+  overflow: hidden;
+  transition: transform var(--dur-reveal) var(--ease-out),
+              opacity var(--dur-reveal) var(--ease-out);
+  will-change: transform, opacity;
+}
+
+.site-loader__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(12px, 2vw, 20px);
+  padding: var(--space-4);
+}
+
+.site-loader__word {
+  display: flex;
+  align-items: center;
+  gap: clamp(2px, 0.6vw, 12px);
+  overflow: hidden;
+}
+
+.site-loader__letter {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(64px, 20vw, 300px);
+  font-weight: 700;
+  line-height: 0.78;
+  letter-spacing: -0.04em;
+  color: var(--color-surface);
+  transform: translateY(110%);
+  opacity: 0;
+  transition: transform 700ms var(--ease-out), opacity 500ms var(--ease-out);
+}
+
+.site-loader.is-in .site-loader__letter {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.site-loader.is-in .site-loader__letter:nth-child(1) { transition-delay: 0ms; }
+.site-loader.is-in .site-loader__letter:nth-child(2) { transition-delay: 80ms; }
+.site-loader.is-in .site-loader__letter:nth-child(3) { transition-delay: 160ms; }
+.site-loader.is-in .site-loader__letter:nth-child(4) { transition-delay: 240ms; }
+.site-loader.is-in .site-loader__letter:nth-child(5) { transition-delay: 320ms; }
+
+.site-loader__tag {
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: rgba(255,255,255,0.72);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 500ms var(--ease-out) 480ms, transform 500ms var(--ease-out) 480ms;
+}
+
+.site-loader.is-in .site-loader__tag {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.site-loader.is-exit {
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.site-loader--hidden {
+  display: none !important;
+}
+
+.user-has-visited .site-loader {
+  display: none !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -1427,18 +1549,17 @@
     width: 100%;
   }
 
-  /* The lockup stops being one line below 640px: "SVIN" plus an open circle
-     cannot sit on a 360px row without either shrinking the type to nothing or
-     scrolling sideways. The run and the CTA stack, and the letter clamp drops
-     its floor so four glyphs still fit the narrowest supported width. */
+  /* SVIND stays one similar line on every screen — keep row, scale via clamp, same format */
   .dna-band--lockup {
     min-height: 0;
   }
 
   .dna-lockup__wordmark {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-5);
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
   }
 
   .dna-lockup__letter,
@@ -1447,15 +1568,25 @@
   }
 
   .dna-lockup__cta-letter {
-    width: clamp(44px, 15vw, 72px);
-    height: clamp(44px, 15vw, 72px);
+    width: auto;
+    height: auto;
+    transform: none;
   }
 
   /* Touch has no hover: on a phone the label is always out, so the CTA reads
-     as a labelled button rather than a mystery disc. */
+     as a labelled button — but keep D's flat left spine. */
   .dna-lockup__cta {
-    border-radius: clamp(24px, 8vw, 40px);
+    width: auto;
+    height: auto;
+    border-radius: 0 clamp(24px, 8vw, 40px) clamp(24px, 8vw, 40px) 0;
     padding-inline-end: var(--space-5);
+  }
+
+  /* VisBug 374×219 is desktop pill; on phone let it size naturally */
+  .dna-lockup.is-cta-open .dna-lockup__cta {
+    width: auto;
+    height: auto;
+    transform: none;
   }
 
   .dna-lockup__cta-label {

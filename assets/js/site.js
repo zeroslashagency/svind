@@ -296,6 +296,104 @@
      removed, so a mid-visit switch to reduce cannot leave a half-played rise.
      ------------------------------------------------------------------------ */
 
+  /* ------------------------------------------------------------------------
+     4c. SITE LOADER — ARRODZ-style opening plate (SVIND)
+     Full-bleed navy curtain with SVIND knockout that rises on first load,
+     then slides up. Mirrors arrodz.com home-loader: localStorage 1h skip,
+     reduced-motion respects + curtain uses the same ease as hero.
+     Also owns the D pill auto-open (your 1 → 3 sec note: D closed circle
+     expands to pill with label+arrow after loader + hero have settled).
+     ------------------------------------------------------------------------ */
+
+  function initSiteLoader() {
+    var loader = document.getElementById('site-loader');
+    if (!loader) return null;
+
+    var STORAGE_KEY = 'hasSeenSVINDLoader';
+    var SKIP_MS = 3600000; // 1h, same as arrodz hasSeenHeroLoader
+    var now = Date.now();
+
+    function shouldSkip() {
+      if (reduceMotion()) return true;
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        if (raw && (now - parseInt(raw, 10) < SKIP_MS)) return true;
+      } catch (e) {}
+      return false;
+    }
+
+    if (shouldSkip()) {
+      try { document.documentElement.classList.add('user-has-visited'); } catch (e) {}
+      loader.classList.add('site-loader--hidden');
+      loader.setAttribute('aria-hidden', 'true');
+      // still schedule D auto-open even when loader is skipped — 5s as requested
+      scheduleDOpen(5000);
+      return loader;
+    }
+
+    // Prevent background scroll while curtain is up (matches arrodz behaviour)
+    var prevOverflow = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = 'hidden';
+
+    // Two frames so translateY(110%) has a start value to transition from
+    window.requestAnimationFrame(function () {
+      window.requestAnimationFrame(function () {
+        loader.classList.add('is-in');
+      });
+    });
+
+    // After letters have risen (~700ms + stagger) + tag (~480ms), hold briefly then exit
+    var EXIT_DELAY = 2200;
+    window.setTimeout(function () {
+      loader.classList.add('is-exit');
+      try { localStorage.setItem(STORAGE_KEY, String(Date.now())); } catch (e) {}
+      // D expands 5s after load — keep loader exit at 2.2s, D waits to hit 5s total
+      window.setTimeout(function () { scheduleDOpen(0); }, 2800);
+      var onEnd = function (ev) {
+        if (ev && ev.target !== loader) return;
+        loader.removeEventListener('transitionend', onEnd);
+        loader.classList.add('site-loader--hidden');
+        document.documentElement.style.overflow = prevOverflow || '';
+      };
+      loader.addEventListener('transitionend', onEnd);
+      // fallback if transitionend never fires (e.g. tab hidden)
+      window.setTimeout(function () {
+        loader.classList.add('site-loader--hidden');
+        document.documentElement.style.overflow = prevOverflow || '';
+      }, 900);
+    }, EXIT_DELAY);
+
+    onMotionChange(function (reduced) {
+      if (reduced) {
+        loader.classList.add('site-loader--hidden');
+        document.documentElement.style.overflow = prevOverflow || '';
+      }
+    });
+
+    return loader;
+  }
+
+  function scheduleDOpen(delayMs) {
+    var lockup = document.querySelector('.dna-lockup');
+    if (!lockup) return;
+    var cta = lockup.querySelector('.dna-lockup__cta');
+    if (!cta) return;
+    if (reduceMotion()) return;
+
+    // Don't re-arm if already open via hover
+    window.setTimeout(function () {
+      // only auto-open if user hasn't already hovered/focused it
+      if (cta.matches(':hover') || cta.matches(':focus-visible') || lockup.classList.contains('is-cta-open')) return;
+      lockup.classList.add('is-cta-open');
+      // keep accessible: aria-expanded not needed as CTA is link, but announce via live label is already in name
+    }, delayMs);
+
+    // Close on first user interaction if they want it shut (optional: keep open — comment next 3 lines to keep sticky)
+    // cta.addEventListener('mouseleave', function handler() {
+    //   cta.removeEventListener('mouseleave', handler);
+    // });
+  }
+
   function initHeroLockup() {
     var lockup = document.querySelector('.dna-lockup');
     if (!lockup) return;
@@ -320,6 +418,12 @@
         lockup.classList.add('is-in');
       });
     });
+
+    // If loader is hidden/skipped, D should still auto-open after hero rise — 5s as requested
+    var loaderEl = document.getElementById('site-loader');
+    if (!loaderEl || loaderEl.classList.contains('site-loader--hidden') || document.documentElement.classList.contains('user-has-visited')) {
+      scheduleDOpen(5000);
+    }
 
     onMotionChange(function (reduced) {
       if (reduced) settle();
@@ -1377,6 +1481,9 @@
     initScrollEffects();
     initMobileMenu();
     initAccordion();
+    /* Loader first: needs to arm before hero so the curtain owns the first
+       ~2.2s and the hero rise is not competing for the first frame. */
+    initSiteLoader();
     /* Before initReveal: the hero entrance runs on load rather than on scroll,
        so it must be armed before the observer starts revealing anything below
        it -- otherwise a restored mid-page scroll position can fire the reveals
