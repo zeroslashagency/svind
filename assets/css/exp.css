@@ -1,0 +1,258 @@
+/* ==========================================================================
+   SVIND — exp.css — expertise after logo-slider (arrodz DNA replica)
+   Scoped .expertise-section. Matches live arrodz-preprod.shared.92eeed5df:
+   sticky 7rem / 9rem lip, 5rem gaps, 80vh max, beige #F5F2E8, 8px radius,
+   cover wipe y 0→-100% 1s outQuart @20%, parallax y -20%→0% smoothing 90.
+   Also accepts typo classes .expertsie-list / .exerptsie-cover-image.
+   ========================================================================== */
+
+.expertise-section {
+  position: relative;
+  z-index: 2;
+  background-color: var(--color-surface);
+  padding-block: var(--band-y);
+  padding-inline: var(--band-inset);
+}
+
+.expertise-component {
+  max-width: var(--max-content);
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 5rem;
+}
+
+.heading-wrapper.is-center {
+  max-width: 720px;
+  margin-inline: auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.heading-title-wrapper.is-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.caption {
+  display: inline-block;
+  padding: 6px 12px;
+  background-color: #F5EFE6;
+  color: var(--color-navy);
+  border-radius: 999px;
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+}
+
+.max-width-xlarge { max-width: clamp(32ch, 52vw, 701px); }
+
+.heading-style-h2 {
+  margin: 0;
+  font-size: clamp(30px, 3.4vw, 48px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.text-color-wine { color: var(--color-navy); }
+.max-width-medium { max-width: 48ch; }
+
+.text-size-small {
+  font-size: var(--text-body-s);
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+/* List — 5rem gap like arrodz, relative is containing block for sticky */
+.expertise-list,
+.expertsie-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5rem;
+  margin-block-start: var(--space-8);
+  position: relative;
+}
+
+/* Sticky stack — exact arrodz top + max-height, paper lip on _02 — bigger deck */
+.expertise-item {
+  position: sticky;
+  top: 7rem;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto;
+  gap: 1.5rem;
+  align-items: stretch;
+  max-height: 85vh;
+  background-color: transparent;
+  isolation: isolate;
+}
+
+.expertise-item._02 { top: 9rem; }
+
+.expertise-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 1.75rem;
+  background-color: #F5F2E8;
+  border-radius: 8px;
+  padding: 4rem;
+  max-height: 85vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.heading-style-h3.expert {
+  margin: 0;
+  font-size: clamp(28px, 2.9vw, 42px);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.text-size-small.expert {
+  margin: 0;
+  font-size: clamp(16px, 1.2vw, 18px);
+  line-height: 1.65;
+}
+.button-group.expert { margin-block-start: var(--space-3); }
+
+/* Image — 135% height for bigger parallax, 8px radius, clipped */
+.expertise-image-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  max-height: 85vh;
+  background-color: var(--color-canvas);
+}
+
+.expertise-image {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 135%;
+  object-fit: cover;
+  display: block;
+  will-change: transform;
+  transform: translate3d(0, -20%, 0);
+}
+
+/* Cover — beige, z2, wipes y 0→-100% 1s outQuart @20% */
+.expertise-cover-image,
+.exerptsie-cover-image {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background-color: #F5F2E8;
+  transform: translate3d(0, 0, 0);
+  transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+  pointer-events: none;
+}
+
+.expertise-item.is-visible .expertise-cover-image,
+.expertise-item.is-visible .exerptsie-cover-image {
+  transform: translate3d(0, -100%, 0);
+}
+
+/* Text — slideInLeft preset: 0→1 + y 18px, 600ms outQuart */
+.heading-style-h3.expert,
+.text-size-small.expert,
+.button-group.expert {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.expertise-item.is-visible .heading-style-h3.expert,
+.expertise-item.is-visible .text-size-small.expert,
+.expertise-item.is-visible .button-group.expert {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Badges — rotated paper labels pinned to card top (arrodz) */
+.caption.is-expertise-1,
+.caption.is-expertise-2,
+.caption.is-expertise-3 {
+  position: absolute;
+  top: -1rem;
+  z-index: 3;
+  border: 2px solid var(--color-surface);
+}
+
+.caption.is-expertise-1 { left: 1.5rem; transform: rotate(-2deg); }
+.caption.is-expertise-2 {
+  left: 13rem;
+  transform: rotate(2deg);
+  background-color: var(--color-navy);
+  color: #F5F2E8;
+}
+.caption.is-expertise-3 { left: 25rem; transform: rotate(-4deg); z-index: 2; }
+
+/* VisBug adapted — desktop bigger hints (responsive, not fixed 1663px overflow) — biggere */
+@media (min-width: 992px) {
+  .expertise-component { gap: 6rem; max-width: 1440px; }
+  .expertise-list, .expertsie-list { gap: 6rem; }
+  img[alt="Fabrication bay with EOT crane"] {
+    transform: translate3d(0, -9.19%, 0);
+  }
+  div#production-contenu {
+    transform: translate3d(0, 0, 0) scale(1.08);
+    transform-origin: center center;
+  }
+  div#communication-digitale {
+    width: min(100%, 1440px);
+    max-width: none;
+    transform: translate3d(0, 0, 0) scale(1.08);
+    transform-origin: center center;
+  }
+  .expertise-item { max-height: 92vh; gap: 2.25rem; }
+  .expertise-content-wrapper { padding: 5rem; max-height: 92vh; }
+  .expertise-image-wrapper { max-height: 92vh; min-height: 560px; }
+  .expertise-image { height: 145%; }
+}
+
+/* Tablet — linear flow, no sticky, no wipe, image capped */
+@media screen and (max-width: 991px) {
+  .expertise-component { gap: 2rem; }
+  .expertise-list, .expertsie-list { gap: 2rem; }
+  .expertise-item, .expertise-item._02 {
+    position: relative;
+    top: 0;
+    max-height: none;
+    grid-template-columns: 1fr;
+    z-index: 1;
+  }
+  .expertise-content-wrapper { max-height: none; }
+  .expertise-image-wrapper { max-height: 20rem; }
+  .expertise-cover-image, .exerptsie-cover-image { display: none; }
+}
+
+@media (max-width: 768px) {
+  .expertise-image-wrapper { max-height: 20rem; }
+}
+
+@media screen and (max-width: 479px) {
+  .expertise-content-wrapper { padding: 3.5rem 1.5rem 1.5rem; }
+  .expertise-image-wrapper { max-height: 12.5rem; }
+  .caption.is-expertise-2 { inset: -1rem 2.5rem auto auto; left: auto; }
+  .caption.is-expertise-3 { inset: -1rem 1rem auto auto; left: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .expertise-cover-image, .exerptsie-cover-image,
+  .expertise-image,
+  .heading-style-h3.expert, .text-size-small.expert, .button-group.expert {
+    transform: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+  }
+}

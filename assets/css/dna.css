@@ -404,10 +404,9 @@
   justify-content: center;
   width: auto;
   height: auto;
-  min-width: clamp(48px, 18vw, 88px);
-  min-height: clamp(48px, 18vw, 88px);
+  min-width: var(--d-size-closed);
+  min-height: var(--d-height);
   padding: 0.08em 0.12em 0.08em 0.08em;
-  /* plain D solid — GIF clipped to D shape, responsive, flat left spine */
   border-radius: 0 clamp(42px, 6vw, 116px) clamp(42px, 6vw, 116px) 0 / 0 50% 50% 0;
   background-color: var(--color-navy);
   color: var(--color-surface);
@@ -440,10 +439,10 @@
   background-color: var(--color-navy-deep);
 }
 
-/* D-pill opens: keep flat left spine — hover expands like cursor, same as plain D */
+/* D-pill opens: hover expands, same height */
 .dna-lockup__cta:hover,
 .dna-lockup__cta:focus-visible {
-  min-width: clamp(160px, 22vw, 320px);
+  min-width: var(--d-size-open);
   border-radius: 0 clamp(28px, 4vw, 56px) clamp(28px, 4vw, 56px) 0;
   padding-inline-end: clamp(18px, 2vw, 30px);
 }
@@ -522,9 +521,9 @@
   opacity: 1;
 }
 
-/* AUTO-OPEN — one container D-pill — same height as closed, only min-width grows, not too long 320 */
+/* Keep for JS fallback if needed — same token */
 .dna-lockup.is-cta-open .dna-lockup__cta {
-  min-width: clamp(160px, 22vw, 320px);
+  min-width: var(--d-size-open);
   background-color: var(--color-navy);
   border-radius: 0 clamp(28px, 4vw, 56px) clamp(28px, 4vw, 56px) 0;
   padding-inline-end: clamp(18px, 2vw, 30px);
@@ -1113,12 +1112,10 @@
   width: max-content;
   align-items: center;
   gap: 56px;
-  /* Supplies the gap the flex `gap` cannot draw at the wrap-around seam, so
-     the spacing across the loop point matches the spacing everywhere else. */
   padding-inline-end: 56px;
   margin: 0;
   list-style: none;
-  animation: dna-marquee-scroll 60s linear infinite;
+  animation: dna-marquee-scroll var(--dur-marquee) linear infinite;
 }
 
 /* Courtesy pause so a reader can stop on a logo they recognise. */

@@ -1464,6 +1464,66 @@
     track.addEventListener('scroll', rafThrottle(syncDots), { passive: true });
     window.addEventListener('resize', debounce(measure, 120), { passive: true });
 
+    /* expertise — arrodz DNA: wipe 1s outQuart @20%, parallax -20%→0% smoothing 90 */
+    (function () {
+      var items = document.querySelectorAll('.expertise-item');
+      if (!items.length) return;
+      if (reduceMotion()) {
+        items.forEach(function (it) { it.classList.add('is-visible'); });
+        return;
+      }
+      var isDesktop = window.matchMedia('(min-width: 992px)').matches;
+      /* Wipe: SCROLL_INTO_VIEW 20% desktop only, 1s outQuart (CSS transition), once */
+      if (isDesktop && 'IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              var item = e.target.closest('.expertise-item');
+              if (item) item.classList.add('is-visible');
+              io.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0, rootMargin: '0px 0px -80% 0px' });
+        document.querySelectorAll('.expertise-image-wrapper').forEach(function (w) { io.observe(w); });
+        /* Text slideInLeft — same 20% trigger, CSS handles 0.6s outQuart */
+        var tio = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              var item2 = e.target.closest('.expertise-item');
+              if (item2) item2.classList.add('is-visible');
+            }
+          });
+        }, { threshold: 0, rootMargin: '0px 0px -80% 0px' });
+        items.forEach(function (it) { tio.observe(it); });
+      } else {
+        /* Mobile/tablet or no IO: show immediately, covers hidden via CSS */
+        items.forEach(function (it) { it.classList.add('is-visible'); });
+      }
+      /* Parallax: SCROLLING_IN_VIEW -20%→0% smoothing 90, all breakpoints */
+      var imgs = document.querySelectorAll('.expertise-image');
+      var lerp = 0.1;
+      var targets = new Map();
+      imgs.forEach(function (img) { targets.set(img, -20); });
+      var tick = function () {
+        imgs.forEach(function (img) {
+          var r = img.getBoundingClientRect();
+          var vh = window.innerHeight;
+          var prog = 1 - (r.top + r.height) / (vh + r.height);
+          prog = Math.max(0, Math.min(1, prog));
+          var target = -20 + prog * 20;
+          var cur = targets.get(img);
+          var next = cur + (target - cur) * lerp;
+          targets.set(img, next);
+          img.style.transform = 'translate3d(0,' + next.toFixed(2) + '%,0)';
+        });
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+      onMotionChange(function (reduced) {
+        if (reduced) imgs.forEach(function (i) { i.style.transform = ''; });
+      });
+    })();
+
     /* Slide heights and widths settle after webfont swap; a rail measured
        against fallback metrics can be a slide out by the time Inter lands. */
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);

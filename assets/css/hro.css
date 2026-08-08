@@ -316,8 +316,8 @@
 .hro .dna-lockup__cta {
   flex: none;
   width: auto;
-  min-width: clamp(56px, 13.5vw, 190px);
-  min-height: clamp(56px, 13.5vw, 219px);
+  min-width: var(--d-size-closed);
+  min-height: var(--d-height);
   padding: 0;
   overflow: hidden;
   transition: min-width var(--dur-base) var(--ease-out),
@@ -329,15 +329,14 @@
 /* Litter fix — arrodz hero uses icon-embed-xsmall 20x20 inside hero-o-cta-content, hide outer DNA 18x16 arrow in hero to keep one container */
 .hro .dna-lockup__cta-arrow { display: none; }
 
-/* D-pill keeps flat left spine when open — hover same as cursor, not auto */
 .hro .dna-lockup__cta:hover,
 .hro .dna-lockup__cta:focus-visible {
-  min-width: clamp(160px, 22vw, 320px);
+  min-width: var(--d-size-open);
   border-radius: 0 clamp(28px, 5vw, 84px) clamp(28px, 5vw, 84px) 0;
 }
 
 .hro .dna-lockup.is-cta-open .dna-lockup__cta {
-  min-width: clamp(160px, 22vw, 320px);
+  min-width: var(--d-size-open);
   border-radius: 0 clamp(28px, 5vw, 84px) clamp(28px, 5vw, 84px) 0;
   background-color: var(--color-navy);
   transform: none;
@@ -432,10 +431,10 @@ div.hero-logo-cta.dna-lockup__wordmark {
 
 .logo-slider-component .splide__list { align-items: center; }
 
-/* Logo slider moves slowly — same as dna-marquee but via splide list, no JS needed */
+/* Logo slider moves slowly — tokenized */
 .logo-slider .splide__list {
   width: max-content;
-  animation: dna-marquee-scroll 60s linear infinite;
+  animation: dna-marquee-scroll var(--dur-marquee) linear infinite;
 }
 
 .logo-slider .splide__list:hover {

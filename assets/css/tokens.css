@@ -283,6 +283,12 @@
   --dur-base: 280ms;
   --dur-slow: 560ms;
   --dur-reveal: 640ms;
+  --dur-marquee: 60s;
+
+  /* D — plain solid single container (hero wordmark) */
+  --d-size-closed: clamp(56px, 10vw, 146px);
+  --d-size-open: clamp(160px, 22vw, 320px);
+  --d-height: clamp(50px, 14.4vw, 234px);
 
   /* ---------------------------------------------------------------------
      FOCUS — 2px navy ring, always visible
