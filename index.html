@@ -194,15 +194,13 @@
       </div>
     </section>
 
-    <!-- 02 · CLIENT MARQUEE — now arrodz logo-slider style (Splide autoScroll) but keeps existing assets.
-         Original pure-CSS dna-marquee kept as fallback; Splide mounts if available. -->
-    <div class="logo-slider-section dna-band dna-band--marquee" aria-labelledby="clients-h">
+    <!-- 02 · CLIENT MARQUEE — clean: one band, one splide, no nested dev-in-dev. Fallback is sibling, not child. -->
+    <div class="logo-slider-section" aria-labelledby="clients-h">
       <h2 class="sr-only" id="clients-h">Clients we build for</h2>
-
-      <div class="padding-global"><div class="container-large"><div class="logo-slider-component"><div class="splide logo-slider splide--loop splide--ltr is-active" role="region" aria-roledescription="carousel"><div class="splide__track logo-slider"><div class="splide__list logo-slider w-dyn-items" style="display:flex;gap:56px;">
-      <div class="dna-marquee splide__track--fallback" style="display:none">
-        <div class="dna-marquee__viewport">
-          <ul class="dna-marquee__track splide__list">
+      <div class="logo-slider-component">
+        <div class="splide logo-slider splide--loop" id="splide01" role="region" aria-roledescription="carousel">
+          <div class="splide__track">
+            <ul class="splide__list" style="display:flex;align-items:center;gap:56px;">
             <li class="dna-marquee__item">
               <img class="dna-marquee__logo" src="assets/img/logos/lt.svg" alt="Larsen &amp; Toubro" width="100" height="40" loading="lazy" decoding="async">
             </li>
@@ -222,7 +220,7 @@
               <img class="dna-marquee__logo" src="assets/img/logos/weir-minerals.svg" alt="Weir Minerals" width="100" height="40" loading="lazy" decoding="async">
             </li>
 
-            <!-- Duplicate set — decorative repeat, identical order and spacing. -->
+            <!-- Duplicate set — decorative repeat for fallback only -->
             <li class="dna-marquee__item" aria-hidden="true">
               <img class="dna-marquee__logo" src="assets/img/logos/lt.svg" alt="" width="100" height="40" loading="lazy" decoding="async">
             </li>
@@ -244,7 +242,20 @@
           </ul>
         </div>
       </div>
-      </div></div></div></div>
+      <!-- Fallback pure-CSS marquee — hidden when splide initializes, separate sibling not nested -->
+      <div class="dna-marquee" style="display:none" aria-hidden="true">
+        <div class="dna-marquee__viewport">
+          <ul class="dna-marquee__track">
+            <li class="dna-marquee__item"><img class="dna-marquee__logo" src="assets/img/logos/lt.svg" alt="" width="100" height="40" loading="lazy" decoding="async"></li>
+            <li class="dna-marquee__item"><img class="dna-marquee__logo" src="assets/img/logos/essar.svg" alt="" width="100" height="40" loading="lazy" decoding="async"></li>
+            <li class="dna-marquee__item"><img class="dna-marquee__logo" src="assets/img/logos/terex.svg" alt="" width="100" height="40" loading="lazy" decoding="async"></li>
+            <li class="dna-marquee__item"><img class="dna-marquee__logo" src="assets/img/logos/adani-defence.svg" alt="" width="100" height="40" loading="lazy" decoding="async"></li>
+            <li class="dna-marquee__item"><img class="dna-marquee__logo" src="assets/img/logos/ajax-engineering.svg" alt="" width="100" height="40" loading="lazy" decoding="async"></li>
+            <li class="dna-marquee__item"><img class="dna-marquee__logo" src="assets/img/logos/weir-minerals.svg" alt="" width="100" height="40" loading="lazy" decoding="async"></li>
+          </ul>
+        </div>
+      </div>
+    </div>
     </div>
 
     <!-- 03 · TRUST STRIP — navy band with compliance cells -->

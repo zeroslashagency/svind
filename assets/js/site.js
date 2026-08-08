@@ -326,8 +326,7 @@
       try { document.documentElement.classList.add('user-has-visited'); } catch (e) {}
       loader.classList.add('site-loader--hidden');
       loader.setAttribute('aria-hidden', 'true');
-      // still schedule D auto-open even when loader is skipped — 5s as requested
-      scheduleDOpen(5000);
+      // D now shows GIF by default, expands only on hover — no auto
       return loader;
     }
 
@@ -347,8 +346,6 @@
     window.setTimeout(function () {
       loader.classList.add('is-exit');
       try { localStorage.setItem(STORAGE_KEY, String(Date.now())); } catch (e) {}
-      // D expands 5s after load — keep loader exit at 2.2s, D waits to hit 5s total
-      window.setTimeout(function () { scheduleDOpen(0); }, 2800);
       var onEnd = function (ev) {
         if (ev && ev.target !== loader) return;
         loader.removeEventListener('transitionend', onEnd);
@@ -420,10 +417,9 @@
     });
 
     // If loader is hidden/skipped, D should still auto-open after hero rise — 5s as requested
+    // D GIF plays by default, expands only on cursor — no auto schedule
     var loaderEl = document.getElementById('site-loader');
-    if (!loaderEl || loaderEl.classList.contains('site-loader--hidden') || document.documentElement.classList.contains('user-has-visited')) {
-      scheduleDOpen(5000);
-    }
+    void loaderEl;
 
     onMotionChange(function (reduced) {
       if (reduced) settle();

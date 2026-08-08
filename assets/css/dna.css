@@ -398,6 +398,7 @@
    spacing is carried by a transitioning margin on the label and the arrow
    instead, so it opens with them and is genuinely 0 while closed. */
 .dna-lockup__cta {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -406,24 +407,43 @@
   min-width: clamp(48px, 18vw, 88px);
   min-height: clamp(48px, 18vw, 88px);
   padding: 0.08em 0.12em 0.08em 0.08em;
-  /* plain D solid — responsive, no hole, same cap-height as S V I N, flat left spine keeps format on every screen */
+  /* plain D solid — GIF clipped to D shape, responsive, flat left spine */
   border-radius: 0 clamp(42px, 6vw, 116px) clamp(42px, 6vw, 116px) 0 / 0 50% 50% 0;
   background-color: var(--color-navy);
   color: var(--color-surface);
   text-decoration: none;
+  overflow: hidden;
   transition: min-width var(--dur-base) var(--ease-out),
               padding var(--dur-base) var(--ease-out),
               background-color var(--dur-fast) var(--ease-out),
               border-radius var(--dur-base) var(--ease-out);
 }
 
+.dna-lockup__cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url(../img/hero/d-bird-star.gif) center / cover no-repeat;
+  border-radius: inherit;
+  opacity: 1;
+  transition: opacity var(--dur-base) var(--ease-out);
+  pointer-events: none;
+}
+
+.dna-lockup__cta:hover::before,
+.dna-lockup__cta:focus-visible::before,
+.dna-lockup.is-cta-open::before {
+  opacity: 0;
+}
+
 .dna-lockup__cta:hover {
   background-color: var(--color-navy-deep);
 }
 
-/* D-pill opens: keep flat left spine so the expanded shape is the same D stretched */
+/* D-pill opens: keep flat left spine — hover expands like cursor, same as plain D */
 .dna-lockup__cta:hover,
 .dna-lockup__cta:focus-visible {
+  min-width: clamp(160px, 22vw, 320px);
   border-radius: 0 clamp(28px, 4vw, 56px) clamp(28px, 4vw, 56px) 0;
   padding-inline-end: clamp(18px, 2vw, 30px);
 }
@@ -502,9 +522,9 @@
   opacity: 1;
 }
 
-/* AUTO-OPEN — one container D-pill — same height as closed, only min-width grows, fully responsive */
+/* AUTO-OPEN — one container D-pill — same height as closed, only min-width grows, not too long 320 */
 .dna-lockup.is-cta-open .dna-lockup__cta {
-  min-width: clamp(180px, 28vw, 374px);
+  min-width: clamp(160px, 22vw, 320px);
   background-color: var(--color-navy);
   border-radius: 0 clamp(28px, 4vw, 56px) clamp(28px, 4vw, 56px) 0;
   padding-inline-end: clamp(18px, 2vw, 30px);
