@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="assets/css/abt.css">
   <link rel="stylesheet" href="assets/css/arz.css">
   <link rel="stylesheet" href="assets/css/mpz.css">
+  <link rel="stylesheet" href="assets/css/hro.css">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -128,23 +129,131 @@
 
   <main id="main" class="page page--footer-reserve">
 
-    <!-- 01 · HERO STAGE — S3 frame + S1 knockout + S2 cut-out -->
-    <section class="dna-band dna-band--stage">
+    <!-- 01 · HERO LOCKUP — full-bleed plate, statement row, edge-to-edge
+         letter run with a circular CTA. See assets/css/hro.css.
+
+         THE ACCESSIBILITY CONTRACT IS dna.css §4b AND HAS NOT CHANGED.
+         The letter run is the brand mark drawn large, so it is aria-hidden and
+         the readable opener is the real <h1> above it — which is also what
+         aria-labelledby points at. The CTA is a sibling of the hidden run, not
+         a child of it: an aria-hidden element must never contain a focusable
+         one.
+
+         The .hro class is the only thing making this the reference
+         composition rather than the stock DNA lockup. Drop the class and the
+         section reverts to what dna.css §4b describes, with no other edit.
+
+         The plate is the LCP element on this page, so it is a real <img>
+         carrying fetchpriority="high" and eager loading — NOT a CSS
+         background-image, which the preload scanner cannot see and which
+         would take no priority hint. Do not switch it to lazy. -->
+    <section class="dna-band dna-band--stage dna-band--lockup hro" aria-labelledby="hero-h">
+      <div class="hro__plate">
+        <img class="hro__shot" src="assets/img/bands/hero-goliath-lifting-load.jpg"
+             width="1440" height="960" alt="" aria-hidden="true"
+             fetchpriority="high" decoding="async">
+        <span class="hro__veil"></span>
+      </div>
+
       <div class="dna-frame">
         <p class="dna-frame__label">Manufacturer</p>
         <p class="dna-frame__counter"><b>01</b><span class="dna-frame__rule"></span>13</p>
       </div>
 
-      <p class="dna-knockout dna-knockout--stage" aria-hidden="true">SVIND</p>
+      <div class="dna-lockup">
+        <div class="hro__top">
+          <h1 class="dna-lockup__h1" id="hero-h">Cranes built to lift Indian industry to its highest capacity.</h1>
+          <p class="hro__lead">
+            We design, fabricate and commission EOT, gantry and hot-metal cranes for
+            steel plants, foundries and fabrication bays — engineered to the duty class
+            of your bay, tested in our works before it ships, and serviced by the people
+            who built it.
+          </p>
+        </div>
 
-      <figure class="dna-cutout dna-cutout--stage dna-cutout--stage-sm">
-        <img src="assets/img/cutouts/cutout-goliath-gantry.png" width="511" height="429"
-             alt="Goliath gantry crane built by SVIND, single-girder portal on rail-mounted legs"
-             decoding="async">
-      </figure>
+        <div class="hro__bottom">
+          <ul class="hro__tags">
+            <li class="hro__tag hro__tag--light">Crane manufacturer</li>
+            <li class="hro__tag hro__tag--dark">Harohalli KIADB · Bengaluru</li>
+          </ul>
+
+          <div class="dna-lockup__wordmark">
+            <span class="dna-lockup__letters" aria-hidden="true">
+              <span class="dna-lockup__letter">S</span>
+              <span class="dna-lockup__letter">V</span>
+              <span class="dna-lockup__letter">I</span>
+              <span class="dna-lockup__letter">N</span>
+            </span>
+
+            <a class="dna-lockup__cta" href="/pages/services/request-a-quote.html">
+              <span class="dna-lockup__cta-letter" aria-hidden="true">D</span>
+              <span class="dna-lockup__cta-label">Request a quote</span>
+              <svg class="dna-lockup__cta-arrow" viewBox="0 0 18 16" aria-hidden="true" focusable="false">
+                <path d="M1 8h15M10 2l6 6-6 6" stroke-linecap="square"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <!-- 02 · TRUST STRIP — navy band with compliance cells -->
+    <!-- 02 · CLIENT MARQUEE — pure-CSS infinite loop, no JavaScript
+         The six logos appear TWICE in one flex track. The track is width:
+         max-content and animates 0 → translateX(-50%), so the second copy lands
+         exactly where the first started and the loop point is invisible. The
+         duplicate half is a visual repeat, not content: aria-hidden="true" and
+         alt="" on every image, so a screen reader reads six clients, not
+         twelve. Both halves must stay byte-identical or the seam shows. -->
+    <section class="dna-band dna-band--marquee" aria-labelledby="clients-h">
+      <h2 class="sr-only" id="clients-h">Clients we build for</h2>
+
+      <div class="dna-marquee">
+        <div class="dna-marquee__viewport">
+          <ul class="dna-marquee__track">
+            <li class="dna-marquee__item">
+              <img class="dna-marquee__logo" src="assets/img/logos/lt.svg" alt="Larsen &amp; Toubro" width="100" height="40" loading="lazy" decoding="async">
+            </li>
+            <li class="dna-marquee__item">
+              <img class="dna-marquee__logo" src="assets/img/logos/essar.svg" alt="Essar" width="100" height="40" loading="lazy" decoding="async">
+            </li>
+            <li class="dna-marquee__item">
+              <img class="dna-marquee__logo" src="assets/img/logos/terex.svg" alt="Terex" width="100" height="40" loading="lazy" decoding="async">
+            </li>
+            <li class="dna-marquee__item">
+              <img class="dna-marquee__logo" src="assets/img/logos/adani-defence.svg" alt="Adani Defence" width="100" height="40" loading="lazy" decoding="async">
+            </li>
+            <li class="dna-marquee__item">
+              <img class="dna-marquee__logo" src="assets/img/logos/ajax-engineering.svg" alt="Ajax Engineering" width="100" height="40" loading="lazy" decoding="async">
+            </li>
+            <li class="dna-marquee__item">
+              <img class="dna-marquee__logo" src="assets/img/logos/weir-minerals.svg" alt="Weir Minerals" width="100" height="40" loading="lazy" decoding="async">
+            </li>
+
+            <!-- Duplicate set — decorative repeat, identical order and spacing. -->
+            <li class="dna-marquee__item" aria-hidden="true">
+              <img class="dna-marquee__logo" src="assets/img/logos/lt.svg" alt="" width="100" height="40" loading="lazy" decoding="async">
+            </li>
+            <li class="dna-marquee__item" aria-hidden="true">
+              <img class="dna-marquee__logo" src="assets/img/logos/essar.svg" alt="" width="100" height="40" loading="lazy" decoding="async">
+            </li>
+            <li class="dna-marquee__item" aria-hidden="true">
+              <img class="dna-marquee__logo" src="assets/img/logos/terex.svg" alt="" width="100" height="40" loading="lazy" decoding="async">
+            </li>
+            <li class="dna-marquee__item" aria-hidden="true">
+              <img class="dna-marquee__logo" src="assets/img/logos/adani-defence.svg" alt="" width="100" height="40" loading="lazy" decoding="async">
+            </li>
+            <li class="dna-marquee__item" aria-hidden="true">
+              <img class="dna-marquee__logo" src="assets/img/logos/ajax-engineering.svg" alt="" width="100" height="40" loading="lazy" decoding="async">
+            </li>
+            <li class="dna-marquee__item" aria-hidden="true">
+              <img class="dna-marquee__logo" src="assets/img/logos/weir-minerals.svg" alt="" width="100" height="40" loading="lazy" decoding="async">
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 · TRUST STRIP — navy band with compliance cells -->
     <section class="dna-band dna-band--navy" aria-labelledby="trust-h">
       <h2 class="sr-only" id="trust-h">Certifications and compliance</h2>
 
@@ -919,8 +1028,10 @@
                        not one page-scroll away. Lazy made them visibly pop in
                        mid-swipe (measured: only slides 1-3 had loaded until
                        the rail reached page 2) to save nothing worth having. -->
-                  <img class="mpz__logo" src="assets/img/logos/lt.svg"
-                       alt="Larsen &amp; Toubro" width="100" height="34"
+                  <!-- --square: 1:1 mark, needs the taller cap to hold its own
+                       against the wordmarks. See .mpz__logo--square. -->
+                  <img class="mpz__logo mpz__logo--square" src="assets/img/logos/lt.svg"
+                       alt="Larsen &amp; Toubro" width="48" height="48"
                        loading="eager" decoding="async">
                 </div>
                 <blockquote class="mpz__quote">
@@ -995,8 +1106,8 @@
             <div class="mpz__slide">
               <figure class="mpz__card">
                 <div class="mpz__logo-slot">
-                  <img class="mpz__logo" src="assets/img/logos/ajax-engineering.svg"
-                       alt="Ajax Engineering" width="34" height="34"
+                  <img class="mpz__logo mpz__logo--square" src="assets/img/logos/ajax-engineering.svg"
+                       alt="Ajax Engineering" width="48" height="48"
                        loading="eager" decoding="async">
                 </div>
                 <blockquote class="mpz__quote">

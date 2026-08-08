@@ -291,6 +291,255 @@
 }
 
 /* --------------------------------------------------------------------------
+   4b. HERO LETTER LOCKUP
+   The stage opener is a wordmark laid out as individual letters, with the
+   final letter replaced by a circular CTA that opens on hover and focus.
+
+   WHAT IS DECORATIVE AND WHAT IS NOT. The letter run is presentation: it is
+   the brand mark drawn large, and a screen reader that spells S-V-I-N gets
+   nothing from it, so .dna-lockup__letters carries aria-hidden="true". The
+   readable opener is the real <h1> above it, which is also what the section's
+   aria-labelledby points at. The CTA is NOT inside the hidden run -- an
+   aria-hidden element must never contain a focusable one -- so it sits as a
+   sibling of the run inside .dna-lockup__wordmark, and takes the letter slot
+   by flex order rather than by nesting.
+
+   THE ONE RADIUS IN THE SYSTEM. DNA §4 sets every radius to zero, and this
+   is the single documented exception: the CTA is a circle, so a 50% radius is
+   its shape and not an ornament applied to a box. It is written as a literal
+   50% rather than through --radius-*, which stay at 0 for everything else.
+
+   NO-JS AND REDUCED MOTION. The entrance is opt-IN, the same way the footer
+   wordmark is (see components.css): the finished state is the CSS default and
+   site.js adds .is-armed only on the path where it will also add .is-in. If
+   this file loads and the script does not, the hero simply reads as finished
+   copy instead of 200px of empty gray.
+   -------------------------------------------------------------------------- */
+
+/* Height: the stage variant pins a fixed 959px, which is a lot of empty field
+   under a lockup that is only as tall as its own type. The lockup sizes to its
+   content with a floor instead, and stays bottom-anchored like the stage. */
+.dna-band--lockup {
+  height: auto;
+  min-height: clamp(420px, 56vw, 760px);
+}
+
+.dna-lockup {
+  position: relative;
+  z-index: 2;
+}
+
+.dna-lockup__title {
+  margin: 0 0 var(--space-4);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  color: var(--color-navy);
+}
+
+/* The real accessible opener. Kept at lead size, not display size: the giant
+   type in this band is the letter run, and DNA allows three visible sizes. */
+.dna-lockup__h1 {
+  max-width: 34ch;
+  margin: 0 0 clamp(24px, 3vw, 44px);
+  font-size: var(--text-lead);
+  font-weight: var(--weight-medium);
+  line-height: var(--lh-lead);
+  letter-spacing: 0;
+  color: var(--color-ink);
+}
+
+/* Letter run plus CTA on one baseline. `align-items: center` rather than
+   baseline: the circle has no text baseline worth aligning to once its label
+   has opened, and centring keeps it on the letters' optical middle at every
+   clamp step. */
+.dna-lockup__wordmark {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(8px, 1.2vw, 18px);
+  /* VisBug pass: the wordmark reads bigger and heavier than the first cut. The
+     drag produced transform: scale(1.8) + a pixel left/top nudge at one
+     viewport; both are folded here into flow-safe values -- a larger letter
+     clamp (below) and a small rightward shift that scales with the viewport --
+     so it holds at every width instead of only the one it was dragged at. */
+  font-weight: 700;
+  margin-inline-start: clamp(0px, 4vw, 72px);
+}
+
+.dna-lockup__letters {
+  display: flex;
+  align-items: center;
+  gap: clamp(2px, 0.5vw, 10px);
+}
+
+.dna-lockup__letter {
+  display: block;
+  font-family: var(--font-display);
+  /* Enlarged from clamp(64px,13vw,188px) to carry the VisBug scale(1.8)
+     intent as real type size rather than a transform (which would not reflow
+     and would clip at the band edges). */
+  font-size: clamp(88px, 20vw, 320px);
+  font-weight: 700;
+  line-height: 0.82;
+  letter-spacing: var(--tracking-knockout-xl);
+  color: var(--color-navy);
+  user-select: none;
+}
+
+/* The circular CTA. Closed it is a navy disc the size of a cap height; open it
+   grows to the right and the label rides out of it. The disc keeps its size
+   (flex: none on the letter) so the growth is all label, never a squashed
+   circle. */
+/* NO flex `gap` HERE, deliberately. Flex draws its gap between items whatever
+   their width, so a 12px gap on a closed CTA adds 24px across the two seams
+   and the disc measures 175x151 -- an ellipse, not a circle. Measured. The
+   spacing is carried by a transitioning margin on the label and the arrow
+   instead, so it opens with them and is genuinely 0 while closed. */
+.dna-lockup__cta {
+  display: inline-flex;
+  align-items: center;
+  padding: clamp(10px, 1.2vw, 18px);
+  border-radius: 50%;                     /* documented exception, see above */
+  background-color: var(--color-navy);
+  color: var(--color-surface);            /* white on navy ≈ 8.6:1 */
+  text-decoration: none;
+  transition: background-color var(--dur-fast) var(--ease-out),
+              border-radius var(--dur-base) var(--ease-out),
+              padding var(--dur-base) var(--ease-out);
+}
+
+.dna-lockup__cta:hover {
+  background-color: var(--color-navy-deep);
+}
+
+/* Square off as it opens: a pill radius on a wide box would read as a button
+   from another design system. */
+.dna-lockup__cta:hover,
+.dna-lockup__cta:focus-visible {
+  border-radius: clamp(28px, 4vw, 56px);
+  padding-inline-end: clamp(18px, 2vw, 30px);
+}
+
+.dna-lockup__cta:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-navy);
+  outline-offset: calc(var(--focus-ring-offset) + 2px);
+}
+
+/* The letter itself, drawn white inside the disc. Fixed square so the disc is
+   a circle and not an ellipse, whatever the glyph's own advance width is. */
+.dna-lockup__cta-letter {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Scaled with the enlarged letter run so the disc reads as one of the
+     glyphs, not a button parked beside them. */
+  width: clamp(72px, 14vw, 232px);
+  height: clamp(72px, 14vw, 232px);
+  font-family: var(--font-display);
+  font-size: clamp(88px, 20vw, 320px);
+  font-weight: 700;
+  line-height: 0.82;
+  letter-spacing: 0;
+}
+
+/* max-width, not display or visibility: the label stays in the accessibility
+   tree and in the link's accessible name while it is closed, and an animatable
+   property is what makes the open a transition rather than a jump. */
+.dna-lockup__cta-label {
+  max-width: 0;
+  margin-inline-start: 0;
+  overflow: hidden;
+  opacity: 0;
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  white-space: nowrap;
+  transition: max-width var(--dur-base) var(--ease-out),
+              margin-inline-start var(--dur-base) var(--ease-out),
+              opacity var(--dur-base) var(--ease-out);
+}
+
+.dna-lockup__cta-arrow {
+  flex: none;
+  width: 0;
+  height: 16px;
+  margin-inline-start: 0;
+  opacity: 0;
+  overflow: hidden;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  transition: width var(--dur-base) var(--ease-out),
+              margin-inline-start var(--dur-base) var(--ease-out),
+              opacity var(--dur-base) var(--ease-out);
+}
+
+.dna-lockup__cta:hover .dna-lockup__cta-label,
+.dna-lockup__cta:focus-visible .dna-lockup__cta-label {
+  max-width: 22ch;
+  margin-inline-start: var(--space-4);
+  opacity: 1;
+}
+
+.dna-lockup__cta:hover .dna-lockup__cta-arrow,
+.dna-lockup__cta:focus-visible .dna-lockup__cta-arrow {
+  width: 18px;
+  margin-inline-start: var(--space-3);
+  opacity: 1;
+}
+
+/* ENTRANCE. Default is the finished state; .is-armed parks it and .is-in
+   releases it, both added by initHeroLockup. The transition lives on the
+   released state, so the rise is eased and nothing animates on the way in to
+   the parked position. */
+.dna-lockup.is-armed .dna-lockup__title,
+.dna-lockup.is-armed .dna-lockup__h1 {
+  opacity: 0;
+  transform: translateY(22px);
+}
+
+.dna-lockup.is-armed.is-in .dna-lockup__title,
+.dna-lockup.is-armed.is-in .dna-lockup__h1 {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 520ms var(--ease-out), transform 520ms var(--ease-out);
+}
+
+.dna-lockup.is-armed.is-in .dna-lockup__h1 {
+  transition-delay: 90ms;
+}
+
+/* Explicit escape hatch: site.js adds this instead of arming when reduced
+   motion is set, and it also covers any page that wants the hero static. */
+.dna-lockup--static .dna-lockup__title,
+.dna-lockup--static .dna-lockup__h1 {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Belt and braces with the --static class: if the script never runs, the
+     media query still guarantees the finished state and kills the open. */
+  .dna-lockup .dna-lockup__title,
+  .dna-lockup .dna-lockup__h1 {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .dna-lockup__cta,
+  .dna-lockup__cta-label,
+  .dna-lockup__cta-arrow {
+    transition: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
    5. S4 — THREE-UP NUMBERED PANEL ROW
    4px gutters, 6px navy square bullet, ~64px knockout numeral,
    3 lines of copy. LAST panel filled navy with white numeral + copy.
@@ -670,17 +919,28 @@
 }
 
 /* --------------------------------------------------------------------------
-   7c. CLIENT MARQUEE
-   Client wordmarks travelling left to right on a continuous loop. Two
-   identical tracks sit side by side and the pair is translated by exactly
-   -50% of its own width, so the moment track A leaves the frame track B is
-   in its starting position and the seam is invisible.
+   7c. CLIENT MARQUEE — infinite CSS loop, no JavaScript
+   ONE flex track holds the six client logos TWICE, back to back. The track is
+   `width: max-content`, so it is exactly twice the width of one set, and the
+   animation runs it from 0 to translateX(-50%). At -50% the second copy sits
+   pixel-for-pixel where the first copy started, so the loop point is
+   invisible: there is no jump to hide and no JS clone to measure.
 
-   Direction: the animation runs from -50% to 0, which moves content to the
-   RIGHT. Reversing this to 0 → -50% gives right-to-left.
+   Two hard requirements come out of that trick:
+   · the two halves must be IDENTICAL, including the gap. The gap is a flex
+     `gap`, which draws between items only, so the run ends flush -- the
+     trailing padding below supplies the missing gap at the seam.
+   · the duplicate half is a visual repeat, not content. It carries
+     aria-hidden="true" and empty alt so a screen reader reads six clients,
+     not twelve.
+
+   Nothing here needs script: with JS disabled the loop still runs, and under
+   reduced motion the animation is dropped and the real set reflows into a
+   centred static grid (bottom of this block).
 
    The band is deliberately short and carries no S3 frame -- it reads as a
-   seam between the hero and the trust strip, not as a section of its own.
+   seam between the trust strip and the range section, not as a section of
+   its own.
    -------------------------------------------------------------------------- */
 
 .dna-band--marquee {
@@ -688,55 +948,47 @@
   background-color: var(--color-canvas);
 }
 
-.dna-marquee__label {
-  margin: 0 0 var(--space-5);
-  font-size: var(--text-micro-caps);
-  font-weight: var(--weight-micro-caps);
-  letter-spacing: var(--tracking-micro-caps);
-  text-transform: var(--case-micro-caps);
-  color: var(--color-navy);
-}
-
-/* The mask fades both edges so wordmarks enter and leave without a hard cut.
-   No gradient is painted here -- this is a mask on transparency, so the
-   no-gradients rule in DNA §4 still holds. */
+/* Full-bleed: the viewport crops at the band edge, not at the content inset,
+   so a logo travels all the way off screen instead of vanishing 200px early.
+   Negative margins undo the band's own inline padding. */
 .dna-marquee {
-  display: flex;
-  width: 100%;
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  margin-inline: calc(var(--band-inset) * -1);
 }
 
+/* The clipping frame. The mask fades both edges so wordmarks enter and leave
+   without a hard cut. No gradient is painted here -- this is a mask on
+   transparency, so the no-gradients rule in DNA §4 still holds. */
+.dna-marquee__viewport {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+
+/* max-content, not a percentage: the track has to be its own natural width
+   for -50% to mean "exactly one copy". */
 .dna-marquee__track {
   display: flex;
-  flex: none;
+  width: max-content;
   align-items: center;
-  gap: clamp(40px, 5vw, 80px);
+  gap: 56px;
+  /* Supplies the gap the flex `gap` cannot draw at the wrap-around seam, so
+     the spacing across the loop point matches the spacing everywhere else. */
+  padding-inline-end: 56px;
   margin: 0;
-  padding: 0 clamp(20px, 2.5vw, 40px) 0 0;
   list-style: none;
-  animation: dna-marquee-rtl 38s linear infinite;
+  animation: dna-marquee-scroll 32s linear infinite;
 }
 
-.dna-marquee:hover .dna-marquee__track {
+/* Courtesy pause so a reader can stop on a logo they recognise. */
+.dna-marquee__viewport:hover .dna-marquee__track,
+.dna-marquee__viewport:focus-within .dna-marquee__track {
   animation-play-state: paused;
 }
 
 .dna-marquee__item {
   flex: none;
-  font-family: var(--font-display);
-  font-size: clamp(18px, 1.8vw, 24px);
-  font-weight: var(--weight-display-l);
-  line-height: 1.1;
-  letter-spacing: -0.01em;
-  white-space: nowrap;
-  color: var(--color-ink-muted);
-  transition: color var(--dur-fast) var(--ease-out);
-}
-
-.dna-marquee__item:hover {
-  color: var(--color-navy);
+  display: flex;
+  align-items: center;
 }
 
 /* Real client logos arrive in clashing brand colours and at wildly different
@@ -766,26 +1018,35 @@
 }
 
 .dna-marquee__item:hover .dna-marquee__logo {
-  filter: none;
+  filter: grayscale(0) opacity(1);
 }
 
-@keyframes dna-marquee-rtl {
-  from { transform: translateX(-50%); }
-  to   { transform: translateX(0); }
+@keyframes dna-marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 
-/* Motion off: the loop stops and the first track sits still and readable. */
+/* Motion off: no loop, no crop, no mask. The real set reflows into a centred
+   wrapping grid and the aria-hidden duplicate is removed outright, so nothing
+   is clipped off screen and nothing is read twice. */
 @media (prefers-reduced-motion: reduce) {
-  .dna-marquee {
-    overflow-x: auto;
+  .dna-marquee__viewport {
+    overflow: visible;
+    -webkit-mask-image: none;
+    mask-image: none;
   }
 
   .dna-marquee__track {
+    width: auto;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-5) clamp(28px, 4vw, 56px);
+    padding-inline-end: 0;
     animation: none;
     transform: none;
   }
 
-  .dna-marquee__track[aria-hidden="true"] {
+  .dna-marquee__item[aria-hidden="true"] {
     display: none;
   }
 }
@@ -1164,6 +1425,54 @@
   .dna-cutout--stage {
     inset-inline-start: 0;
     width: 100%;
+  }
+
+  /* The lockup stops being one line below 640px: "SVIN" plus an open circle
+     cannot sit on a 360px row without either shrinking the type to nothing or
+     scrolling sideways. The run and the CTA stack, and the letter clamp drops
+     its floor so four glyphs still fit the narrowest supported width. */
+  .dna-band--lockup {
+    min-height: 0;
+  }
+
+  .dna-lockup__wordmark {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-5);
+  }
+
+  .dna-lockup__letter,
+  .dna-lockup__cta-letter {
+    font-size: clamp(48px, 18vw, 88px);
+  }
+
+  .dna-lockup__cta-letter {
+    width: clamp(44px, 15vw, 72px);
+    height: clamp(44px, 15vw, 72px);
+  }
+
+  /* Touch has no hover: on a phone the label is always out, so the CTA reads
+     as a labelled button rather than a mystery disc. */
+  .dna-lockup__cta {
+    border-radius: clamp(24px, 8vw, 40px);
+    padding-inline-end: var(--space-5);
+  }
+
+  .dna-lockup__cta-label {
+    max-width: 22ch;
+    margin-inline-start: var(--space-4);
+    opacity: 1;
+  }
+
+  .dna-lockup__cta-arrow {
+    width: 18px;
+    margin-inline-start: var(--space-3);
+    opacity: 1;
+  }
+
+  .dna-marquee__track {
+    gap: 36px;
+    padding-inline-end: 36px;
   }
 
   .dna-specs {

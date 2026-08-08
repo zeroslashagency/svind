@@ -1,5 +1,20 @@
 # URL Rewriting for clean URLs
 RewriteEngine On
+
+# Canonical short URLs → filesystem locations
+RewriteRule ^eot-cranes/double-girder/?$ products/eot-cranes/double-girder.html [NC,L]
+RewriteRule ^eot-cranes/?$ products/eot-cranes/index.html [NC,L]
+RewriteRule ^gantry-cranes/?$ products/gantry-cranes/index.html [NC,L]
+RewriteRule ^jib-cranes/?$ products/jib-cranes/index.html [NC,L]
+RewriteRule ^hoists/?$ products/hoists/index.html [NC,L]
+RewriteRule ^crane-spare-parts/?$ products/spare-parts/index.html [NC,L]
+RewriteRule ^locations/bangalore/?$ locations/bangalore.html [NC,L]
+RewriteRule ^downloads/?$ pages/resources/downloads.html [NC,L]
+RewriteRule ^contact/?$ pages/company/contact.html [NC,L]
+RewriteRule ^request-a-quote/?$ pages/services/request-a-quote.html [NC,L]
+
+# Directory-indexed product paths also resolve (e.g. /products/eot-cranes)
+# Generic fallback: /foo → /foo.html if that file exists
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^([^\.]+)$ $1.html [NC,L]

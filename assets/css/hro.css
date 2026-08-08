@@ -1,0 +1,434 @@
+/* ==========================================================================
+   SVIND v2 — hro.css
+   Reference adaptation: the arrodz.com hero composition, folded onto the
+   EXISTING .dna-lockup component rather than replacing it.
+
+   Load order: tokens → base → components → dna → foc → abt → arz → mpz → hro
+   This file MUST load after dna.css. Every rule here is scoped with .hro on
+   the section, so `.dna-band--lockup.hro` outranks the plain
+   `.dna-band--lockup` rules in dna.css §4b without a single !important and
+   without touching that file. Remove the class from the markup and the hero
+   reverts to the stock DNA lockup exactly as documented there.
+
+   WHAT THE REFERENCE ACTUALLY DOES (arrodz.com, hero + logo strip):
+     · full-bleed photograph fills the first screen, no boxed frame
+     · a large statement line top-left, a small lead paragraph top-right
+     · the wordmark drawn as individual giant letters along the bottom edge,
+       spanning the full content measure, with one letter replaced by a
+       circular CTA
+     · two small pill tags overlapping the top of the letter run
+     · a white auto-scrolling client-logo strip abutting the hero
+
+   WHAT WE KEEP FROM DNA. The one accent stays navy -- the reference's wine
+   disc is their palette, not ours, and DNA §4 allows exactly one. The 50%
+   radius on the CTA is already the single documented radius exception in the
+   system (dna.css §4b); the pills below are the only other rounded shapes
+   here and they are the reference's own form, so they are declared against
+   --hro-tag-radius rather than smuggled into --radius-*.
+
+   ACCESSIBILITY CONTRACT — UNCHANGED FROM dna.css §4b, DO NOT DRIFT:
+     · .dna-lockup__letters stays aria-hidden="true". It is the brand mark
+       drawn large; a reader that spells S-V-I-N gets nothing.
+     · the CTA is a SIBLING of that run, never a child. An aria-hidden
+       element must never contain a focusable one.
+     · the real accessible opener is the <h1>, which is also what the
+       section's aria-labelledby points at.
+   ========================================================================== */
+
+.hro {
+  /* Veil stops. Two rather than one: the photograph is bright at the top
+     (sky and lit steel) and the white statement line needs contrast there,
+     while the bottom has to go dark enough to carry the giant white letters
+     without them dissolving into the plate. Matches the approach in
+     abt.css, which solved the same problem over the team photo. */
+  --hro-veil-top: rgba(12, 16, 22, 0.52);
+  --hro-veil-mid: rgba(12, 16, 22, 0.38);
+  --hro-veil-bottom: rgba(12, 16, 22, 0.74);
+
+  --hro-tag-radius: 4px;
+  --hro-gap-block: clamp(40px, 6vw, 88px);
+}
+
+/* --------------------------------------------------------------------------
+   1. THE BAND
+   .dna-band--stage pins height: 959.18px and .dna-band--lockup relaxes that
+   to a clamped min-height. Neither is what the reference does: it fills the
+   first screen and no more. Height is the viewport minus the sticky nav, so
+   the logo strip below sits exactly at the fold like the reference.
+
+   Two min-height declarations, not one. svh is the correct unit -- it does
+   not jump when a mobile URL bar collapses -- but vh is the fallback for
+   anything that does not know svh, and a browser that ignores the second
+   line keeps the first.
+   -------------------------------------------------------------------------- */
+
+.dna-band--lockup.hro {
+  height: auto;
+  min-height: calc(100vh - var(--nav-h));
+  min-height: calc(100svh - var(--nav-h));
+  display: flex;
+  flex-direction: column;
+  /* Statement row pinned to the top, letter run pinned to the bottom, all
+     slack in the middle -- the reference composition. .dna-band--stage says
+     flex-end, which would stack both at the bottom. */
+  justify-content: space-between;
+  padding-block-end: clamp(28px, 3.4vw, 52px);
+  background-color: var(--color-ink);   /* seen only while the photo decodes */
+  color: var(--color-text-on-dark);
+}
+
+/* --------------------------------------------------------------------------
+   2. THE PLATE
+   An <img>, not a background-image: this is the LCP element on the home page
+   and a real element is what lets the markup carry fetchpriority, width and
+   height. The band already sets overflow: hidden, so the crop is free.
+   -------------------------------------------------------------------------- */
+
+.hro__plate {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hro__shot {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* The load hangs from the top of the frame, so bias the crop upward:
+     `center` throws away the hook and the hanging steel on a short viewport. */
+  object-fit: cover;
+  object-position: 50% 32%;
+}
+
+/* The veil. Sits over the photograph and under every piece of type. A mask
+   on flat colour rather than a painted gradient fill, same as abt.css --
+   DNA §4's no-gradients rule is about decorative fills, and this is a
+   legibility scrim over a photograph. */
+.hro__veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image: linear-gradient(
+    180deg,
+    var(--hro-veil-top) 0%,
+    var(--hro-veil-mid) 38%,
+    var(--hro-veil-bottom) 100%
+  );
+}
+
+/* --------------------------------------------------------------------------
+   3. S3 FRAME — INVERTED
+   dna.css paints the label navy and the counter ink-muted, which is correct
+   on gray and invisible on a dark plate. The band is not .dna-band--navy so
+   the inverted rules there do not reach it; these are its equivalents.
+   -------------------------------------------------------------------------- */
+
+.hro > .dna-frame {
+  z-index: 4;
+}
+
+.hro .dna-frame__label {
+  color: var(--color-surface);
+}
+
+.hro .dna-frame__counter {
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.hro .dna-frame__counter b {
+  color: var(--color-surface);
+}
+
+.hro .dna-frame__rule {
+  background-color: rgba(255, 255, 255, 0.42);
+}
+
+/* --------------------------------------------------------------------------
+   4. TOP ROW — statement left, lead right
+   Two columns at the reference's proportion: the statement takes the wider
+   share and the lead sits in the right column, ragged, capped in ch so the
+   measure is governed by the text and not by the column (the rule tokens.css
+   states for the whole page).
+   -------------------------------------------------------------------------- */
+
+.hro__top {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr);
+  align-items: start;
+  gap: clamp(20px, 3vw, 56px);
+  padding-block-start: clamp(8px, 1.4vw, 24px);
+}
+
+/* The real accessible opener, restyled to the reference's treatment: heavy,
+   uppercase, tight. Still ONE of the three permitted visible sizes -- it
+   takes display-l's slot, it does not add a fourth step. */
+.hro .dna-lockup__h1 {
+  max-width: 22ch;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(26px, 3.3vw, 52px);
+  font-weight: var(--weight-bold);
+  line-height: 1.06;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+  color: var(--color-surface);
+}
+
+.hro__lead {
+  grid-column: 2;
+  max-width: 46ch;
+  margin: 0;
+  margin-inline-start: auto;
+  font-size: var(--text-lead);
+  font-weight: var(--weight-lead);
+  line-height: var(--lh-lead);
+  color: var(--color-text-on-dark);
+}
+
+/* --------------------------------------------------------------------------
+   5. BOTTOM — TAGS + LETTER RUN
+   -------------------------------------------------------------------------- */
+
+.hro__bottom {
+  position: relative;
+  z-index: 3;
+  margin-block-start: var(--hro-gap-block);
+}
+
+/* The pills. In the reference they overlap the caps of the letter run and
+   step down-and-right from each other. The overlap is a negative block
+   margin on the list rather than absolute positioning, so the letters cannot
+   be overlapped by a pill that has outgrown its box at a different font
+   size or in a translation. */
+.hro__tags {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(2px, 0.4vw, 6px);
+  margin: 0 0 clamp(-52px, -3.4vw, -10px);
+  padding: 0;
+  list-style: none;
+}
+
+.hro__tag {
+  display: block;
+  padding: clamp(6px, 0.7vw, 10px) clamp(12px, 1.2vw, 18px);
+  border-radius: var(--hro-tag-radius);
+  font-size: var(--text-micro-caps);
+  font-weight: var(--weight-micro-caps);
+  letter-spacing: var(--tracking-micro-caps);
+  text-transform: var(--case-micro-caps);
+  line-height: var(--lh-micro-caps);
+}
+
+/* Surface pill first, navy pill second and indented -- the reference's
+   two-step. Indent is a margin on the second item, so the pair reads as one
+   staggered lockup rather than two centred chips. */
+.hro__tag--light {
+  background-color: var(--color-surface);
+  color: var(--color-navy);
+}
+
+.hro__tag--dark {
+  margin-inline-start: clamp(16px, 3.4vw, 74px);
+  background-color: var(--color-navy);
+  color: var(--color-surface);
+}
+
+/* THE LETTER RUN. The reference fills the whole content measure edge to
+   edge, which a natural-width flex row cannot do: at 1920 the four glyphs
+   plus the disc measure about 1100px inside a 1670px column, so the run
+   would float in the middle with 280px of slack per side -- the exact
+   failure mode tokens.css warns about for the page as a whole.
+
+   So the run takes the full width and distributes the slack BETWEEN the
+   glyphs. `flex: 1` on the letters plus space-between on both levels means
+   the S starts on the band's shoulder and the disc ends on it, at every
+   width, with no magic numbers. */
+.hro .dna-lockup__wordmark {
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: clamp(8px, 1.4vw, 28px);
+  flex-wrap: nowrap;
+}
+
+.hro .dna-lockup__letters {
+  flex: 1 1 auto;
+  justify-content: space-between;
+  gap: clamp(2px, 0.6vw, 16px);
+}
+
+.hro .dna-lockup__letter {
+  font-size: clamp(64px, 18.5vw, 300px);
+  line-height: 0.78;
+  letter-spacing: -0.04em;
+  /* White on the plate, not navy: the letters are the composition's mass and
+     they sit on the darkest part of the veil. */
+  color: var(--color-surface);
+}
+
+/* The disc scales with the letters or it stops being their optical equal.
+   Width and height off the SAME clamp so it stays a circle -- the ellipse
+   trap dna.css §4b documents. */
+.hro .dna-lockup__cta-letter {
+  width: clamp(56px, 13.5vw, 218px);
+  height: clamp(56px, 13.5vw, 218px);
+  font-size: clamp(64px, 18.5vw, 300px);
+  line-height: 0.78;
+}
+
+.hro .dna-lockup__cta {
+  flex: none;
+  padding: clamp(8px, 1vw, 20px);
+}
+
+/* The open state is inherited from dna.css. Only the closed radius needs a
+   step up here, because the disc is much larger than the stock one and the
+   squared-off open radius has to stay proportional to it. */
+.hro .dna-lockup__cta:hover,
+.hro .dna-lockup__cta:focus-visible {
+  border-radius: clamp(28px, 5vw, 84px);
+}
+
+.hro .dna-lockup__cta:focus-visible {
+  outline-color: var(--color-surface);
+}
+
+/* --------------------------------------------------------------------------
+   6. ENTRANCE
+   Extends the existing .is-armed / .is-in pair from dna.css §4b to the two
+   elements this file adds. Opt-IN exactly as documented there: the finished
+   state is the CSS default and site.js only arms on the path where it will
+   also release. If the script never runs, the hero reads as finished copy.
+   initHeroLockup needs no change -- it toggles classes on .dna-lockup and
+   knows nothing about which children respond.
+   -------------------------------------------------------------------------- */
+
+.hro .dna-lockup.is-armed .hro__lead,
+.hro .dna-lockup.is-armed .hro__tags {
+  opacity: 0;
+  transform: translateY(22px);
+}
+
+.hro .dna-lockup.is-armed.is-in .hro__lead,
+.hro .dna-lockup.is-armed.is-in .hro__tags {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 520ms var(--ease-out), transform 520ms var(--ease-out);
+}
+
+/* Staggered behind the h1's own 90ms so the row reads top-down. */
+.hro .dna-lockup.is-armed.is-in .hro__lead {
+  transition-delay: 150ms;
+}
+
+.hro .dna-lockup.is-armed.is-in .hro__tags {
+  transition-delay: 210ms;
+}
+
+.hro .dna-lockup--static .hro__lead,
+.hro .dna-lockup--static .hro__tags {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Belt and braces with --static, matching dna.css: if the script never
+     runs, the media query still guarantees the finished state. */
+  .hro .hro__lead,
+  .hro .hro__tags {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   7. THE LOGO STRIP UNDER THE HERO
+   The reference puts its client strip on WHITE, immediately below the hero,
+   as the closing element of the first screen. dna.css paints
+   .dna-band--marquee on --color-canvas, which is correct for the strip in
+   its old position mid-page and wrong directly under a dark plate: gray on
+   near-black reads as a third band rather than as the hero's own footer.
+
+   Scoped to the marquee that DIRECTLY FOLLOWS the hero, so the selector
+   describes the composition instead of needing a second class in the markup,
+   and any other marquee on any other page keeps the DNA fill.
+   -------------------------------------------------------------------------- */
+
+.hro + .dna-band--marquee {
+  background-color: var(--color-surface);
+  padding-block: clamp(26px, 2.6vw, 40px);
+}
+
+/* --------------------------------------------------------------------------
+   8. NARROW
+   Inlined breakpoint numbers, per the tokens.css note that media queries
+   must not reference --bp-*.
+   -------------------------------------------------------------------------- */
+
+/* The two-column top row cannot hold a 22ch statement and a 46ch lead side
+   by side much under 900px. */
+@media (max-width: 900px) {
+  .hro__top {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hro__lead {
+    grid-column: 1;
+    max-width: 52ch;
+    margin-inline-start: 0;
+  }
+}
+
+/* Below 640px dna.css stacks .dna-lockup__wordmark into a column and drops
+   the letter clamp so four glyphs fit 360px. That is the right call and this
+   file must not fight it -- but `flex: 1` and space-between are meaningless
+   once the axis is vertical, so both are released and the run goes back to
+   its natural width, left-aligned under the tags. */
+@media (max-width: 640px) {
+  .dna-band--lockup.hro {
+    /* A phone viewport minus the nav is short, and the tags, statement, lead
+       and stacked wordmark together need more than that. Let it grow. */
+    min-height: 0;
+    padding-block-end: clamp(32px, 8vw, 48px);
+  }
+
+  .hro .dna-lockup__wordmark {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  .hro .dna-lockup__letters {
+    flex: 0 1 auto;
+    justify-content: flex-start;
+  }
+
+  .hro .dna-lockup__letter,
+  .hro .dna-lockup__cta-letter {
+    font-size: clamp(48px, 18vw, 88px);
+  }
+
+  .hro .dna-lockup__cta-letter {
+    width: clamp(44px, 15vw, 72px);
+    height: clamp(44px, 15vw, 72px);
+  }
+
+  /* The negative overlap is tuned to a 300px cap. At phone sizes the letters
+     are a fifth of that and a -52px pull would drag the pills through them. */
+  .hro__tags {
+    margin-block-end: var(--space-4);
+  }
+
+  .hro__bottom {
+    margin-block-start: clamp(32px, 9vw, 56px);
+  }
+}

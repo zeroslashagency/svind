@@ -279,6 +279,54 @@
   }
 
   /* ------------------------------------------------------------------------
+     4b. HERO LOCKUP
+     The hero lockup's title and <h1> rise on load. Everything else about the
+     section -- the letter run, the circular CTA and its hover/focus open -- is
+     CSS only, so this module owns nothing but the entrance.
+
+     ARMED, NOT PARKED BY DEFAULT, for the same reason as the footer wordmark:
+     the finished state is the CSS default, and .is-armed is added here only on
+     the path that also adds .is-in a frame later. If this file 404s, throws
+     earlier in boot() or is blocked, the hero reads as finished copy rather
+     than an empty band. Verified by loading index.html with the <script> tag
+     stripped.
+
+     Under reduced motion nothing is armed at all -- .dna-lockup--static is
+     added instead, which is the same finished state with the transitions
+     removed, so a mid-visit switch to reduce cannot leave a half-played rise.
+     ------------------------------------------------------------------------ */
+
+  function initHeroLockup() {
+    var lockup = document.querySelector('.dna-lockup');
+    if (!lockup) return;
+
+    function settle() {
+      lockup.classList.remove('is-armed', 'is-in');
+      lockup.classList.add('dna-lockup--static');
+    }
+
+    if (reduceMotion()) {
+      settle();
+      return;
+    }
+
+    /* Two frames, not one: the class that parks the elements and the class
+       that releases them have to land in separate frames or the browser
+       collapses them into a single style resolution and there is no start
+       value to transition from. */
+    lockup.classList.add('is-armed');
+    window.requestAnimationFrame(function () {
+      window.requestAnimationFrame(function () {
+        lockup.classList.add('is-in');
+      });
+    });
+
+    onMotionChange(function (reduced) {
+      if (reduced) settle();
+    });
+  }
+
+  /* ------------------------------------------------------------------------
      5. REVEAL
      IntersectionObserver adds .is-visible once; stagger children get a
      capped incremental transition-delay.
@@ -1329,6 +1377,11 @@
     initScrollEffects();
     initMobileMenu();
     initAccordion();
+    /* Before initReveal: the hero entrance runs on load rather than on scroll,
+       so it must be armed before the observer starts revealing anything below
+       it -- otherwise a restored mid-page scroll position can fire the reveals
+       while the hero is still unarmed. */
+    initHeroLockup();
     /* Before initReveal: the reserve has to exist before the entrance measures
        anything against it, and initReveal's trigger needs to know whether the
        footer ended up pinned. */

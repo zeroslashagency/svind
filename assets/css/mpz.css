@@ -122,8 +122,17 @@
 
   --mpz-gap:         clamp(16px, 1.7vw, 24px);
   --mpz-radius:      14px;
-  --mpz-max:         1280px;
-  --mpz-pad-inline:  clamp(20px, 3.9vw, 50px);
+
+  /* --band-inset, NOT a private clamp. This is the page's own shoulder token
+     (tokens.css: clamp(20px, 6.5vw, var(--max-shoulder))), so the rail starts
+     and ends on the same vertical as every DNA band above it and scales with
+     the viewport instead of stopping at a fixed measure.
+
+     This replaced `--mpz-max: 1280px` + `clamp(20px, 3.9vw, 50px)`, which was
+     inherited from FOC. At 1920 that produced a 1280 wrap inside a 1920 band:
+     320px of dead shoulder per side, cards at 377px, and the rail visibly
+     narrower than the bands it sits between. See .mpz__wrap. */
+  --mpz-pad-inline:  var(--band-inset);
   --mpz-pad-block:   clamp(64px, 8vw, 112px);
 
   padding-block: var(--mpz-pad-block);
@@ -148,9 +157,18 @@
   display: block;
 }
 
+/* NO max-width. The band is full-bleed and the content column is positioned by
+   --band-inset alone, which is the rule tokens.css states for every band on
+   this page ("A fixed cap here left ~280px of dead space per side at 1800px:
+   the fill reached the edge but the content did not follow, so the page read
+   as a narrow column floating in a wide frame").
+
+   That is exactly what a 1280px cap did here, and it is why the section looked
+   small next to its neighbours. Line length is not at risk: .mpz__intro caps
+   itself at 46ch and each quote is bounded by its card, which is bounded by
+   flex-basis -- so the extra width becomes WIDER CARDS, not longer lines.
+   Do not reintroduce a max-width on this element. */
 .mpz__wrap {
-  max-width: var(--mpz-max);
-  margin-inline: auto;
   padding-inline: var(--mpz-pad-inline);
 }
 
@@ -293,10 +311,8 @@
   margin-block-end: 26px;
 }
 
-/* Constrains HEIGHT and lets width follow: a wide wordmark (Terex, 1129x198)
-   and a square badge (Ajax, 652x652) share an optical weight by cap height,
-   not by bounding width -- capping width instead would render Ajax large and
-   Terex hairline-thin.
+/* Constrains HEIGHT and lets width follow: capping WIDTH instead would render
+   the square badges large and Terex (1129x198) a hairline.
 
    The filter is why these marks work here at all. They are full-colour source
    files, including Ajax's #F50A11, and colour marks on a near-black card
@@ -314,6 +330,33 @@
   filter: var(--mpz-logo-filter);
   opacity: 0.92;   /* pure white marks out-weigh the 16px quote below them;
                       this pulls them back to a head, not a shout */
+}
+
+/* Square marks get a TALLER cap than wordmarks, because a single height cap
+   does not equalise mixed aspect ratios -- it equalises one dimension and
+   lets area follow the aspect. Measured at a 34px cap: Terex rendered
+   132x34 = 4488px^2 while L&T and Ajax (both 1:1) rendered 34x34 = 1156px^2,
+   a 3.9x spread, and the square badges read as an afterthought next to the
+   wordmarks.
+
+   48px brings them to 2304px^2. Still lighter than a wordmark, which is
+   correct -- a compact badge SHOULD carry less ink than a five-letter
+   wordmark, or it starts shouting -- but it is now in the same family rather
+   than a different one. The slot is 34px tall and does not grow, so these
+   overhang it symmetrically (align-items: center) and the quote below stays
+   on its baseline across the whole row.
+
+   .mpz__logo--square is authored per-mark rather than detected, because the
+   ratio is a property of the FILE and CSS cannot branch on an image's
+   intrinsic aspect. Add the class to any future 1:1-ish mark. */
+.mpz__logo--square {
+  /* block-size, not just max-block-size: the base rule sets block-size: 100%,
+     which resolves against the 34px slot and caps these at 34px before a
+     max-block-size of 48 is ever consulted. Measured: they stayed 34x34 until
+     the used value itself was raised. */
+  block-size: 48px;
+  max-inline-size: 48px;
+  max-block-size: 48px;
 }
 
 .mpz__quote {
