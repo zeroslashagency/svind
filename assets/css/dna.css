@@ -1118,7 +1118,7 @@
   padding-inline-end: 56px;
   margin: 0;
   list-style: none;
-  animation: dna-marquee-scroll 32s linear infinite;
+  animation: dna-marquee-scroll 60s linear infinite;
 }
 
 /* Courtesy pause so a reader can stop on a logo they recognise. */

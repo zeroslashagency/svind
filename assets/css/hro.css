@@ -432,6 +432,16 @@ div.hero-logo-cta.dna-lockup__wordmark {
 
 .logo-slider-component .splide__list { align-items: center; }
 
+/* Logo slider moves slowly — same as dna-marquee but via splide list, no JS needed */
+.logo-slider .splide__list {
+  width: max-content;
+  animation: dna-marquee-scroll 60s linear infinite;
+}
+
+.logo-slider .splide__list:hover {
+  animation-play-state: paused;
+}
+
 /* --------------------------------------------------------------------------
    8. NARROW
    Inlined breakpoint numbers, per the tokens.css note that media queries
