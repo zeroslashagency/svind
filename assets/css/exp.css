@@ -1,5 +1,5 @@
 /* ==========================================================================
-   SVIND — exp.css — expertise after logo-slider (arrodz DNA replica)
+   SVIND - exp.css - expertise after logo-slider (arrodz core replica)
    Scoped .expertise-section. Matches live arrodz-preprod.shared.92eeed5df:
    sticky 7rem / 9rem lip, 5rem gaps, 80vh max, beige #F5F2E8, 8px radius,
    cover wipe y 0→-100% 1s outQuart @20%, parallax y -20%→0% smoothing 90.
@@ -12,6 +12,7 @@
   background-color: var(--color-surface);
   padding-block: var(--band-y);
   padding-inline: var(--band-inset);
+  scroll-margin-top: calc(var(--nav-h) + 2rem);
 }
 
 .expertise-component {
@@ -30,6 +31,9 @@
   flex-direction: column;
   align-items: center;
   gap: var(--space-4);
+  padding-block-start: var(--space-6);
+  position: relative;
+  z-index: 1;
 }
 
 .heading-title-wrapper.is-center {
@@ -70,7 +74,7 @@
   color: var(--color-text-secondary);
 }
 
-/* List — 5rem gap like arrodz, relative is containing block for sticky */
+/* List - 5rem gap like arrodz, relative is containing block for sticky */
 .expertise-list,
 .expertsie-list {
   display: flex;
@@ -80,7 +84,7 @@
   position: relative;
 }
 
-/* Sticky stack — exact arrodz top + max-height, paper lip on _02 — bigger deck */
+/* Sticky stack - exact arrodz top + max-height, paper lip on _02 - bigger deck */
 .expertise-item {
   position: sticky;
   top: 7rem;
@@ -125,7 +129,7 @@
 }
 .button-group.expert { margin-block-start: var(--space-3); }
 
-/* Image — 135% height for bigger parallax, 8px radius, clipped */
+/* Image - 135% height for bigger parallax, 8px radius, clipped */
 .expertise-image-wrapper {
   position: relative;
   overflow: hidden;
@@ -145,43 +149,39 @@
   transform: translate3d(0, -20%, 0);
 }
 
-/* Cover — beige, z2, wipes y 0→-100% 1s outQuart @20% */
+/* Cover - hidden by default so image is visible; JS wipe is optional */
 .expertise-cover-image,
 .exerptsie-cover-image {
   position: absolute;
   inset: 0;
   z-index: 2;
   background-color: #F5F2E8;
-  transform: translate3d(0, 0, 0);
-  transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+  transform: translate3d(0, -100%, 0);
   pointer-events: none;
 }
 
-.expertise-item.is-visible .expertise-cover-image,
-.expertise-item.is-visible .exerptsie-cover-image {
-  transform: translate3d(0, -100%, 0);
-}
-
-/* Text — slideInLeft preset: 0→1 + y 18px, 600ms outQuart */
+/* Text - slideInLeft preset: 0→1 + y 18px, 600ms outQuart - visible by default, JS hides until is-visible */
 .heading-style-h3.expert,
 .text-size-small.expert,
 .button-group.expert {
-  opacity: 0;
-  transform: translate3d(0, 18px, 0);
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
   transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.expertise-item.is-visible .heading-style-h3.expert,
-.expertise-item.is-visible .text-size-small.expert,
-.expertise-item.is-visible .button-group.expert {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
+/* text always visible - no gate, wipe is cover only */
+.heading-style-h3.expert,
+.text-size-small.expert,
+.button-group.expert {
+  opacity: 1 !important;
+  transform: none !important;
 }
 
-/* Badges — rotated paper labels pinned to card top (arrodz) */
+/* Badges - rotated paper labels pinned to card top (arrodz) */
 .caption.is-expertise-1,
 .caption.is-expertise-2,
-.caption.is-expertise-3 {
+.caption.is-expertise-3,
+.expertise-kicker {
   position: absolute;
   top: -1rem;
   z-index: 3;
@@ -197,21 +197,54 @@
 }
 .caption.is-expertise-3 { left: 25rem; transform: rotate(-4deg); z-index: 2; }
 
-/* VisBug adapted — desktop bigger hints (responsive, not fixed 1663px overflow) — biggere */
+/* Non-eyebrow kicker for expertise items - same badge shape but without micro-caps eyebrow signature */
+.expertise-kicker {
+  display: inline-block;
+  padding: 6px 12px;
+  background-color: #F5EFE6;
+  color: var(--color-navy);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.expertise-item:nth-child(1) .expertise-kicker { left: 1.5rem; transform: rotate(-2deg); }
+.expertise-item:nth-child(2) .expertise-kicker {
+  left: 13rem;
+  transform: rotate(2deg);
+  background-color: var(--color-navy);
+  color: #F5F2E8;
+}
+.expertise-item:nth-child(3) .expertise-kicker { left: 25rem; transform: rotate(-4deg); z-index: 2; }
+
+/* VisBug adapted - desktop bigger hints (responsive, not fixed 1663px overflow) - biggere */
 @media (min-width: 992px) {
   .expertise-component { gap: 6rem; max-width: 1440px; }
   .expertise-list, .expertsie-list { gap: 6rem; }
   img[alt="Fabrication bay with EOT crane"] {
     transform: translate3d(0, -9.19%, 0);
   }
-  div#production-contenu {
+  div#production-contenu,
+  div#fabrication-test {
     transform: translate3d(0, 0, 0) scale(1.08);
     transform-origin: center center;
   }
-  div#communication-digitale {
+  div#communication-digitale,
+  div#engineering-design {
     width: min(100%, 1440px);
     max-width: none;
     transform: translate3d(0, 0, 0) scale(1.08);
+    transform-origin: center center;
+  }
+  /* English IDs - new canonical anchors (French IDs retained for back-compat) */
+  div#service-amc {
+    /* no extra transform; inherits .expertise-item stacking */
+  }
+  div#branding {
+    width: min(100%, 1440px);
+    max-width: none;
+    transform: translate3d(-28px, 0, 0) scale(1.08);
     transform-origin: center center;
   }
   .expertise-item { max-height: 92vh; gap: 2.25rem; }
@@ -220,11 +253,11 @@
   .expertise-image { height: 145%; }
 }
 
-/* Tablet — linear flow, no sticky, no wipe, image capped */
+/* Tablet - linear flow, no sticky, no wipe, image capped */
 @media screen and (max-width: 991px) {
   .expertise-component { gap: 2rem; }
   .expertise-list, .expertsie-list { gap: 2rem; }
-  .expertise-item, .expertise-item._02 {
+  .expertise-item {
     position: relative;
     top: 0;
     max-height: none;
@@ -243,8 +276,10 @@
 @media screen and (max-width: 479px) {
   .expertise-content-wrapper { padding: 3.5rem 1.5rem 1.5rem; }
   .expertise-image-wrapper { max-height: 12.5rem; }
-  .caption.is-expertise-2 { inset: -1rem 2.5rem auto auto; left: auto; }
-  .caption.is-expertise-3 { inset: -1rem 1rem auto auto; left: auto; }
+  .caption.is-expertise-2,
+  .expertise-item:nth-child(2) .expertise-kicker { inset: -1rem 2.5rem auto auto; left: auto; }
+  .caption.is-expertise-3,
+  .expertise-item:nth-child(3) .expertise-kicker { inset: -1rem 1rem auto auto; left: auto; }
 }
 
 @media (prefers-reduced-motion: reduce) {

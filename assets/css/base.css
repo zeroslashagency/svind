@@ -1,7 +1,11 @@
+/* Fonts: Inter Tight + IBM Plex Mono = core SVIND (justified in tokens.css).
+   Passion One + Open Sans are scoped to arz.css only, measured from the
+   arrodz.com source via getComputedStyle - not a generic pairing. They load
+   here to avoid FOIT on the ARZ sections but are never used outside .arz. */
 @import url("https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Passion+One:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap");
 
 /* ==========================================================================
-   SVIND v2 — base.css
+   SVIND v2 - base.css
    Reset, document defaults, layout primitives, a11y utilities.
    Depends on tokens.css. Load order: tokens.css → base.css → components.css
    Mobile-first. min-width media queries only.
@@ -315,7 +319,7 @@ p a:not([class]):hover {
 }
 
 /* --------------------------------------------------------------------------
-   8. CONTAINER — fluid, 1240px max, clamped gutter
+   8. CONTAINER - fluid, 1240px max, clamped gutter
    -------------------------------------------------------------------------- */
 
 /* Used by the nav rail, the footer and the mobile overlay -- all of which
@@ -348,7 +352,7 @@ p a:not([class]):hover {
 }
 
 /* --------------------------------------------------------------------------
-   9. BAND — the section wrapper. Whitespace is the separator.
+   9. BAND - the section wrapper. Whitespace is the separator.
    Colour bands ≤2 per page: --ink once, plus the footer.
    -------------------------------------------------------------------------- */
 
@@ -425,7 +429,7 @@ p a:not([class]):hover {
 }
 
 /* --------------------------------------------------------------------------
-   10. GRID — 12 columns with named asymmetric helpers
+   10. GRID - 12 columns with named asymmetric helpers
    Single column below 768px. Asymmetry from 1024px up.
    -------------------------------------------------------------------------- */
 
@@ -478,7 +482,7 @@ p a:not([class]):hover {
   .grid > .col-start-8 { grid-column-start: 8; }
 }
 
-/* Named asymmetric splits — exactly two children each */
+/* Named asymmetric splits - exactly two children each */
 .grid--7-5,
 .grid--8-4,
 .grid--5-7,

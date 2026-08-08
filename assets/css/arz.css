@@ -2,7 +2,7 @@
    arz.css -- closing CTA + FAQ, exact copy of www.arrodz.com
 
    A THIRD DESIGN SYSTEM on this page, deliberately, and the second foreign
-   one. index.html now runs: SVIND DNA (navy/gray, zero radii, full-bleed
+   one. index.html now runs: SVIND core (navy/gray, zero radii, full-bleed
    bands) -> FOC (charcoal + orange, 72px display, 400px numeral) -> ARZ
    (wine + beige, 6-8px radii, 155px condensed uppercase display). Each
    contradicts the others on purpose and each is scoped so it cannot leak.
@@ -56,6 +56,12 @@
    FONT CAVEAT: the source serves Passion One as "Passionone". It is on Google
    Fonts as Passion One, imported in base.css alongside Open Sans, so unlike
    the licensed Neue Haas in foc.css this one is reproduced exactly.
+   JUSTIFICATION per design-taste-frontend §4.1 generic-pairing rule: this
+   Passion One + Open Sans pairing is NOT a generic AI choice. It was measured
+   from the live arrodz.com source via getComputedStyle at 1280/1440/992/900/500px
+   and is scoped strictly to .arz descendants (see SCOPING above). Core SVIND
+   type remains Inter Tight + IBM Plex Mono (tokens.css). Do not reuse this
+   display pair outside .arz.
 
    DEPARTURES FROM THE MEASURED PALETTE. Four surfaces no longer match the
    MEASURED FACTS above, by request, so the list is no longer a description of

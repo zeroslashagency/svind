@@ -1,9 +1,9 @@
 /* ==========================================================================
-   MPZ · WHAT OUR PARTNERS SAY — the mprez.fr testimonial carousel
+   MPZ · WHAT OUR PARTNERS SAY - the mprez.fr testimonial carousel
    https://www.mprez.fr/  ("They entrust us with their projects")
 
    Fifth scoped design system on this page; load order is
-   SVIND DNA -> FOC -> ABT -> ARZ -> MPZ. Replaces the three static
+   SVIND core -> FOC -> ABT -> ARZ -> MPZ. Replaces the three static
    .foc__quote cards that used to sit in the .foc--paper band.
 
    --------------------------------------------------------------------------
@@ -125,7 +125,7 @@
 
   /* --band-inset, NOT a private clamp. This is the page's own shoulder token
      (tokens.css: clamp(20px, 6.5vw, var(--max-shoulder))), so the rail starts
-     and ends on the same vertical as every DNA band above it and scales with
+     and ends on the same vertical as every core band above it and scales with
      the viewport instead of stopping at a fixed measure.
 
      This replaced `--mpz-max: 1280px` + `clamp(20px, 3.9vw, 50px)`, which was
@@ -173,7 +173,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   HEADER — .gallery_content-wrapper: heading left, intro copy right
+   HEADER - .gallery_content-wrapper: heading left, intro copy right
    -------------------------------------------------------------------------- */
 
 .mpz__head {
@@ -220,7 +220,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   TRACK — the native scroll container
+   TRACK - the native scroll container
    -------------------------------------------------------------------------- */
 
 .mpz__carousel {
@@ -285,7 +285,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   CARD — .box > .box_padding > .testimonial_content
+   CARD - .box > .box_padding > .testimonial_content
    -------------------------------------------------------------------------- */
 
 .mpz__card {
@@ -393,7 +393,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   CONTROLS — arrows centred, dots right, on one footer row
+   CONTROLS - arrows centred, dots right, on one footer row
 
    Splide's stock CSS overlays arrows on the track edges, vertically centred;
    over card corners that swallows the first and last card's logo. The

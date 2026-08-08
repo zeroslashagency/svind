@@ -1,5 +1,5 @@
 /* ==========================================================================
-   SVIND v2 — components.css
+   SVIND v2 - components.css
    Depends on tokens.css + base.css. Load third.
    Governing aesthetic: 01_DESIGN/06_DESIGN_RECALIBRATION.md (clean minimal).
    Rules honoured throughout:
@@ -12,8 +12,8 @@
 
 /* --------------------------------------------------------------------------
    PROGRESS BAR
-   .progress-bar — 2px copper scroll hairline pinned to the top of the
-   viewport. Width driven by JS (--progress-scale, 0–1). Decorative:
+   .progress-bar - 2px copper scroll hairline pinned to the top of the
+   viewport. Width driven by JS (--progress-scale, 0-1). Decorative:
    aria-hidden in markup. This is copper appearance #1 and it is 2px tall.
    -------------------------------------------------------------------------- */
 
@@ -37,7 +37,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   NAV — hairline-celled sticky header
+   NAV - hairline-celled sticky header
    .nav is a full-width bar split into cells by 1px hairlines. Logo cell
    left, link cells centre, right-most cell solid copper holding the quote
    CTA. Sticky; collapses on scroll via .is-scrolled.
@@ -63,7 +63,7 @@
   transition: min-height var(--dur-fast) var(--ease-out);
 }
 
-/* Brand cell — wordmark + one-line descriptor */
+/* Brand cell - wordmark + one-line descriptor */
 .nav__brand {
   display: flex;
   flex-direction: column;
@@ -95,7 +95,7 @@
   color: var(--color-text-muted);
 }
 
-/* Link cell group — hidden below 1024px, replaced by the overlay */
+/* Link cell group - hidden below 1024px, replaced by the overlay */
 .nav__menu {
   display: none;
 }
@@ -129,14 +129,14 @@
   background-color: var(--color-concrete-2);
 }
 
-/* Current page: ink text + 2px ink underline. Not copper — the accent
+/* Current page: ink text + 2px ink underline. Not copper - the accent
    budget belongs to the CTA cell. */
 .nav__link[aria-current="page"] {
   color: var(--color-text);
   box-shadow: inset 0 -2px 0 0 var(--color-ink);
 }
 
-/* Copper CTA cell — the right-most cell. Copper appearance #2.
+/* Copper CTA cell - the right-most cell. Copper appearance #2.
 
    The hide/show pair is scoped `.nav .nav__cta` rather than `.nav__cta` on
    purpose. Three of the four built pages write `class="btn nav__cta"`, and
@@ -174,7 +174,7 @@
   }
 }
 
-/* Scrolled state — collapse height, switch field to white, tighten line */
+/* Scrolled state - collapse height, switch field to white, tighten line */
 .nav.is-scrolled {
   background-color: var(--color-white);
   border-block-end-color: var(--color-hairline-2);
@@ -188,7 +188,7 @@
   display: none;
 }
 
-/* Hamburger — three 1px rules, becomes an X while the overlay is open */
+/* Hamburger - three 1px rules, becomes an X while the overlay is open */
 .nav__toggle {
   display: flex;
   flex-direction: column;
@@ -259,7 +259,7 @@
   }
 }
 
-/* Overlay link list — display-m scale, hairline between rows */
+/* Overlay link list - display-m scale, hairline between rows */
 .nav__overlay-list {
   display: flex;
   flex-direction: column;
@@ -283,7 +283,7 @@
   color: var(--color-copper);
 }
 
-/* Overlay footer — phone + email in mono, metadata in micro-caps */
+/* Overlay footer - phone + email in mono, metadata in micro-caps */
 .nav__overlay-foot {
   margin-block-start: auto;
   padding-block-start: var(--space-7);
@@ -298,7 +298,7 @@
 
 /* --------------------------------------------------------------------------
    MOBILE BAR
-   .mobile-bar — fixed bottom Call / WhatsApp / Quote bar. Below 768px only.
+   .mobile-bar - fixed bottom Call / WhatsApp / Quote bar. Below 768px only.
    Three equal cells divided by hairlines; the Quote cell is copper.
    -------------------------------------------------------------------------- */
 
@@ -358,7 +358,7 @@
 
 /* --------------------------------------------------------------------------
    HERO
-   .hero — first screen. Eyebrow → H1 → lead → spec row → actions, with an
+   .hero - first screen. Eyebrow → H1 → lead → spec row → actions, with an
    optional media column on the 7/5 split. NO ghost watermark: decorative
    type is revoked by the recalibration.
    -------------------------------------------------------------------------- */
@@ -396,7 +396,7 @@
   gap: var(--space-5);
 }
 
-/* micro-caps kicker above the H1 — category, location, or niche */
+/* micro-caps kicker above the H1 - category, location, or niche */
 .hero__eyebrow {
   display: inline-flex;
   align-items: center;
@@ -437,7 +437,7 @@
   text-wrap: balance;
 }
 
-/* Optional single copper word inside the H1 — counts against the budget */
+/* Optional single copper word inside the H1 - counts against the budget */
 .hero__title em {
   font-style: normal;
   color: var(--color-copper);
@@ -456,7 +456,7 @@
 }
 
 /* Engineering readout under the lead: capacity · span · duty, mono, in a
-   hairline-topped row. This is the ornament — data as decoration. */
+   hairline-topped row. This is the ornament - data as decoration. */
 .hero__specs {
   display: flex;
   flex-wrap: wrap;
@@ -532,7 +532,7 @@
   pointer-events: none;
 }
 
-/* Caption strip pinned under the media — alt-grade spec text */
+/* Caption strip pinned under the media - alt-grade spec text */
 .hero__media-caption {
   position: relative;
   z-index: 1;
@@ -549,7 +549,7 @@
 
 /* --------------------------------------------------------------------------
    TRUST STRIP
-   .trust-strip — credentials above the first fold break. Hairline-bordered
+   .trust-strip - credentials above the first fold break. Hairline-bordered
    on concrete (not the old solid ink slab). micro-caps labels with mono
    values, one cell per credential, hairline dividers.
    -------------------------------------------------------------------------- */
@@ -658,7 +658,7 @@
 
 /* --------------------------------------------------------------------------
    BUTTONS
-   .btn — base: small, flat, micro-caps, 2px radius. Deliberately quiet
+   .btn - base: small, flat, micro-caps, 2px radius. Deliberately quiet
    against the headline. Variants: --primary (copper), --ghost (copper-wire
    1px border), --dark (ink).
    -------------------------------------------------------------------------- */
@@ -708,7 +708,7 @@
   pointer-events: none;
 }
 
-/* Solid copper. One per viewport — this is the accent budget's main line. */
+/* Solid copper. One per viewport - this is the accent budget's main line. */
 .btn--primary {
   background-color: var(--color-copper);
   color: var(--color-text-on-accent);
@@ -788,7 +788,7 @@
 
 /* --------------------------------------------------------------------------
    CARD
-   .card — white surface on concrete, 1px hairline, 4px radius.
+   .card - white surface on concrete, 1px hairline, 4px radius.
    .card--product adds the numbered index, media slot and pinned spec foot.
    Hover is ONLY: border → hairline-2, title → copper, 1px lift, 160ms.
    No colour flood anywhere.
@@ -850,7 +850,7 @@
   margin: 0;
 }
 
-/* Media slot. Contained — no frame-breaking cut-outs by default. */
+/* Media slot. Contained - no frame-breaking cut-outs by default. */
 .card__media {
   order: -1;
   margin: calc(var(--space-5) * -1) calc(var(--space-5) * -1) 0;
@@ -929,7 +929,7 @@
 
 /* --------------------------------------------------------------------------
    INDEX ROW
-   .index-row — numbered accordion. Replaces icon bullets entirely.
+   .index-row - numbered accordion. Replaces icon bullets entirely.
    mono numeral | display-m label | +/− expander, 1px hairline between rows.
    Button carries aria-expanded + aria-controls; panel is the controlled id.
    -------------------------------------------------------------------------- */
@@ -975,7 +975,7 @@
   color: var(--color-text-on-dark);
 }
 
-/* 01 / 02 / 03 — thin mono numeral, slashed zero */
+/* 01 / 02 / 03 - thin mono numeral, slashed zero */
 .index-row__num {
   font-family: var(--font-mono);
   font-size: var(--text-index-numeral);
@@ -1064,7 +1064,7 @@
 
 /* --------------------------------------------------------------------------
    STAT
-   .stat — proof-point lockup: thin numeral + micro-caps caption stacked
+   .stat - proof-point lockup: thin numeral + micro-caps caption stacked
    below it, on a plain hairline grid. No outline strokes, no photo overlay.
    -------------------------------------------------------------------------- */
 
@@ -1117,7 +1117,7 @@
   color: var(--color-text-on-dark-muted);
 }
 
-/* One stat per row of the grid may be highlighted — use at most once */
+/* One stat per row of the grid may be highlighted - use at most once */
 .stat--accent .stat__value {
   color: var(--color-copper);
 }
@@ -1137,7 +1137,7 @@
 
 /* --------------------------------------------------------------------------
    SPEC TABLE
-   .spec-table — hairline grid, mono values, dotted-leader alignment between
+   .spec-table - hairline grid, mono values, dotted-leader alignment between
    label and value, horizontal scroll with a shadow affordance on mobile.
    Requires <caption>, scope on every header cell.
    -------------------------------------------------------------------------- */
@@ -1286,7 +1286,7 @@
   color: var(--color-text);
 }
 
-/* Footnote under a table — tolerances, standards, revision */
+/* Footnote under a table - tolerances, standards, revision */
 .spec-table__note {
   margin-block-start: var(--space-3);
   font-size: var(--text-micro-caps);
@@ -1298,7 +1298,7 @@
 
 /* --------------------------------------------------------------------------
    COMPARE TABLE
-   .compare-table — 3 columns: pain / common solution / SVIND solution.
+   .compare-table - 3 columns: pain / common solution / SVIND solution.
    The SVIND column carries the copper-soft wash and a copper top rule.
    Requires <caption> and scope="col" on all three headers.
    -------------------------------------------------------------------------- */
@@ -1393,7 +1393,7 @@
 
 /* --------------------------------------------------------------------------
    CHIPS
-   .chips — process pill chips with chevron separators. Wraps to as many
+   .chips - process pill chips with chevron separators. Wraps to as many
    rows as needed. Ordered list in markup; separators are CSS-generated and
    therefore decorative only.
    -------------------------------------------------------------------------- */
@@ -1453,7 +1453,7 @@
   color: var(--color-text-muted);
 }
 
-/* Current process step — at most one per viewport */
+/* Current process step - at most one per viewport */
 .chips__item--active .chips__label {
   border-color: var(--color-copper-wire);
   color: var(--color-copper);
@@ -1476,9 +1476,9 @@
 
 /* --------------------------------------------------------------------------
    FORM
-   .form — RFQ. Label-less underline inputs: the <label> is visually the
+   .form - RFQ. Label-less underline inputs: the <label> is visually the
    placeholder-position caption and floats to micro-caps on focus/fill.
-   Stepped progress 01 — 04. Error + required states included.
+   Stepped progress 01 - 04. Error + required states included.
    -------------------------------------------------------------------------- */
 
 .form {
@@ -1487,7 +1487,7 @@
   gap: var(--space-6);
 }
 
-/* Progress readout: 01 — 04 in mono plus a 1px track */
+/* Progress readout: 01 - 04 in mono plus a 1px track */
 .form__step {
   display: flex;
   align-items: center;
@@ -1632,7 +1632,7 @@
   color: var(--color-text-muted);
 }
 
-/* Required marker — a dot, not an asterisk soup */
+/* Required marker - a dot, not an asterisk soup */
 .form__label .form__required {
   color: var(--color-copper);
   margin-inline-start: 2px;
@@ -1669,7 +1669,7 @@
   color: var(--color-alert);
 }
 
-/* Checkbox / radio row — square 16px control, 2px radius */
+/* Checkbox / radio row - square 16px control, 2px radius */
 .form__check {
   display: flex;
   align-items: flex-start;
@@ -1722,7 +1722,7 @@
   border-inline-start: 2px solid var(--color-alert);
 }
 
-/* Honeypot — off-screen, never focusable by design */
+/* Honeypot - off-screen, never focusable by design */
 .form__trap {
   position: absolute;
   inset-inline-start: -9999px;
@@ -1752,8 +1752,8 @@
 
 /* --------------------------------------------------------------------------
    TEXT-LEVEL UTILITIES
-   .eyebrow — micro-caps kicker for any band or block.
-   .spec     — mono engineering readout, inline.
+   .eyebrow - micro-caps kicker for any band or block.
+   .spec     - mono engineering readout, inline.
    -------------------------------------------------------------------------- */
 
 .eyebrow {
@@ -1816,7 +1816,7 @@
 
 /* --------------------------------------------------------------------------
    REVEAL
-   .reveal — IntersectionObserver entrance: opacity 0→1, translateY 20px→0,
+   .reveal - IntersectionObserver entrance: opacity 0→1, translateY 20px→0,
    640ms --ease-out. JS adds .is-visible. Final state kept under
    prefers-reduced-motion (see base.css §13).
    -------------------------------------------------------------------------- */
@@ -1844,7 +1844,7 @@
 
 /* --------------------------------------------------------------------------
    FOOTER
-   .footer — ink band: 4 columns (brand + 3 link groups) over a legal bar.
+   .footer - ink band: 4 columns (brand + 3 link groups) over a legal bar.
    This is the second and last colour band on any page.
    -------------------------------------------------------------------------- */
 
@@ -1932,7 +1932,7 @@
   color: var(--color-text-on-dark-muted);
 }
 
-/* Legal bar — hairline above, micro-caps both sides */
+/* Legal bar - hairline above, micro-caps both sides */
 .footer__legal {
   display: flex;
   flex-wrap: wrap;
@@ -1966,8 +1966,8 @@
 
 /* --------------------------------------------------------------------------
    FOOTER WORDMARK + BASELINE
-   .footer__mark — the giant brand word cropped flush to its cap height, the
-   letters rising from below the crop one after another. .footer__baseline —
+   .footer__mark - the giant brand word cropped flush to its cap height, the
+   letters rising from below the crop one after another. .footer__baseline -
    the pale legal strip that closes the page under it.
 
    Both are copied from the bottom of www.arrodz.com, measured in Chrome via
@@ -2173,7 +2173,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   FOOTER CLOSE — the upper half of the arrodz footer
+   FOOTER CLOSE - the upper half of the arrodz footer
    The band above the wordmark: a giant display headline on the left, and on
    the right a two-column nav / CTA block over a partner strip. Measured from
    www.arrodz.com in Chrome via the DevTools protocol at 1700, 1280, 991, 767
@@ -2292,7 +2292,7 @@
 }
 
 /* The one beige element in the ink band, straight off the source. Not a
-   .btn--* variant: every one of those is tokenised to the DNA palette and
+   .btn--* variant: every one of those is tokenised to the core palette and
    zero radius, and this needs the arrodz beige and its 8px corner without
    dragging a --arz- dependency onto three pages that never load arz.css. */
 .footer__close-btn {
@@ -2438,7 +2438,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   FOOTER CLOSE — entrance
+   FOOTER CLOSE - entrance
    The source runs one GSAP timeline for the whole footer, triggered at
    `body bottom-=200`:
 
@@ -2489,7 +2489,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   FOOTER REVEAL — the footer is pinned and the page slides off it
+   FOOTER REVEAL - the footer is pinned and the page slides off it
    The source parks the footer at the bottom of the viewport and lets the last
    section travel up and off it, so the footer is uncovered from its top edge
    down rather than scrolling in from below. Measured on www.arrodz.com: the
@@ -2516,7 +2516,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  /* Under the page, over nothing. .page is opaque (--color-surface, dna.css)
+  /* Under the page, over nothing. .page is opaque (--color-surface, core.css)
      which is what actually hides the footer; z-index only settles the order
      for the two in the same stacking context. Below --z-nav (100) so the
      sticky header still wins, and below --z-mobile-bar (300). */

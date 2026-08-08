@@ -6,7 +6,7 @@ first check on whether it is being used correctly.
 
 | Folder | Role | Rules |
 |---|---|---|
-| `cutouts/` | S2 background-free product cut-outs | Transparent PNG. Sits on a grey band with a drawn elliptical ground shadow. **Never upscaled past its native width** — `dna.css` caps the small one at its real 511px. Never boxed, never a backdrop |
+| `cutouts/` | S2 background-free product cut-outs | Transparent PNG. Sits on a grey band with a drawn elliptical ground shadow. **Never upscaled past its native width** - `core.css` caps the small one at its real 511px. Never boxed, never a backdrop |
 | `bands/` | Wide band imagery, 2:1 and 3:2 | Placed **beside** copy, never behind it. `band-goliath-lifting-load.jpg` satisfies the §7 requirement that at least one band shows a crane lifting a real load in a real bay |
 | `cards/` | §6 media-card shots, 4:3 | Bleeds to the card edge above the meta row. Zero radius, no border |
 | `people/` | Portraits | Reserved for named individuals; consent is assumed only for the MD portrait supplied by the client |

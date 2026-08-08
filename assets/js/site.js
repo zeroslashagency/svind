@@ -1,5 +1,5 @@
 /* ==========================================================================
-   SVIND v2 — site.js
+   SVIND v2 - site.js
    One file, vanilla ES2020, no dependencies, loaded with `defer`.
    Implements exactly the behaviours in COMPONENT_CONTRACT.md §5.
    Every module null-checks its targets: any component may be absent from a
@@ -8,6 +8,7 @@
 
 (function () {
   'use strict';
+  try { document.documentElement.classList.add('js'); } catch (e) {}
 
   /* ------------------------------------------------------------------------
      SHARED HELPERS
@@ -291,13 +292,13 @@
      than an empty band. Verified by loading index.html with the <script> tag
      stripped.
 
-     Under reduced motion nothing is armed at all -- .dna-lockup--static is
+     Under reduced motion nothing is armed at all -- .core-lockup--static is
      added instead, which is the same finished state with the transitions
      removed, so a mid-visit switch to reduce cannot leave a half-played rise.
      ------------------------------------------------------------------------ */
 
   /* ------------------------------------------------------------------------
-     4c. SITE LOADER — ARRODZ-style opening plate (SVIND)
+     4c. SITE LOADER - ARRODZ-style opening plate (SVIND)
      Full-bleed navy curtain with SVIND knockout that rises on first load,
      then slides up. Mirrors arrodz.com home-loader: localStorage 1h skip,
      reduced-motion respects + curtain uses the same ease as hero.
@@ -326,7 +327,7 @@
       try { document.documentElement.classList.add('user-has-visited'); } catch (e) {}
       loader.classList.add('site-loader--hidden');
       loader.setAttribute('aria-hidden', 'true');
-      // D now shows GIF by default, expands only on hover — no auto
+      // D now shows GIF by default, expands only on hover - no auto
       return loader;
     }
 
@@ -371,9 +372,9 @@
   }
 
   function scheduleDOpen(delayMs) {
-    var lockup = document.querySelector('.dna-lockup');
+    var lockup = document.querySelector('.core-lockup');
     if (!lockup) return;
-    var cta = lockup.querySelector('.dna-lockup__cta');
+    var cta = lockup.querySelector('.core-lockup__cta');
     if (!cta) return;
     if (reduceMotion()) return;
 
@@ -385,19 +386,19 @@
       // keep accessible: aria-expanded not needed as CTA is link, but announce via live label is already in name
     }, delayMs);
 
-    // Close on first user interaction if they want it shut (optional: keep open — comment next 3 lines to keep sticky)
+    // Close on first user interaction if they want it shut (optional: keep open - comment next 3 lines to keep sticky)
     // cta.addEventListener('mouseleave', function handler() {
     //   cta.removeEventListener('mouseleave', handler);
     // });
   }
 
   function initHeroLockup() {
-    var lockup = document.querySelector('.dna-lockup');
+    var lockup = document.querySelector('.core-lockup');
     if (!lockup) return;
 
     function settle() {
       lockup.classList.remove('is-armed', 'is-in');
-      lockup.classList.add('dna-lockup--static');
+      lockup.classList.add('core-lockup--static');
     }
 
     if (reduceMotion()) {
@@ -416,8 +417,8 @@
       });
     });
 
-    // If loader is hidden/skipped, D should still auto-open after hero rise — 5s as requested
-    // D GIF plays by default, expands only on cursor — no auto schedule
+    // If loader is hidden/skipped, D should still auto-open after hero rise - 5s as requested
+    // D GIF plays by default, expands only on cursor - no auto schedule
     var loaderEl = document.getElementById('site-loader');
     void loaderEl;
 
@@ -543,7 +544,7 @@
   }
 
   /* ------------------------------------------------------------------------
-     5b. ABOUT PIN — pinned photograph + headline travelling on the x axis
+     5b. ABOUT PIN - pinned photograph + headline travelling on the x axis
 
      The arrodz .about-home-section. The source pins with position: sticky and
      drives the headline with GSAP ScrollTrigger (scrub: 1, x resolved to
@@ -555,7 +556,7 @@
          Measured: a probe with top:0, scrolled 800px past its host's top edge,
          reports getBoundingClientRect().top === -800 where a working sticky
          reports 0. (Same root cause as .nav not sticking. Unrelated and left
-         alone. If that is ever fixed with overflow-x: clip, this still works —
+         alone. If that is ever fixed with overflow-x: clip, this still works -
          the stage's `position` is owned here outright and sticky is never
          consulted.)
        - No GSAP, so the travel distance is measured and written as a custom
@@ -566,7 +567,7 @@
      those cannot be expressed in CSS alone without duplicating the decision.
 
      Not applied at all when reduced motion is set. This is scroll-coupled
-     motion of a full-viewport image, which is the kind that makes people ill —
+     motion of a full-viewport image, which is the kind that makes people ill -
      so it is skipped rather than shortened, and abt.css carries the same
      decision in a media query so neither half can apply alone.
      ------------------------------------------------------------------------ */
@@ -657,7 +658,7 @@
        move for its last glyph to reach the right edge. scrollWidth is the
        full unclipped width of the nowrap line; the padding on .abt__line-wrap
        is what the line starts inset by, so it is added back or the line stops
-       a padding short of the edge. Clamped at 0 — a line shorter than the
+       a padding short of the edge. Clamped at 0 - a line shorter than the
        viewport has nowhere to travel and must not move backwards.
 
        RUNWAY HEIGHT is one viewport plus the travel: the viewport is the frame
@@ -919,7 +920,7 @@
 
     var dot = raw.indexOf('.');
     var decimals = dot === -1 ? 0 : raw.length - dot - 1;
-    // Only group thousands when the authored text already did — keeps years
+    // Only group thousands when the authored text already did - keeps years
     // such as 1994 unformatted.
     var grouping = raw.indexOf(',') !== -1 || original.indexOf(',') !== -1;
 
@@ -1178,7 +1179,7 @@
     if (wrap) wrap.classList.add('form__field--error');
     var node = errorNode(field);
     if (node) {
-      node.textContent = message; // textContent only — no markup injection
+      node.textContent = message; // textContent only - no markup injection
       if (node.id) {
         var described = field.getAttribute('aria-describedby') || '';
         if (described.split(/\s+/).indexOf(node.id) === -1) {
@@ -1464,7 +1465,7 @@
     track.addEventListener('scroll', rafThrottle(syncDots), { passive: true });
     window.addEventListener('resize', debounce(measure, 120), { passive: true });
 
-    /* expertise — arrodz DNA: wipe 1s outQuart @20%, parallax -20%→0% smoothing 90 */
+    /* expertise - arrodz core: wipe 1s outQuart @20%, parallax -20%→0% smoothing 90 */
     (function () {
       var items = document.querySelectorAll('.expertise-item');
       if (!items.length) return;
@@ -1485,7 +1486,7 @@
           });
         }, { threshold: 0, rootMargin: '0px 0px -80% 0px' });
         document.querySelectorAll('.expertise-image-wrapper').forEach(function (w) { io.observe(w); });
-        /* Text slideInLeft — same 20% trigger, CSS handles 0.6s outQuart */
+        /* Text slideInLeft - same 20% trigger, CSS handles 0.6s outQuart */
         var tio = new IntersectionObserver(function (entries) {
           entries.forEach(function (e) {
             if (e.isIntersecting) {

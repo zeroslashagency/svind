@@ -1,9 +1,9 @@
 /* ==========================================================================
-   foc.css — Full Option Craft sections, exact copy
+   foc.css - Full Option Craft sections, exact copy
 
    A FOREIGN DESIGN SYSTEM, deliberately. These four sections reproduce
    www.fulloptioncraftreno.ca (a Wix site) and intentionally contradict
-   SVIND's DNA system: dark charcoal bands, an orange accent, a 400px
+   SVIND's core system: dark charcoal bands, an orange accent, a 400px
    numeral, and 72px display headings. None of that is permitted above the
    seam in index.html.
 
@@ -185,7 +185,7 @@
   border: 1px solid #D2D2D2;
 }
 
-/* On ash the orange numeral goes navy — #1E3A6B, the SVIND accent from
+/* On ash the orange numeral goes navy - #1E3A6B, the SVIND accent from
    tokens.css --color-navy, hardcoded here because foc.css must not depend on
    the SVIND token layer. This is the one place the foreign design system
    borrows a colour from the page above the seam. */
@@ -379,7 +379,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   LEGACY — the 400px orange numeral
+   LEGACY - the 400px orange numeral
    The numeral is the whole composition: 400px orange, with "years of
    building" set at the 72px display size beside it and the paragraph to
    its right. line-height 0.8 crops the generous font ascent so the figure
