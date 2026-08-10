@@ -1,20 +1,20 @@
-# URL Rewriting for clean URLs
+# SVIND — Homepage-Only (HP-03)
+# Frozen: index.html + 10 CSS + site.js remain byte-identical (see fingerprints.txt)
+# Pruned: 10 explicit product/location RewriteRules removed:
+#   eot-cranes/double-girder, eot-cranes, gantry-cranes, jib-cranes, hoists,
+#   crane-spare-parts, locations/bangalore, downloads, contact, request-a-quote
 RewriteEngine On
 
-# Canonical short URLs → filesystem locations
-RewriteRule ^eot-cranes/double-girder/?$ products/eot-cranes/double-girder.html [NC,L]
-RewriteRule ^eot-cranes/?$ products/eot-cranes/index.html [NC,L]
-RewriteRule ^gantry-cranes/?$ products/gantry-cranes/index.html [NC,L]
-RewriteRule ^jib-cranes/?$ products/jib-cranes/index.html [NC,L]
-RewriteRule ^hoists/?$ products/hoists/index.html [NC,L]
-RewriteRule ^crane-spare-parts/?$ products/spare-parts/index.html [NC,L]
-RewriteRule ^locations/bangalore/?$ locations/bangalore.html [NC,L]
-RewriteRule ^downloads/?$ pages/resources/downloads.html [NC,L]
-RewriteRule ^contact/?$ pages/company/contact.html [NC,L]
-RewriteRule ^request-a-quote/?$ pages/services/request-a-quote.html [NC,L]
+# Option A (plan §4D) — deleted prefixes 301 → / with zero index.html edit.
+# Preserves link equity for old /products/*, /pages/* etc. Homepage hrefs
+# to /products/* now 301 → / via this rule.
+# Pattern requires "prefix/" so "/" itself is never redirected (verified:
+# "^(products|pages|locations|reference|testing)/.*$" does not match "" or "/").
+RewriteRule ^(products|pages|locations|reference|testing)/.*$ / [R=301,L]
 
-# Directory-indexed product paths also resolve (e.g. /products/eot-cranes)
-# Generic fallback: /foo → /foo.html if that file exists
+# Generic fallback — keep from original, must stay after catch-all:
+# /foo → /foo.html if that file exists (e.g., future docs). !-f / !-d guards
+# assets/* and existing files; does not affect "/".
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^([^\.]+)$ $1.html [NC,L]

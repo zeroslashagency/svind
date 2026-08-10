@@ -1,0 +1,59 @@
+{
+  "team": "svind-homepage-preserve",
+  "orchestrator": "main-agent",
+  "created": "2026-08-11T02:44:00Z",
+  "spec": "shared/specs/2026-08-11-homepage-only-prune.md",
+  "plan": "plans/svind-homepage-preserve/plan.md",
+  "tasks": [
+    {
+      "id": "HP-01",
+      "title": "Freeze & fingerprint homepage bundle",
+      "state": "Done",
+      "assignee": "builder",
+      "priority": "High",
+      "artifacts": "plans/svind-homepage-preserve/fingerprints.txt",
+      "acceptance": "sha256 written, tag homepage-frozen-20260811, git diff 0 on frozen set",
+      "handoff": "shared/artifacts/HP-01-handoff.md",
+      "completed_at": "2026-08-11",
+      "verdict": "Approved — 13 sha256 OK, frozen bundle empty diff"
+    },
+    {
+      "id": "HP-02",
+      "title": "Delete non-homepage pages (products/pages/locations/reference/testing)",
+      "state": "Done",
+      "assignee": "builder",
+      "priority": "High",
+      "dependsOn": ["HP-01"],
+      "artifacts": "git rm -r products pages locations/bangalore.html reference testing",
+      "acceptance": "find . -name *.html == only index.html",
+      "handoff": "shared/artifacts/HP-02-handoff.md",
+      "completed_at": "2026-08-11",
+      "verdict": "Approved — 20 files staged D, find 1 html"
+    },
+    {
+      "id": "HP-03",
+      "title": "Trim shell: .htaccess + sitemap.xml + archive LINK_INVENTORY",
+      "state": "Done",
+      "assignee": "builder",
+      "priority": "High",
+      "dependsOn": ["HP-02"],
+      "artifacts": ".htaccess, sitemap.xml, shared/artifacts/LINK_INVENTORY.archive.md",
+      "acceptance": "sitemap 1 loc, .htaccess generic fallback only, no 301 on /",
+      "handoff": "shared/artifacts/HP-03-handoff.md",
+      "completed_at": "2026-08-11",
+      "verdict": "Approved — sitemap 1 loc, .htaccess 2 rules, 10 old rules removed, / not redirected"
+    },
+    {
+      "id": "HP-04",
+      "title": "Verify frozen homepage + prune (reviewer gate)",
+      "state": "Done",
+      "assignee": "reviewer",
+      "priority": "High",
+      "dependsOn": ["HP-03"],
+      "artifacts": "shared/reviews/HP-04-review.md, plans/svind-homepage-preserve/verify.sh",
+      "acceptance": "5 gates green: sha256, DOM count, 200, sitemap 1 loc, no new broken /",
+      "completed_at": "2026-08-11",
+      "verdict": "Approved — 36 PASS 0 FAIL, shared/reviews/HP-04-review.md"
+    }
+  ]
+}
