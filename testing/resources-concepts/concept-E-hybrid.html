@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spec Vault — SVIND Engineering Resource Archive · Concept E Hybrid</title>
+<meta name="description" content="Concept E Hybrid: Ledger + Blueprint = Spec Vault. A vaulted engineering resource archive for SVIND cranes.">
+<style>
+  /* ─────────────────────────────────────────────────────────
+     CONCEPT E — SPEC VAULT
+     Hybrid: Ledger (ruled accounting paper, perforations,
+     folio numbers, mono) + Blueprint (grid, dimension lines,
+     white-on-navy invert, technical drafting)
+     One accent: Navy #1E3A6B. No gradients. No radii. No shadows.
+     Anti-slop: sharp grid, editorial rag, tabular numbers, gutter as ornament.
+     Standalone. System fonts only (no external deps).
+     ───────────────────────────────────────────────────────── */
+  *,*::before,*::after{box-sizing:border-box}
+  *{margin:0;padding:0}
+  html{scroll-behavior:smooth;scrollbar-gutter:stable}
+  :root{
+    --canvas:#EFEFEF;
+    --canvas2:#E7E7E7;
+    --surface:#FFFFFF;
+    --ink:#1A1D21;
+    --muted:#8A8F96;
+    --muted2:#5A6067;
+    --navy:#1E3A6B;
+    --navy-deep:#162C52;
+    --rule:#B2B5C6;
+    --ink-hair:rgba(26,29,33,0.08);
+    --navy-soft:rgba(30,58,107,0.08);
+    --navy-line:rgba(30,58,107,0.18);
+    --gutter:4px;
+    --gutter2:8px;
+    --max:1240px;
+    --band-inset:clamp(20px,6.5vw,96px);
+    --sans: "Inter Tight", Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, IBM Plex Mono, monospace;
+    --micro:11px;
+    --dur:160ms;
+    --ease:cubic-bezier(0.22,1,0.36,1);
+  }
+  body{
+    font-family:var(--sans);
+    background:var(--canvas);
+    color:var(--ink);
+    font-size:15px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  a{color:inherit;text-decoration:none}
+  button{font:inherit}
+  /* progress hairline */
+  .hair-progress{position:fixed;inset:0 0 auto 0;height:2px;background:var(--navy);transform:scaleX(0);transform-origin:0 50%;z-index:99;opacity:0.95}
+
+  /* nav — minimal ledger strip */
+  .nav{
+    position:sticky;top:0;z-index:20;
+    background:var(--surface);
+    border-bottom:var(--gutter) solid var(--ink);
+  }
+  .nav__inner{
+    display:flex;align-items:stretch;justify-content:space-between;
+    min-height:56px;
+    padding:0 var(--band-inset);
+    gap:16px;
+  }
+  .nav__brand{display:flex;align-items:center;gap:14px;min-width:0}
+  .nav__wordmark{font-weight:700;letter-spacing:-0.02em;font-size:18px;line-height:1}
+  .nav__sub{font-size:var(--micro);font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);line-height:1;white-space:nowrap}
+  .nav__divider{width:1px;background:var(--rule);align-self:stretch}
+  .nav__links{display:none;align-items:center;gap:28px}
+  @media(min-width:900px){.nav__links{display:flex}}
+  .nav__link{font-size:var(--micro);font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted2)}
+  .nav__link[aria-current="page"]{color:var(--navy);text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:1.5px}
+  .nav__meta{display:flex;align-items:center;gap:12px;flex-shrink:0}
+  .nav__folio{font-family:var(--mono);font-size:11px;letter-spacing:0.06em;color:var(--muted);display:none}
+  @media(min-width:640px){.nav__folio{display:block}}
+  .btn-quote{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--navy);color:#fff;
+    font-size:var(--micro);font-weight:600;letter-spacing:0.09em;text-transform:uppercase;
+    padding:10px 16px;white-space:nowrap;
+  }
+  .btn-quote:hover{background:var(--navy-deep)}
+  .btn-quote:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+
+  /* MASTHEAD — blueprint field + ledger title */
+  .mast{
+    position:relative;overflow:hidden;
+    background:var(--canvas);
+    background-image:
+      linear-gradient(rgba(30,58,107,0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(30,58,107,0.07) 1px, transparent 1px),
+      linear-gradient(rgba(30,58,107,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(30,58,107,0.04) 1px, transparent 1px);
+    background-size:32px 32px,32px 32px, 160px 160px, 160px 160px;
+    background-position:0 0,0 0,0 0,0 0;
+    padding:22px var(--band-inset) 0;
+    border-bottom:var(--gutter) solid var(--ink);
+  }
+  .mast__frame{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding:10px 0 14px;
+    border-bottom:1px solid var(--rule);
+  }
+  .mast__label{font-size:var(--micro);font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--navy)}
+  .mast__label span{color:var(--muted);font-weight:600}
+  .mast__counter{font-size:var(--micro);font-weight:600;letter-spacing:0.04em;color:var(--muted);font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:10px}
+  .mast__counter b{color:var(--ink)}
+  .mast__rule{width:24px;height:1px;background:var(--rule);display:block}
+  .mast__grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:20px;
+    padding:28px 0 0;
+  }
+  @media(min-width:980px){.mast__grid{grid-template-columns: 1.08fr 0.92fr;align-items:end;gap:32px}}
+  .knockout{
+    font-size:clamp(56px, 11vw, 148px);
+    font-weight:700;letter-spacing:-0.03em;line-height:0.82;
+    color:#fff;user-select:none;white-space:nowrap;
+    text-transform:uppercase;
+    -webkit-text-stroke:1px rgba(26,29,33,0.06);
+  }
+  .mast__title{
+    font-size:clamp(28px,3.6vw,44px);font-weight:700;letter-spacing:-0.02em;line-height:1.02;
+    max-width:16ch;margin-top:8px;
+  }
+  .mast__title em{font-style:normal;background:var(--navy);color:#fff;padding:0 6px 1px;box-decoration-break:clone}
+  .mast__lead{
+    font-size:clamp(15px,1.35vw,18px);line-height:1.55;color:var(--muted2);
+    max-width:42ch;margin-top:14px;
+  }
+  .mast__actions{display:flex;flex-wrap:wrap;gap:var(--gutter2);margin-top:22px}
+  .btn-primary{
+    display:inline-flex;align-items:center;gap:10px;
+    background:var(--navy);color:#fff;
+    font-size:var(--micro);font-weight:600;letter-spacing:0.09em;text-transform:uppercase;
+    padding:14px 18px;
+  }
+  .btn-primary:hover{background:var(--navy-deep)}
+  .btn-ghost{
+    display:inline-flex;align-items:center;gap:10px;
+    background:var(--surface);color:var(--ink);
+    font-size:var(--micro);font-weight:600;letter-spacing:0.09em;text-transform:uppercase;
+    padding:14px 18px;
+    border:1px solid var(--rule);
+  }
+  .btn-ghost:hover{border-color:var(--ink)}
+  /* drawing sheet on mast right */
+  .sheet{
+    position:relative;
+    background:var(--surface);
+    border:1px solid var(--ink);
+    padding:12px;
+    display:flex;flex-direction:column;gap:10px;
+    box-shadow:6px 6px 0 var(--ink);
+  }
+  .sheet__bar{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    font-size:var(--micro);font-weight:600;letter-spacing:0.09em;text-transform:uppercase;
+    color:var(--muted);border-bottom:1px solid var(--rule);padding-bottom:8px;
+  }
+  .sheet__bar b{color:var(--navy)}
+  .sheet__stage{
+    position:relative;
+    background:var(--canvas);
+    background-image:
+      linear-gradient(rgba(30,58,107,0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(30,58,107,0.08) 1px, transparent 1px);
+    background-size:22px 22px;
+    min-height:220px;
+    display:grid;place-items:center;
+    overflow:hidden;
+    border:1px solid rgba(26,29,33,0.08);
+  }
+  .sheet__stage::before{
+    content:"";position:absolute;inset:10px;
+    border:1px dashed var(--navy-line);pointer-events:none;
+  }
+  .sheet__dim{position:absolute;font-family:var(--mono);font-size:10px;letter-spacing:0.06em;color:var(--navy);background:var(--canvas);padding:0 6px}
+  .sheet__dim--top{top:6px;left:50%;transform:translateX(-50%)}
+  .sheet__dim--left{left:2px;top:50%;transform:translateY(-50%) rotate(-90deg)}
+  .sheet__crane{width:min(78%, 360px);height:auto;display:block;filter:contrast(1.05)}
+  .sheet__titleblock{
+    display:grid;grid-template-columns:1fr auto;
+    gap:10px;
+    border-top:1px solid var(--ink);
+    padding-top:10px;
+    font-family:var(--mono);font-size:11px;line-height:1.4;
+  }
+  .sheet__tb-left{color:var(--muted2)}
+  .sheet__tb-left strong{color:var(--ink);font-weight:600}
+  .sheet__tb-right{text-align:right;color:var(--ink);font-weight:600;letter-spacing:0.02em}
+  .sheet__stamp{
+    position:absolute;right:14px;top:52px;
+    border:2px solid var(--navy);color:var(--navy);
+    font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;
+    padding:6px 8px;transform:rotate(-7deg);background:rgba(255,255,255,0.9);
+    line-height:1;mix-blend-mode:multiply;
+  }
+  /* stats ledger strip */
+  .stats{
+    display:grid;grid-template-columns:repeat(2,1fr);
+    gap:var(--gutter);
+    background:var(--ink);
+    padding:var(--gutter);
+    margin-top:18px;
+  }
+  @media(min-width:760px){.stats{grid-template-columns:repeat(4,1fr)}}
+  .stat{
+    background:var(--surface);
+    padding:14px 16px;
+    display:flex;flex-direction:column;gap:6px;
+  }
+  .stat--navy{background:var(--navy);color:#fff}
+  .stat__label{font-size:var(--micro);font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted)}
+  .stat--navy .stat__label{color:rgba(255,255,255,0.7)}
+  .stat__value{font-size:22px;font-weight:700;letter-spacing:-0.02em;line-height:1;font-variant-numeric:tabular-nums}
+  .stat__value small{font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted)}
+  .stat--navy .stat__value small{color:rgba(255,255,255,0.75)}
+  .stat__sub{font-family:var(--mono);font-size:11px;color:var(--muted2)}
+  .stat--navy .stat__sub{color:rgba(255,255,255,0.8)}
+
+  /* VAULT — main two-column ledger + blueprint */
+  .vault{
+    background:var(--canvas);
+    padding:var(--gutter) var(--band-inset) 28px;
+  }
+  .vault__shell{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:var(--gutter);
+    align-items:start;
+  }
+  @media(min-width:980px){.vault__shell{grid-template-columns: 1.22fr 0.88fr}}
+  /* ledger panel */
+  .ledger{
+    background:var(--surface);
+    border:1px solid var(--ink);
+    position:relative;
+    overflow:hidden;
+  }
+  .ledger::before{
+    /* perforation */
+    content:"";
+    position:absolute;left:0;top:0;bottom:0;width:18px;
+    background:
+      radial-gradient(circle at 9px 14px, transparent 5px, var(--surface) 6px),
+      radial-gradient(circle at 9px 14px, var(--ink) 6px, transparent 7px),
+      var(--surface);
+    background-size:18px 28px,18px 28px, auto;
+    background-repeat:repeat-y, repeat-y, no-repeat;
+    border-right:1px dashed var(--rule);
+    z-index:1;
+  }
+  .ledger__head{
+    margin-left:18px;
+    display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;
+    padding:16px 16px 14px 18px;
+    border-bottom:1px solid var(--ink);
+    background:linear-gradient(to bottom, var(--surface), #fafafa);
+  }
+  .ledger__title{font-size:var(--micro);font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--navy);display:flex;align-items:center;gap:10px}
+  .ledger__title i{width:10px;height:10px;background:var(--navy);display:inline-block}
+  .ledger__controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .search{
+    display:flex;align-items:center;gap:8px;
+    border:1px solid var(--rule);background:var(--surface);
+    padding:8px 10px;min-width:200px;
+  }
+  .search input{border:0;outline:0;width:100%;font-size:13px;color:var(--ink);background:transparent}
+  .search input::placeholder{color:var(--muted)}
+  .search:focus-within{border-color:var(--navy)}
+  .tabs{
+    margin-left:18px;
+    display:flex;gap:0;overflow:auto;scrollbar-width:none;
+    border-bottom:1px solid var(--rule);
+    background:var(--canvas);
+  }
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{
+    flex:0 0 auto;
+    font-size:var(--micro);font-weight:600;letter-spacing:0.09em;text-transform:uppercase;
+    color:var(--muted2);
+    padding:13px 16px;
+    border-right:1px solid var(--rule);
+    border-bottom:2px solid transparent;
+    background:transparent;
+    white-space:nowrap;
+    cursor:pointer;
+  }
+  .tab[aria-selected="true"]{color:var(--navy);background:var(--surface);border-bottom-color:var(--navy)}
+  .tab sup{font-family:var(--mono);font-size:10px;letter-spacing:0;color:var(--muted);margin-left:6px}
+  .tab[aria-selected="true"] sup{color:var(--navy)}
+  /* ledger list — ruled paper */
+  .folio{
+    margin-left:18px;
+    background-color:var(--surface);
+    background-image:repeating-linear-gradient(to bottom, transparent 0 31px, rgba(30,58,107,0.07) 31px 32px);
+    background-position:0 8px;
+  }
+  .row{
+    position:relative;
+    display:grid;
+    grid-template-columns: 52px 1fr auto;
+    gap:12px;
+    align-items:center;
+    padding:14px 14px 14px 16px;
+    border-bottom:1px solid rgba(30,58,107,0.08);
+    cursor:pointer;
+    transition:background var(--dur) var(--ease);
+  }
+  .row:last-child{border-bottom:0}
+  .row:hover{background:var(--navy-soft)}
+  .row[aria-selected="true"]{background:var(--navy);color:#fff}
+  .row[aria-selected="true"] .row__folio,
+  .row[aria-selected="true"] .row__meta,
+  .row[aria-selected="true"] .row__title,
+  .row[aria-selected="true"] .row__spec{color:#fff}
+  .row[aria-selected="true"] .row__tag{color:rgba(255,255,255,0.85);border-color:rgba(255,255,255,0.35)}
+  .row[aria-selected="true"] .row__go{background:#fff;color:var(--navy)}
+  .row__folio{
+    font-family:var(--mono);font-size:11px;letter-spacing:0.06em;color:var(--muted);text-align:center;
+    border:1px solid var(--rule);padding:6px 0;background:var(--canvas);font-variant-numeric:tabular-nums;
+  }
+  .row[aria-selected="true"] .row__folio{background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.35)}
+  .row__main{min-width:0}
+  .row__topline{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:4px}
+  .row__tag{font-size:10px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--navy);border:1px solid var(--navy-line);padding:2px 6px;background:var(--navy-soft)}
+  .row__meta{font-family:var(--mono);font-size:11px;letter-spacing:0.04em;color:var(--muted);white-space:nowrap}
+  .row__title{font-size:15px;font-weight:700;letter-spacing:-0.01em;line-height:1.25;max-width:38ch}
+  .row__spec{font-family:var(--mono);font-size:11px;color:var(--muted2);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .row__spec b{color:var(--ink);font-weight:600}
+  .row[aria-selected="true"] .row__spec b{color:#fff}
+  .row__go{
+    width:28px;height:28px;display:grid;place-items:center;
+    border:1px solid var(--ink);background:var(--surface);font-size:13px;flex-shrink:0;
+  }
+  .row__go:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+  .ledger__foot{
+    margin-left:18px;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:12px 14px;
+    border-top:1px solid var(--ink);
+    background:var(--canvas);
+    font-size:var(--micro);font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted2);
+  }
+  .ledger__foot em{font-style:normal;color:var(--navy)}
+
+  /* detail — blueprint sheet (sticky) */
+  .detail{
+    position:sticky;top:64px;
+    background:var(--navy);
+    color:#fff;
+    border:1px solid var(--ink);
+    overflow:hidden;
+    display:flex;flex-direction:column;
+    min-height:560px;
+  }
+  .detail__head{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:14px 16px;
+    border-bottom:1px solid rgba(255,255,255,0.18);
+    font-size:var(--micro);font-weight:600;letter-spacing:0.09em;text-transform:uppercase;
+  }
+  .detail__head span{opacity:0.8}
+  .detail__head b{color:#fff}
+  .detail__live{width:8px;height:8px;background:#3DD68C;border-radius:50%;box-shadow:0 0 0 4px rgba(61,214,140,0.18);display:inline-block}
+  .detail__paper{
+    background:#0F2442;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size:24px 24px;
+    margin:12px;
+    border:1px solid rgba(255,255,255,0.18);
+    padding:14px;
+    flex:1;
+    display:flex;flex-direction:column;gap:14px;
+    position:relative;
+  }
+  .detail__paper::after{
+    content:"S V I N D  —  BENGALURU  ·  DWG CHECKED";
+    position:absolute;right:10px;bottom:10px;
+    font-family:var(--mono);font-size:9px;letter-spacing:0.14em;color:rgba(255,255,255,0.28);transform:rotate(-90deg);transform-origin:100% 100%;
+  }
+  .eyebrow{font-size:var(--micro);font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:rgba(255,255,255,0.65);display:flex;align-items:center;gap:8px}
+  .eyebrow i{width:14px;height:1px;background:rgba(255,255,255,0.35);display:block}
+  .detail__title{font-size:22px;font-weight:700;letter-spacing:-0.02em;line-height:1.15;max-width:22ch}
+  .detail__desc{font-size:14px;line-height:1.55;color:rgba(255,255,255,0.78);max-width:38ch}
+  .detail__dims{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gutter);
+    margin-top:2px;
+  }
+  .dim{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);padding:10px 12px}
+  .dim__k{font-size:10px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:rgba(255,255,255,0.6)}
+  .dim__v{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:0.02em;margin-top:4px;font-variant-numeric:tabular-nums}
+  .dim__v small{font-size:11px;opacity:0.7;font-weight:400}
+  .detail__table{
+    width:100%;border-collapse:collapse;
+    font-size:13px;line-height:1.45;
+  }
+  .detail__table th{
+    text-align:left;font-size:var(--micro);font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:rgba(255,255,255,0.6);
+    padding:8px 10px;border-bottom:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06)
+  }
+  .detail__table td{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.9)}
+  .detail__table td:last-child{font-family:var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+  .detail__actions{display:flex;gap:var(--gutter);margin-top:auto;padding-top:6px}
+  .detail__actions a{flex:1;display:inline-flex;justify-content:center;align-items:center;gap:8px;padding:13px 14px;font-size:var(--micro);font-weight:600;letter-spacing:0.09em;text-transform:uppercase}
+  .detail__primary{background:#fff;color:var(--navy)}
+  .detail__primary:hover{background:var(--canvas)}
+  .detail__secondary{border:1px solid rgba(255,255,255,0.5);color:#fff}
+  .detail__secondary:hover{background:rgba(255,255,255,0.08)}
+  .detail__foot{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:10px 12px;
+    font-family:var(--mono);font-size:11px;letter-spacing:0.03em;color:rgba(255,255,255,0.7);
+    border-top:1px solid rgba(255,255,255,0.12);
+    background:rgba(0,0,0,0.15);
+  }
+  .detail__foot b{color:#fff;font-weight:600}
+
+  /* compare strip — ledger vs site */
+  .compare{
+    background:var(--surface);
+    border-top:var(--gutter) solid var(--ink);
+    padding:22px var(--band-inset) 26px;
+  }
+  .compare__head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:16px;margin-bottom:16px}
+  .compare__head h2{font-size:clamp(22px,2.8vw,32px);font-weight:700;letter-spacing:-0.02em;line-height:1.05}
+  .compare__head p{font-size:14px;line-height:1.5;color:var(--muted2);max-width:38ch}
+  .compare__grid{display:grid;grid-template-columns:1fr;gap:var(--gutter);background:var(--ink);padding:var(--gutter)}
+  @media(min-width:860px){.compare__grid{grid-template-columns:repeat(3,1fr)}}
+  .c-card{background:var(--surface);padding:16px 16px 14px;display:flex;flex-direction:column;gap:10px}
+  .c-card--navy{background:var(--navy);color:#fff}
+  .c-card__kicker{font-size:var(--micro);font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted)}
+  .c-card--navy .c-card__kicker{color:rgba(255,255,255,0.65)}
+  .c-card__title{font-size:15px;font-weight:700;letter-spacing:-0.01em;line-height:1.25}
+  .c-card__body{font-size:13px;line-height:1.5;color:var(--muted2)}
+  .c-card--navy .c-card__body{color:rgba(255,255,255,0.78)}
+  .c-card__list{margin-top:2px;display:grid;gap:6px}
+  .c-card__li{display:flex;gap:8px;font-size:13px;line-height:1.45;color:var(--muted2)}
+  .c-card--navy .c-card__li{color:rgba(255,255,255,0.85)}
+  .c-card__li i{width:14px;height:14px;border:1px solid var(--rule);display:grid;place-items:center;flex-shrink:0;margin-top:2px;font-size:10px;line-height:1}
+  .c-card--navy .c-card__li i{border-color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.1)}
+  .c-card__foot{margin-top:auto;padding-top:10px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:11px;color:var(--muted)}
+  .c-card--navy .c-card__foot{border-color:rgba(255,255,255,0.18);color:rgba(255,255,255,0.6)}
+
+  /* downloads — vault index table */
+  .downloads{
+    background:var(--canvas);
+    padding:18px var(--band-inset) 28px;
+  }
+  .downloads__bar{
+    display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;
+    padding:14px 0 12px;border-bottom:1px solid var(--rule);margin-bottom:14px;
+  }
+  .downloads__bar h2{font-size:13px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--navy)}
+  .downloads__bar span{font-family:var(--mono);font-size:11px;color:var(--muted)}
+  .dl-grid{display:grid;grid-template-columns:1fr;gap:var(--gutter)}
+  @media(min-width:760px){.dl-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(min-width:1100px){.dl-grid{grid-template-columns:repeat(3,1fr)}}
+  .dl{
+    background:var(--surface);border:1px solid var(--ink);
+    padding:14px 14px 12px;display:flex;flex-direction:column;gap:12px;
+    position:relative;
+  }
+  .dl::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--navy)}
+  .dl__top{display:flex;align-items:start;justify-content:space-between;gap:10px}
+  .dl__type{font-size:10px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--navy);background:var(--navy-soft);border:1px solid var(--navy-line);padding:3px 6px}
+  .dl__meta{font-family:var(--mono);font-size:11px;color:var(--muted);text-align:right;white-space:nowrap}
+  .dl__title{font-size:14px;font-weight:700;letter-spacing:-0.01em;line-height:1.3}
+  .dl__desc{font-size:13px;line-height:1.5;color:var(--muted2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .dl__foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:10px;border-top:1px dashed var(--rule);margin-top:auto}
+  .dl__spec{font-family:var(--mono);font-size:11px;color:var(--muted2)}
+  .dl__spec b{color:var(--ink)}
+  .dl__dl{font-size:var(--micro);font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--navy);display:inline-flex;align-items:center;gap:6px;border:1px solid var(--ink);padding:8px 10px;background:var(--surface)}
+  .dl__dl:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
+
+  /* footer — micro */
+  .footer{border-top:var(--gutter) solid var(--ink);background:var(--surface);padding:20px var(--band-inset);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px}
+  .footer__brand{font-weight:700;letter-spacing:-0.02em}
+  .footer__brand small{font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);font-size:11px;margin-left:8px}
+  .footer__links{display:flex;gap:16px;font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted2)}
+  .footer__links a:hover{color:var(--navy)}
+
+  /* utilities */
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  :focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+  @media(prefers-reduced-motion:reduce){*{transition:none !important;scroll-behavior:auto !important}}
+</style>
+</head>
+<body>
+<div class="hair-progress" id="prog" aria-hidden="true"></div>
+
+<header class="nav" aria-label="Primary">
+  <div class="nav__inner">
+    <a class="nav__brand" href="#">
+      <span class="nav__wordmark">SVIND</span>
+      <span class="nav__divider" aria-hidden="true"></span>
+      <span class="nav__sub">EOT &amp; Gantry · Bengaluru</span>
+    </a>
+    <nav class="nav__links" aria-label="Sections">
+      <a class="nav__link" href="#">Cranes</a>
+      <a class="nav__link" href="#">Industries</a>
+      <a class="nav__link" href="#">Service</a>
+      <a class="nav__link" aria-current="page" href="#">Resources</a>
+      <a class="nav__link" href="#">Company</a>
+    </nav>
+    <div class="nav__meta">
+      <span class="nav__folio">FOLIO — SV-RES / 2026-08</span>
+      <a class="btn-quote" href="#">Request a quote <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</header>
+
+<section class="mast" aria-labelledby="mast-title">
+  <div class="mast__frame">
+    <p class="mast__label">Resources <span>— Engineering archive</span></p>
+    <p class="mast__counter"><b>05</b> <span class="mast__rule" aria-hidden="true"></span> 05 &nbsp;·&nbsp; CONCEPT E · SPEC VAULT</p>
+  </div>
+
+  <div class="mast__grid">
+    <div>
+      <p class="knockout" aria-hidden="true">VAULT</p>
+      <h1 class="mast__title" id="mast-title">Spec <em>Vault</em> — a ledger for crane engineering.</h1>
+      <p class="mast__lead">Ledger + Blueprint. Every standard, selection guide and shop drawing lives as a numbered folio: ruled, dimensioned and vault-stamped. For engineers who specify before they buy.</p>
+      <div class="mast__actions">
+        <a class="btn-primary" href="#vault">Open the vault <span aria-hidden="true">→</span></a>
+        <a class="btn-ghost" href="#downloads">Download index (PDF)</a>
+      </div>
+      <p style="margin-top:14px;font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:0.03em">DWG SET · SV-RES-2026 · REV 05 · CHECKED BY SVIND QA · BENGALURU</p>
+    </div>
+
+    <div class="sheet" role="img" aria-label="Blueprint title block for EOT double-girder 20 tonne, span 22 metre, with plan view silhouette and dimension callouts">
+      <div class="sheet__bar"><span>Sheet <b>05 — Spec Vault</b> · Hybrid</span><span>Scale 1:50</span></div>
+      <div class="sheet__stage">
+        <span class="sheet__dim sheet__dim--top">22 000 — SPAN</span>
+        <span class="sheet__dim sheet__dim--left">⊕ RAIL GAUGE</span>
+        <!-- crane silhouette — inline SVG, no external asset -->
+        <svg class="sheet__crane" viewBox="0 0 520 220" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <!-- runway -->
+          <line x1="28" y1="178" x2="492" y2="178" stroke="#1E3A6B" stroke-width="1.4" stroke-dasharray="8 6"/>
+          <!-- legs -->
+          <rect x="72" y="96" width="10" height="82" fill="#1A1D21" opacity="0.95"/>
+          <rect x="428" y="96" width="10" height="82" fill="#1A1D21" opacity="0.95"/>
+          <line x1="62" y1="120" x2="82" y2="120" stroke="#1A1D21" stroke-width="1"/>
+          <line x1="418" y1="120" x2="438" y2="120" stroke="#1A1D21" stroke-width="1"/>
+          <!-- girder -->
+          <rect x="36" y="82" width="448" height="22" fill="none" stroke="#1E3A6B" stroke-width="1.6"/>
+          <line x1="36" y1="93" x2="484" y2="93" stroke="#1E3A6B" stroke-width="0.9" stroke-dasharray="3 4" opacity="0.7"/>
+          <!-- crab -->
+          <rect x="232" y="66" width="56" height="20" fill="#1A1D21"/>
+          <rect x="246" y="56" width="28" height="14" fill="none" stroke="#1A1D21" stroke-width="1.2"/>
+          <circle cx="246" cy="86" r="6" fill="none" stroke="#1A1D21" stroke-width="1.2"/>
+          <circle cx="274" cy="86" r="6" fill="none" stroke="#1A1D21" stroke-width="1.2"/>
+          <!-- hook block -->
+          <line x1="260" y1="86" x2="260" y2="138" stroke="#1A1D21" stroke-width="1.1"/>
+          <rect x="250" y="138" width="20" height="14" fill="none" stroke="#1A1D21" stroke-width="1.2"/>
+          <path d="M255 152 Q260 172 265 152" stroke="#1A1D21" stroke-width="1.2" fill="none"/>
+          <!-- dims -->
+          <line x1="36" y1="42" x2="484" y2="42" stroke="#1E3A6B" stroke-width="0.9"/>
+          <line x1="36" y1="38" x2="36" y2="46" stroke="#1E3A6B" stroke-width="0.9"/>
+          <line x1="484" y1="38" x2="484" y2="46" stroke="#1E3A6B" stroke-width="0.9"/>
+        </svg>
+        <span class="sheet__stamp">VAULT · CERTIFIED</span>
+      </div>
+      <div class="sheet__titleblock">
+        <div class="sheet__tb-left">
+          <div><strong>SVIND</strong> — S.V. Material Handling · Bengaluru</div>
+          <div>DOUBLE-GIRDER EOT · 20T · CLASS A3 · IS 3177 / IS 807</div>
+        </div>
+        <div class="sheet__tb-right">DWG<br>SV-EOT-20T-DBL<br>REV 04</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats" aria-label="Archive statistics">
+    <div class="stat stat--navy">
+      <div class="stat__label">Folios vaulted</div>
+      <div class="stat__value">24 <small>docs</small></div>
+      <div class="stat__sub">08 standards · 12 drawings · 04 checklists</div>
+    </div>
+    <div class="stat">
+      <div class="stat__label">Standards decoded</div>
+      <div class="stat__value">IS 807 <small>· 3177 · 4137 · 800</small></div>
+      <div class="stat__sub">Duty, design &amp; fabrication fully annotated</div>
+    </div>
+    <div class="stat">
+      <div class="stat__label">Avg. spec time saved</div>
+      <div class="stat__value">3.2 <small>hrs / RFQ</small></div>
+      <div class="stat__sub">Measured across 47 enquiries — 2025–26</div>
+    </div>
+    <div class="stat">
+      <div class="stat__label">Last audited</div>
+      <div class="stat__value">09 <small>AUG 2026</small></div>
+      <div class="stat__sub">QA stamp · Bengaluru works</div>
+    </div>
+  </div>
+</section>
+
+<section class="vault" id="vault" aria-label="Spec Vault ledger and preview">
+  <div class="vault__shell">
+    <!-- LEDGER -->
+    <div class="ledger" role="region" aria-label="Ledger index">
+      <div class="ledger__head">
+        <h2 class="ledger__title"><i aria-hidden="true"></i> LEDGER INDEX — Folio SV-RES</h2>
+        <div class="ledger__controls">
+          <label class="search" aria-label="Filter folios">
+            <span aria-hidden="true">⌕</span>
+            <input id="q" type="search" placeholder="Filter by ref, std or keyword…" autocomplete="off" spellcheck="false">
+          </label>
+        </div>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Filter by type">
+        <button class="tab" role="tab" aria-selected="true" data-filter="all">All <sup>24</sup></button>
+        <button class="tab" role="tab" aria-selected="false" data-filter="standards">Standards <sup>08</sup></button>
+        <button class="tab" role="tab" aria-selected="false" data-filter="guides">Guides <sup>09</sup></button>
+        <button class="tab" role="tab" aria-selected="false" data-filter="drawings">Drawings <sup>04</sup></button>
+        <button class="tab" role="tab" aria-selected="false" data-filter="checks">Checklists <sup>03</sup></button>
+      </div>
+
+      <div class="folio" id="folio" role="listbox" aria-label="Resource folios">
+        <!-- rows injected by JS, but static fallback below for no-JS -->
+        <div class="row" role="option" aria-selected="true" data-type="standards" data-title="IS 807 crane classification explained" tabindex="0">
+          <div class="row__folio">01</div>
+          <div class="row__main">
+            <div class="row__topline"><span class="row__tag">Standards</span><span class="row__meta">SV-RES-07 · IS 807 · 6 min</span></div>
+            <div class="row__title">IS 807 crane classification — duty groups demystified</div>
+            <div class="row__spec"><b>A1 → A8</b> · Utilisation · Loading · Worked example: 10T × 18M</div>
+          </div>
+          <div class="row__go" aria-hidden="true">→</div>
+        </div>
+        <div class="row" role="option" aria-selected="false" data-type="guides" data-title="Single vs double girder" tabindex="0">
+          <div class="row__folio">02</div>
+          <div class="row__main">
+            <div class="row__topline"><span class="row__tag">Guides</span><span class="row__meta">SV-RES-11 · Selection · 8 min</span></div>
+            <div class="row__title">Single-girder vs double-girder — which crane do you need?</div>
+            <div class="row__spec"><b>Cost Δ 18–28%</b> · Headroom · Deflection · Span / SWL matrix</div>
+          </div>
+          <div class="row__go" aria-hidden="true">→</div>
+        </div>
+        <div class="row" role="option" aria-selected="false" data-type="standards" data-title="IS 3177 design code" tabindex="0">
+          <div class="row__folio">03</div>
+          <div class="row__main">
+            <div class="row__topline"><span class="row__tag">Standards</span><span class="row__meta">SV-RES-09 · IS 3177 · 10 min</span></div>
+            <div class="row__title">IS 3177 — design of overhead travelling cranes</div>
+            <div class="row__spec"><b>Cl. 12–18</b> · Allowable stress · Fatigue · Worked calc: Box girder</div>
+          </div>
+          <div class="row__go" aria-hidden="true">→</div>
+        </div>
+        <div class="row" role="option" aria-selected="false" data-type="guides" data-title="EOT crane price India" tabindex="0">
+          <div class="row__folio">04</div>
+          <div class="row__main">
+            <div class="row__topline"><span class="row__tag">Guides</span><span class="row__meta">SV-RES-14 · Pricing · 7 min</span></div>
+            <div class="row__title">EOT crane price in India — what actually moves the quote</div>
+            <div class="row__spec"><b>₹ / kg</b> · Steel · Labour · Controls · Freight — build your own</div>
+          </div>
+          <div class="row__go" aria-hidden="true">→</div>
+        </div>
+        <div class="row" role="option" aria-selected="false" data-type="drawings" data-title="Double girder EOT drawing pack" tabindex="0">
+          <div class="row__folio">05</div>
+          <div class="row__main">
+            <div class="row__topline"><span class="row__tag">Drawings</span><span class="row__meta">SV-DWG-20T · DWG · PDF + DXF</span></div>
+            <div class="row__title">Double-girder EOT — 20T × 22M drawing pack (GA + wheel loads)</div>
+            <div class="row__spec"><b>1:50</b> · End carriage · Wheel load 68 kN · Rail: 60×40</div>
+          </div>
+          <div class="row__go" aria-hidden="true">→</div>
+        </div>
+        <div class="row" role="option" aria-selected="false" data-type="checks" data-title="Pre-dispatch inspection checklist" tabindex="0">
+          <div class="row__folio">06</div>
+          <div class="row__main">
+            <div class="row__topline"><span class="row__tag">Checklists</span><span class="row__meta">SV-CHK-01 · QA · Print-ready</span></div>
+            <div class="row__title">Pre-dispatch inspection — 42-point QA sheet (shop → site)</div>
+            <div class="row__spec"><b>42 pts</b> · NDT · Trial run · Paint DFT · Sign-off columns</div>
+          </div>
+          <div class="row__go" aria-hidden="true">→</div>
+        </div>
+        <div class="row" role="option" aria-selected="false" data-type="standards" data-title="IS 4137 heavy duty" tabindex="0">
+          <div class="row__folio">07</div>
+          <div class="row__main">
+            <div class="row__topline"><span class="row__tag">Standards</span><span class="row__meta">SV-RES-10 · IS 4137 · 5 min</span></div>
+            <div class="row__title">IS 4137 — heavy-duty cranes for steel and ladle service</div>
+            <div class="row__spec"><b>M7–M8</b> · Heat shield · Duty cycle · Case: Ladle handling</div>
+          </div>
+          <div class="row__go" aria-hidden="true">→</div>
+        </div>
+        <div class="row" role="option" aria-selected="false" data-type="guides" data-title="Crane selection matrix" tabindex="0">
+          <div class="row__folio">08</div>
+          <div class="row__main">
+            <div class="row__topline"><span class="row__tag">Guides</span><span class="row__meta">SV-RES-18 · Tool · Interactive</span></div>
+            <div class="row__title">Crane selection matrix — span, SWL and duty in one view</div>
+            <div class="row__spec"><b>4 inputs → 1 rec.</b> · Printable · Share link · Engg. stamp</div>
+          </div>
+          <div class="row__go" aria-hidden="true">→</div>
+        </div>
+      </div>
+
+      <div class="ledger__foot">
+        <span>Showing <em id="count">8</em> of 24 folios · <em>vaulted and versioned</em></span>
+        <span style="font-family:var(--mono);font-size:11px;letter-spacing:0;text-transform:none;font-weight:400;color:var(--muted)">↕ ruled ledger · perforated edge · tabular folio nos.</span>
+      </div>
+    </div>
+
+    <!-- BLUEPRINT DETAIL -->
+    <aside class="detail" aria-label="Folio preview — blueprint sheet">
+      <div class="detail__head">
+        <span><b id="d-kicker">Folio 01</b> <span style="opacity:0.6">—</span> <span id="d-type">Standards</span></span>
+        <span style="display:flex;align-items:center;gap:8px"><i class="detail__live" aria-hidden="true"></i> <span id="d-status">Vault live</span></span>
+      </div>
+      <div class="detail__paper">
+        <div class="eyebrow"><i></i><span id="d-eyebrow">IS 807 · Duty classification</span></div>
+        <h3 class="detail__title" id="d-title">IS 807 crane classification — duty groups demystified</h3>
+        <p class="detail__desc" id="d-desc">From A1 (light, infrequent) to A8 (continuous heavy). This sheet maps utilisation class, load spectrum and group selection — with a fully worked 10T × 18M example and a printable decision chart.</p>
+
+        <div class="detail__dims" id="d-dims">
+          <div class="dim"><div class="dim__k">Group</div><div class="dim__v">A1 → A8 <small>/ 8 steps</small></div></div>
+          <div class="dim"><div class="dim__k">Read time</div><div class="dim__v">6 <small>min</small></div></div>
+          <div class="dim"><div class="dim__k">Rev.</div><div class="dim__v">Rev. 04 <small>· 09 Aug 26</small></div></div>
+        </div>
+
+        <table class="detail__table" aria-label="Key data">
+          <thead><tr><th style="width:58%">Field</th><th style="text-align:right">Value</th></tr></thead>
+          <tbody id="d-table">
+            <tr><td>Utilisation class</td><td>U0 – U9</td></tr>
+            <tr><td>Load spectrum</td><td>Q1 – Q4</td></tr>
+            <tr><td>Worked example</td><td>10T × 18M × A5</td></tr>
+            <tr><td>Download</td><td>PDF · 1.2 MB</td></tr>
+          </tbody>
+        </table>
+
+        <div class="detail__actions">
+          <a class="detail__primary" href="#" id="d-primary">Read folio <span aria-hidden="true">→</span></a>
+          <a class="detail__secondary" href="#" id="d-secondary">PDF</a>
+        </div>
+      </div>
+      <div class="detail__foot">
+        <span>REF <b id="d-ref">SV-RES-07</b> · DWG <b id="d-dwg">—</b></span>
+        <span>VAULT <b>05 / CERT</b></span>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section class="compare" aria-labelledby="compare-title">
+  <div class="compare__head">
+    <h2 id="compare-title">Why a vault, not a blog.</h2>
+    <p>Resources that behave like engineering documents — numbered, dimensioned and signed — close faster than posts that behave like marketing.</p>
+  </div>
+  <div class="compare__grid">
+    <div class="c-card">
+      <div class="c-card__kicker">Common — the blog trap</div>
+      <div class="c-card__title">Searchable, but not spec-able</div>
+      <p class="c-card__body">Long posts, no folio, no revision, no dimensions. Engineer copies a paragraph into an RFQ and hopes.</p>
+      <ul class="c-card__list" aria-label="Common pitfalls">
+        <li class="c-card__li"><i>✕</i><span>“As per standard” with no clause number</span></li>
+        <li class="c-card__li"><i>✕</i><span>Pricing without steel/kg breakdown</span></li>
+        <li class="c-card__li"><i>✕</i><span>No drawing to hand to civil</span></li>
+      </ul>
+      <div class="c-card__foot">Result: 2–3 extra clarification loops.</div>
+    </div>
+    <div class="c-card c-card--navy">
+      <div class="c-card__kicker">SVIND — the vault method</div>
+      <div class="c-card__title">Every folio is a transmittal</div>
+      <p class="c-card__body">Numbered ref, revision, clause, dimension and drawing — ready to forward to your consultant or purchase team.</p>
+      <ul class="c-card__list">
+        <li class="c-card__li"><i>✓</i><span>IS 807 Cl. 5.2 mapped to A-class table</span></li>
+        <li class="c-card__li"><i>✓</i><span>Price drivers as ₹/kg formula</span></li>
+        <li class="c-card__li"><i>✓</i><span>GA + wheel-load DWG with title block</span></li>
+      </ul>
+      <div class="c-card__foot">Result: RFQ in one clean issue.</div>
+    </div>
+    <div class="c-card">
+      <div class="c-card__kicker">Built for the site, not the feed</div>
+      <div class="c-card__title">From vault to site in one click</div>
+      <p class="c-card__body">Print-ready A4, title block and QA stamp. Pin it on the site office wall or attach it to the indent.</p>
+      <ul class="c-card__list">
+        <li class="c-card__li"><i>→</i><span>Perforated ledger — tear-off ref for site</span></li>
+        <li class="c-card__li"><i>→</i><span>Blueprint — dimension lines your civil can trust</span></li>
+        <li class="c-card__li"><i>→</i><span>Checklist — 42-point sign-off, not a blog tip</span></li>
+      </ul>
+      <div class="c-card__foot">Perception: engineering house, not trader.</div>
+    </div>
+  </div>
+</section>
+
+<section class="downloads" id="downloads" aria-labelledby="dl-title">
+  <div class="downloads__bar">
+    <h2 id="dl-title">Download index — title block register</h2>
+    <span>6 sheets · A4 · PDF · Rev. 04 — Bengaluru Works</span>
+  </div>
+  <div class="dl-grid">
+    <article class="dl">
+      <div class="dl__top"><span class="dl__type">Standard</span><span class="dl__meta">SV-RES-07 · 6 min</span></div>
+      <h3 class="dl__title">IS 807 classification — A1 to A8 decision chart</h3>
+      <p class="dl__desc">One-page wall chart. Utilisation × load spectrum → group. With 10T example. Print on A3, pin in design room.</p>
+      <div class="dl__foot"><span class="dl__spec"><b>PDF</b> · 1.2 MB · Rev.04</span><a class="dl__dl" href="#">Download <span aria-hidden="true">↓</span></a></div>
+    </article>
+    <article class="dl">
+      <div class="dl__top"><span class="dl__type">Drawing</span><span class="dl__meta">SV-DWG-20T · GA</span></div>
+      <h3 class="dl__title">EOT 20T × 22M — GA + rail &amp; wheel loads</h3>
+      <p class="dl__desc">General arrangement with end-carriage, wheel centres and civil loads. Title block, revision, scale 1:50.</p>
+      <div class="dl__foot"><span class="dl__spec"><b>PDF+DXF</b> · 3.8 MB</span><a class="dl__dl" href="#">Download <span aria-hidden="true">↓</span></a></div>
+    </article>
+    <article class="dl">
+      <div class="dl__top"><span class="dl__type">Checklist</span><span class="dl__meta">SV-CHK-01 · QA</span></div>
+      <h3 class="dl__title">42-point pre-dispatch QA — shop to site</h3>
+      <p class="dl__desc">NDT, trial run, paint DFT, nameplate, O&amp;M — with sign-off columns for QA, client and site EIC.</p>
+      <div class="dl__foot"><span class="dl__spec"><b>PDF</b> · 640 KB · Print</span><a class="dl__dl" href="#">Download <span aria-hidden="true">↓</span></a></div>
+    </article>
+    <article class="dl">
+      <div class="dl__top"><span class="dl__type">Guide</span><span class="dl__meta">SV-RES-11 · Sel.</span></div>
+      <h3 class="dl__title">Single vs double-girder — selection matrix</h3>
+      <p class="dl__desc">Span/SWL/duty → recommendation + headroom &amp; cost delta. One page, one decision.</p>
+      <div class="dl__foot"><span class="dl__spec"><b>PDF</b> · 890 KB</span><a class="dl__dl" href="#">Download <span aria-hidden="true">↓</span></a></div>
+    </article>
+    <article class="dl">
+      <div class="dl__top"><span class="dl__type">Standard</span><span class="dl__meta">SV-RES-09 · IS 3177</span></div>
+      <h3 class="dl__title">IS 3177 — design stresses &amp; fatigue checks</h3>
+      <p class="dl__desc">Clauses 12–18 distilled into a box-girder worked calc. Allowable stress, weld class, fatigue.</p>
+      <div class="dl__foot"><span class="dl__spec"><b>PDF</b> · 1.6 MB</span><a class="dl__dl" href="#">Download <span aria-hidden="true">↓</span></a></div>
+    </article>
+    <article class="dl">
+      <div class="dl__top"><span class="dl__type">Guide</span><span class="dl__meta">SV-RES-14 · Price</span></div>
+      <h3 class="dl__title">Price drivers — build your ₹/kg estimate</h3>
+      <p class="dl__desc">Steel, fabrication, electrics, freight — with formula and sensitivity so you can defend the budget.</p>
+      <div class="dl__foot"><span class="dl__spec"><b>XLSX</b> · 48 KB · Calc</span><a class="dl__dl" href="#">Download <span aria-hidden="true">↓</span></a></div>
+    </article>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer__brand">SVIND <small>Spec Vault · Concept E Hybrid — Ledger + Blueprint</small></div>
+  <div class="footer__links">
+    <span style="font-family:var(--mono);font-size:11px;letter-spacing:0.04em;text-transform:none;font-weight:400;color:var(--muted)">© 2026 S.V. Material Handling · Bengaluru · GST 29AAKCS6443A1ZB</span>
+  </div>
+</footer>
+
+<script>
+  // progress
+  const prog = document.getElementById('prog');
+  addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const p = Math.min(1, Math.max(0, h.scrollTop / (h.scrollHeight - h.clientHeight)));
+    prog.style.transform = 'scaleX(' + p + ')';
+  }, {passive:true});
+
+  // data for blueprint pane
+  const DATA = {
+    "IS 807 crane classification explained": {
+      kicker:"Folio 01", type:"Standards", eyebrow:"IS 807 · Duty classification",
+      title:"IS 807 crane classification — duty groups demystified",
+      desc:"From A1 (light, infrequent) to A8 (continuous heavy). This sheet maps utilisation class, load spectrum and group selection — with a fully worked 10T × 18M example and a printable decision chart.",
+      dims:[["Group","A1 → A8 <small>/ 8 steps</small>"],["Read time","6 <small>min</small>"],["Rev.","Rev. 04 <small>· 09 Aug 26</small>"]],
+      table:[["Utilisation class","U0 – U9"],["Load spectrum","Q1 – Q4"],["Worked example","10T × 18M × A5"],["Download","PDF · 1.2 MB"]],
+      ref:"SV-RES-07", dwg:"—", cta:"Read folio"
+    },
+    "Single vs double girder": {
+      kicker:"Folio 02", type:"Guides", eyebrow:"Selection · SWL × Span",
+      title:"Single-girder vs double-girder — which crane do you need?",
+      desc:"Headroom, deflection, trolley type and cost delta in one matrix. Pick once, defend in the meeting. Includes civil implications and rail choice.",
+      dims:[["Span break","≤ 20M → SG <small>· >20M → DG</small>"],["Cost Δ","18–28% <small>DG over SG</small>"],["Rev.","Rev. 03 <small>· 01 Aug 26</small>"]],
+      table:[["Headroom gain","320 mm (DG)"],["Deflection","1/750 vs 1/1000"],["Trolley","Underslung vs Top-running"],["Download","PDF · 890 KB"]],
+      ref:"SV-RES-11", dwg:"SV-EOT-SEL-01", cta:"Open matrix"
+    },
+    "IS 3177 design code": {
+      kicker:"Folio 03", type:"Standards", eyebrow:"IS 3177 · Design",
+      title:"IS 3177 — design of overhead travelling cranes",
+      desc:"Clauses 12–18 distilled into a box-girder worked calculation: allowable stresses, weld classification and fatigue check — the part your consultant will actually verify.",
+      dims:[["Clauses","12–18 <small>core</small>"],["Example","Box girder <small>350×900</small>"],["Rev.","Rev. 04 <small>· 05 Aug 26</small>"]],
+      table:[["Allowable (bending)","165 N/mm²"],["Weld class","F2 (IS 800)"],["Fatigue check","Δσ < 52 N/mm²"],["Download","PDF · 1.6 MB"]],
+      ref:"SV-RES-09", dwg:"—", cta:"Read calc"
+    },
+    "EOT crane price India": {
+      kicker:"Folio 04", type:"Guides", eyebrow:"Pricing · ₹ / kg",
+      title:"EOT crane price in India — what actually moves the quote",
+      desc:"A transparent formula: steel + fabrication + electrics + freight. Change steel/kg or span and see the quote move — so you can budget before you tender.",
+      dims:[["Steel","~58% <small>of cost</small>"],["Sensitivity","₹ 2.1k <small>/ T / ₹ steel</small>"],["Rev.","Rev. 02 <small>· 28 Jul 26</small>"]],
+      table:[["20T × 22M indicative","₹ 28–34 lakh"],["Freight (Blr→Site)","₹ 1.8–2.4 lakh"],["Electrics","VFD + DSL"],["Download","XLSX · 48 KB"]],
+      ref:"SV-RES-14", dwg:"—", cta:"Open calculator"
+    },
+    "Double girder EOT drawing pack": {
+      kicker:"Folio 05", type:"Drawings", eyebrow:"DWG · GA + Loads",
+      title:"Double-girder EOT — 20T × 22M drawing pack (GA + wheel loads)",
+      desc:"General arrangement, end-carriage detail and civil wheel loads with rail section. Title block, revision and scale — forward straight to your civil consultant.",
+      dims:[["Scale","1:50 <small>GA</small>"],["Wheel load","68 kN <small>max</small>"],["Rev.","Rev. 04 <small>· DWG</small>"]],
+      table:[["Span / SWL","22M / 20T"],["Rail","60 × 40 (CR) | A55"],["End carriage","W 3400 · L 4200"],["Download","PDF + DXF · 3.8 MB"]],
+      ref:"SV-DWG-20T", dwg:"SV-EOT-20T-DBL", cta:"View GA"
+    },
+    "Pre-dispatch inspection checklist": {
+      kicker:"Folio 06", type:"Checklists", eyebrow:"QA · 42 points",
+      title:"Pre-dispatch inspection — 42-point QA sheet (shop → site)",
+      desc:"Shop floor to site handover: NDT, trial run, paint DFT, nameplate and O&M — with sign-off columns for SVIND QA, client and site EIC.",
+      dims:[["Points","42 <small>checks</small>"],["Format","A4 <small>print</small>"],["Rev.","Rev. 05 <small>· 09 Aug 26</small>"]],
+      table:[["NDT","DP + UT (welds)"],["Trial run","No-load + 25% OL"],["Paint DFT","120 µm min"],["Download","PDF · 640 KB"]],
+      ref:"SV-CHK-01", dwg:"—", cta:"Open checklist"
+    },
+    "IS 4137 heavy duty": {
+      kicker:"Folio 07", type:"Standards", eyebrow:"IS 4137 · Heavy duty",
+      title:"IS 4137 — heavy-duty cranes for steel and ladle service",
+      desc:"M7–M8 duty, heat shields and duty-cycle derating for molten-metal handling. With a ladle-crane case study and inspection intervals.",
+      dims:[["Duty","M7–M8 <small>heavy</small>"],["Service","Ladle / Soaking pit"],["Rev.","Rev. 02 <small>· 15 Jul 26</small>"]],
+      table:[["Ambient","≤ 60°C (shielded)"],["Duty factor","0.55–0.65"],["Inspection","Weekly (hook)"],["Download","PDF · 980 KB"]],
+      ref:"SV-RES-10", dwg:"—", cta:"Read standard"
+    },
+    "Crane selection matrix": {
+      kicker:"Folio 08", type:"Guides", eyebrow:"Tool · 4 inputs → 1 rec.",
+      title:"Crane selection matrix — span, SWL and duty in one view",
+      desc:"Four inputs, one recommendation. Interactive sheet that outputs crane type, girder, rail and budget band — printable with SVIND stamp for your indent.",
+      dims:[["Inputs","4 <small>fields</small>"],["Output","1 rec. <small>+ budget</small>"],["Rev.","Tool <small>v1.2</small>"]],
+      table:[["Span range","6 – 32 M"],["SWL","1 – 80 T"],["Duty","A3 – A8 / M3–M8"],["Download","Tool · Share link"]],
+      ref:"SV-RES-18", dwg:"SV-TOOL-01", cta:"Open tool"
+    }
+  };
+
+  const rows = [...document.querySelectorAll('.row')];
+  const tabs = [...document.querySelectorAll('.tab')];
+  const q = document.getElementById('q');
+  const count = document.getElementById('count');
+  const els = {
+    kicker: document.getElementById('d-kicker'),
+    type: document.getElementById('d-type'),
+    eyebrow: document.getElementById('d-eyebrow'),
+    title: document.getElementById('d-title'),
+    desc: document.getElementById('d-desc'),
+    dims: document.getElementById('d-dims'),
+    table: document.getElementById('d-table'),
+    ref: document.getElementById('d-ref'),
+    dwg: document.getElementById('d-dwg'),
+    primary: document.getElementById('d-primary'),
+    status: document.getElementById('d-status')
+  };
+
+  function selectRow(row){
+    rows.forEach(r=>r.setAttribute('aria-selected','false'));
+    row.setAttribute('aria-selected','true');
+    const key = row.getAttribute('data-title');
+    const d = DATA[key];
+    if(!d) return;
+    els.kicker.textContent = d.kicker;
+    els.type.textContent = d.type;
+    els.eyebrow.textContent = d.eyebrow;
+    els.title.textContent = d.title;
+    els.desc.textContent = d.desc;
+    els.ref.textContent = d.ref;
+    els.dwg.textContent = d.dwg;
+    els.primary.firstChild.textContent = d.cta + ' ';
+    els.dims.innerHTML = d.dims.map(([k,v]) => `<div class="dim"><div class="dim__k">${k}</div><div class="dim__v">${v}</div></div>`).join('');
+    els.table.innerHTML = d.table.map(([k,v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('');
+    els.status.textContent = 'Vault live';
+  }
+
+  rows.forEach(r=>{
+    r.addEventListener('click', ()=> selectRow(r));
+    r.addEventListener('keydown', e=>{
+      if(e.key==='Enter' || e.key===' '){ e.preventDefault(); selectRow(r); }
+      if(e.key==='ArrowDown'){ e.preventDefault(); (r.nextElementSibling||rows[0]).focus(); }
+      if(e.key==='ArrowUp'){ e.preventDefault(); (r.previousElementSibling||rows[rows.length-1]).focus(); }
+    });
+  });
+
+  function applyFilter(){
+    const f = document.querySelector('.tab[aria-selected="true"]').dataset.filter;
+    const term = (q.value||'').toLowerCase().trim();
+    let visible=0;
+    rows.forEach(r=>{
+      const okType = f==='all' || r.dataset.type===f;
+      const okTerm = !term || r.dataset.title.toLowerCase().includes(term) || r.textContent.toLowerCase().includes(term);
+      const show = okType && okTerm;
+      r.style.display = show ? '' : 'none';
+      if(show) visible++;
+    });
+    count.textContent = visible;
+  }
+  tabs.forEach(t=> t.addEventListener('click', ()=>{
+    tabs.forEach(x=>x.setAttribute('aria-selected','false'));
+    t.setAttribute('aria-selected','true');
+    applyFilter();
+  }));
+  q.addEventListener('input', applyFilter);
+</script>
+</body>
+</html>

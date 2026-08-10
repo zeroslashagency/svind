@@ -899,6 +899,25 @@
   .core-cards {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+  .core-cards--bento {
+    grid-template-columns: 1.45fr 1fr;
+  }
+  .core-cards--bento > .core-card:first-child {
+    grid-row: span 2;
+  }
+  .core-cards--bento > .core-card:first-child .core-card__link {
+    min-height: clamp(420px, 38vw, 520px);
+    background-color: var(--color-navy);
+    color: var(--color-surface);
+  }
+  .core-cards--bento > .core-card:first-child .core-card__tag,
+  .core-cards--bento > .core-card:first-child .core-card__title,
+  .core-cards--bento > .core-card:first-child .core-card__foot {
+    color: var(--color-surface);
+  }
+  .core-cards--bento > .core-card:first-child .core-card__glyph {
+    background-color: var(--color-surface);
+  }
 }
 
 .core-card {

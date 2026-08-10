@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SVIND — Field Manual No. 04 · Spec before you buy.</title>
+<meta name="color-scheme" content="light">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── SVIND Field Manual — Concept D ──
+   Kraft + Ink + Safety Amber #C9870A
+   12-col · 8px baseline · zero gloss
+   taste-ui anti-slop: one accent, no equal thirds, no em dashes, no gradient, no glass */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --kraft:#F5F1E8;
+  --kraft-2:#FFFBEB;
+  --white:#FFFFFF;
+  --ink:#1C1917;
+  --muted:#57534E;
+  --muted-2:#78716C;
+  --rule:#E7E5E4;
+  --amber:#C9870A;
+  --amber-hover:#B87A08;
+  --amber-pressed:#A66E07;
+  --shadow:0 1px 3px rgba(28,25,23,.08),0 8px 24px rgba(28,25,23,.06);
+  --shadow-hover:0 4px 16px rgba(28,25,23,.10),0 12px 32px rgba(28,25,23,.07);
+  --r:2px;
+  --max:1400px;
+}
+html{scroll-behavior:smooth;background:var(--kraft)}
+body{
+  font-family:'IBM Plex Sans',system-ui,-apple-system,sans-serif;
+  background:var(--kraft);
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+img{display:block;max-width:100%}
+
+/* ── Binder Spine — 8px fixed left ── */
+.spine{
+  position:fixed;left:0;top:0;bottom:0;width:8px;
+  background:var(--kraft);
+  border-right:1px solid var(--rule);
+  z-index:80;overflow:hidden;
+}
+.spine-progress{
+  position:absolute;left:0;top:0;width:2px;height:100%;
+  background:var(--amber);
+  transform-origin:top;
+  transform:scaleY(0);
+  transition:transform .08s linear;
+}
+.spine-stamp{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%) rotate(-90deg);
+  white-space:nowrap;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:.14em;font-weight:500;
+  color:var(--muted-2);text-transform:uppercase;
+  pointer-events:none;
+}
+
+/* ── Top Nav — minimal, ink rule ── */
+.topnav{
+  position:sticky;top:0;z-index:60;
+  background:var(--kraft);
+  border-bottom:1px solid var(--rule);
+  height:56px;
+}
+.topnav-inner{
+  max-width:var(--max);margin:0 auto;
+  padding:0 40px 0 48px;
+  height:56px;display:flex;align-items:center;justify-content:space-between;
+  gap:24px;
+}
+.brand{
+  display:flex;align-items:center;gap:12px;
+}
+.brand-mark{
+  width:32px;height:32px;background:var(--ink);color:var(--kraft);
+  display:grid;place-items:center;
+  font-family:'Geist',sans-serif;font-weight:800;font-size:13px;letter-spacing:-.02em;
+  border-radius:var(--r);
+}
+.brand-name{
+  font-family:'Geist',sans-serif;font-weight:700;font-size:15px;letter-spacing:-.02em;color:var(--ink);
+}
+.brand-sub{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--muted-2);text-transform:uppercase;margin-top:1px}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);font-weight:500;padding:4px 0;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;
+}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a.is-active{color:var(--ink);border-bottom-color:var(--amber)}
+.nav-cta{
+  height:36px;padding:0 18px;background:var(--amber);color:var(--ink);
+  border:1px solid var(--amber);border-radius:var(--r);
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;
+  cursor:pointer;transition:background .15s,transform .08s;
+}
+.nav-cta:hover{background:var(--amber-hover)}
+.nav-cta:active{transform:translateY(1px);background:var(--amber-pressed)}
+.nav-cta:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+
+/* ── Container ── */
+.container{max-width:var(--max);margin:0 auto;padding:0 40px 0 48px}
+.grid12{display:grid;grid-template-columns:repeat(12,1fr);gap:24px}
+
+/* ── Cover Sheet — 5 / 7 ── */
+.cover{
+  padding:48px 0 40px;
+  border-bottom:1px solid var(--rule);
+}
+.cover-left{grid-column:1 / span 5;display:flex;flex-direction:column}
+.cover-right{grid-column:6 / span 7;display:flex;flex-direction:column;gap:0;position:relative;min-height:360px}
+.amber-rule{height:3px;background:var(--amber);width:48px;border-radius:1px}
+.stamp{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  font-weight:500;color:var(--muted-2);margin-top:14px;
+}
+.cover h1{
+  font-family:'Geist',sans-serif;font-weight:700;font-size:44px;line-height:46px;
+  letter-spacing:-.03em;color:var(--ink);margin-top:18px;max-width:10ch;
+}
+.cover-lede{
+  font-size:17px;line-height:27px;color:#44403C;margin-top:16px;max-width:42ch;
+}
+.cover-meta{
+  margin-top:24px;padding-top:16px;border-top:1px solid var(--rule);
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+}
+.cover-meta span{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted-2)}
+.cover-actions{margin-top:22px;display:flex;gap:12px;flex-wrap:wrap}
+.btn-amber{
+  height:44px;padding:0 22px;background:var(--amber);color:var(--ink);
+  border:1px solid var(--amber);border-radius:var(--r);
+  font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;
+  cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:background .15s,transform .08s;
+}
+.btn-amber:hover{background:var(--amber-hover)}
+.btn-amber:active{transform:translateY(1px) scale(.98);background:var(--amber-pressed)}
+.btn-amber:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.btn-ghost{
+  height:44px;padding:0 20px;background:var(--white);color:var(--ink);
+  border:1px solid var(--rule);border-radius:var(--r);
+  font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:500;
+  cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:border-color .15s,color .15s;
+}
+.btn-ghost:hover{border-color:var(--ink);color:var(--ink)}
+.btn-ghost:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.cover-footnote{
+  margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted-2);
+  border-top:1px solid var(--rule);padding-top:10px;
+}
+
+/* Spec callouts — paper stack */
+.callout-stack{position:relative;height:100%;display:flex;flex-direction:column;justify-content:center;gap:0}
+.callout{
+  background:var(--white);border:1px solid var(--rule);border-radius:var(--r);
+  box-shadow:var(--shadow);overflow:hidden;
+  transition:transform .16s ease,box-shadow .16s ease;
+}
+.callout:hover{transform:translateY(-1px);box-shadow:var(--shadow-hover)}
+.callout-top{height:3px;background:var(--amber)}
+.callout-head{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:14px 18px 12px;border-bottom:1px solid var(--rule);
+}
+.callout-head strong{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink)}
+.callout-head span{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted-2)}
+.callout-table{width:100%;border-collapse:collapse}
+.callout-table th{
+  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);font-weight:600;text-align:left;padding:10px 18px 6px;
+}
+.callout-table td{
+  font-family:'JetBrains Mono',monospace;font-size:13px;line-height:18px;color:var(--ink);
+  padding:8px 18px;border-top:1px solid var(--rule);
+}
+.callout-table td:nth-child(2){text-align:right;font-weight:600}
+.callout-table td:nth-child(3){text-align:right;color:var(--muted);font-size:12px}
+.callout-foot{
+  padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  border-top:1px solid var(--rule);background:#FFFEFB;
+}
+.callout-foot small{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted-2)}
+.callout-foot a{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--ink);font-weight:600;border-bottom:2px solid transparent;transition:border-color .15s;
+}
+.callout-foot a:hover{border-bottom-color:var(--amber)}
+.callout:nth-child(2){
+  margin-top:-8px;margin-left:16px;
+}
+@media(max-width:1100px){.callout:nth-child(2){margin-left:0;margin-top:12px}}
+
+/* ── Tabbed Index Bar — die-cut ── */
+.tabbar{
+  position:sticky;top:56px;z-index:50;
+  background:var(--kraft);
+  border-bottom:1px solid var(--rule);
+}
+.tabbar-inner{
+  max-width:var(--max);margin:0 auto;padding:0 40px 0 48px;
+  display:flex;align-items:flex-end;gap:0;overflow-x:auto;scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;
+}
+.tabbar-inner::-webkit-scrollbar{display:none}
+.tab{
+  flex:0 0 auto;
+  height:44px;padding:0 16px;
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.04em;font-weight:500;
+  color:var(--muted);background:transparent;border:1px solid transparent;
+  border-bottom:none;cursor:pointer;white-space:nowrap;
+  scroll-snap-align:start;transition:color .15s,background .15s,border-color .15s;
+  position:relative;top:1px;
+}
+.tab:hover{color:var(--ink)}
+.tab:focus-visible{outline:2px solid var(--amber);outline-offset:2px;z-index:1}
+.tab.is-active{
+  background:var(--white);color:var(--ink);
+  border-color:var(--rule);border-top:3px solid var(--amber);
+  border-bottom:1px solid var(--white);
+}
+.tab-count{
+  font-size:11px;color:var(--muted-2);font-weight:400;letter-spacing:.04em;margin-left:2px;
+}
+.tab.is-active .tab-count{color:var(--muted)}
+.tabbar-rule{display:none}
+
+/* ── Manual Body — 3 / 6 / 3 ── */
+.body{padding:32px 0 48px}
+.body-grid{
+  display:grid;grid-template-columns:3fr 6fr 3fr;gap:24px;
+  align-items:start;
+}
+
+/* Left — Section Nav */
+.sidenav{position:sticky;top:116px}
+.sidenav-label{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted-2);font-weight:500;margin-bottom:16px;display:flex;align-items:center;gap:8px;
+}
+.sidenav-label::before{content:'';width:20px;height:1px;background:var(--rule)}
+.side-item{
+  display:block;padding:14px 14px 12px;
+  border:1px solid transparent;border-radius:var(--r);
+  cursor:pointer;transition:border-color .15s,background .15s;
+  text-align:left;width:100%;background:transparent;
+}
+.side-item:hover{background:var(--white);border-color:var(--rule)}
+.side-item.is-active{background:var(--white);border-color:var(--rule);border-left:3px solid var(--amber);padding-left:12px}
+.side-num{
+  font-family:'JetBrains Mono',monospace;font-size:28px;line-height:1;font-weight:700;
+  letter-spacing:-.03em;color:#A8A29E;transition:color .15s;
+}
+.side-item.is-active .side-num{color:var(--ink)}
+.side-item:hover .side-num{color:var(--ink)}
+.side-name{font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:500;color:var(--ink);margin-top:6px}
+.side-count{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted-2);margin-top:2px}
+.side-rule{width:24px;height:2px;background:var(--amber);margin-top:8px;opacity:0;transition:opacity .15s}
+.side-item.is-active .side-rule{opacity:1}
+.side-divider{height:1px;background:var(--rule);margin:6px 0}
+
+/* mobile dropdown for sidenav */
+.sidenav-select{display:none}
+
+/* Middle — Sheet Stack */
+.sheets{display:flex;flex-direction:column;gap:24px}
+.group-divider{
+  display:flex;align-items:center;gap:12px;
+  background:var(--kraft);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+  border-left:3px solid var(--amber);padding:10px 14px;
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);font-weight:600;
+}
+.sheet{
+  background:var(--white);border:1px solid var(--rule);border-radius:var(--r);
+  padding:22px 20px 0;box-shadow:var(--shadow);
+  transition:transform .14s ease,box-shadow .14s ease;border-left:1px solid var(--rule);
+  position:relative;overflow:hidden;
+}
+.sheet:hover{transform:translateY(-1px);box-shadow:var(--shadow-hover)}
+.sheet.is-featured{border-left:3px solid var(--amber);padding-left:18px}
+.sheet-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.sheet-num{font-family:'JetBrains Mono',monospace;font-size:28px;line-height:1;font-weight:700;color:var(--amber);letter-spacing:-.02em}
+.sheet-titles{flex:1;min-width:0}
+.sheet-title{font-family:'IBM Plex Sans',sans-serif;font-size:15px;line-height:20px;font-weight:600;color:var(--ink)}
+.sheet-sub{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sheet-badge{
+  flex:0 0 auto;
+  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);border:1px solid var(--rule);border-radius:var(--r);padding:5px 8px;background:var(--white);
+  font-weight:500;
+}
+.sheet-hook{
+  margin-top:14px;padding-top:10px;border-top:1px solid var(--rule);
+  font-family:'JetBrains Mono',monospace;font-size:14px;line-height:20px;font-weight:500;color:var(--ink);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+}
+.sheet-hook small{font-size:11px;color:var(--muted-2);font-weight:400}
+.sheet-desc{font-size:14px;line-height:20px;color:#44403C;margin-top:10px;max-width:52ch}
+.sheet-rule{
+  margin-top:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  border-top:1px solid var(--rule);padding:12px 0 14px;
+}
+.sheet-link{
+  font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--ink);font-weight:600;display:inline-flex;align-items:center;gap:6px;
+  border-bottom:2px solid transparent;transition:border-color .15s,transform .1s;
+}
+.sheet-link:hover{border-bottom-color:var(--amber)}
+.sheet-link:active{transform:translateY(1px)}
+.sheet-meta{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted-2);display:flex;align-items:center;gap:8px}
+.sheet-meta i{width:6px;height:6px;border-radius:50%;background:var(--amber);display:inline-block}
+
+/* helper column */
+.helper{position:sticky;top:116px;display:flex;flex-direction:column;gap:16px}
+.helper-card{
+  background:var(--white);border:1px solid var(--rule);border-radius:var(--r);padding:20px;
+}
+.helper-rule{width:24px;height:3px;background:var(--amber);border-radius:1px;margin-bottom:12px}
+.helper-title{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink);font-weight:600;margin-bottom:12px;
+}
+.helper-list{list-style:none;display:flex;flex-direction:column}
+.helper-list li{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:10px 0;border-bottom:1px solid var(--rule);
+  font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink);
+}
+.helper-list li:last-child{border-bottom:none}
+.helper-list li small{color:var(--muted-2);font-size:11px}
+.helper-list li em{font-style:normal;color:var(--amber);font-weight:700}
+.helper-note{
+  border-left:3px solid var(--amber);padding-left:16px;
+}
+.helper-note p{font-size:14px;line-height:20px;color:#44403C}
+.helper-note cite{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted-2);font-style:normal;margin-top:8px;display:block}
+.helper-cta{
+  border:1px solid var(--amber);background:var(--kraft-2);border-radius:var(--r);padding:22px 20px;
+}
+.helper-cta h3{font-family:'Geist',sans-serif;font-size:16px;font-weight:650;letter-spacing:-.01em;color:var(--ink)}
+.helper-cta p{font-size:13px;line-height:19px;color:var(--muted);margin-top:6px}
+.helper-cta .btn-amber{width:100%;justify-content:center;margin-top:14px}
+.helper-cta small{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted-2);display:block;text-align:center;margin-top:8px}
+
+/* ── Yard Notes Strip ── */
+.yard{
+  border-top:2px solid var(--ink);padding:28px 0 32px;
+  display:grid;grid-template-columns:1fr 1fr;gap:24px;
+}
+.yard-block{border-left:3px solid var(--amber);padding-left:20px}
+.yard-label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.10em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.yard-block blockquote{font-family:'Geist',sans-serif;font-size:15px;line-height:22px;color:var(--ink);margin-top:8px;letter-spacing:-.01em}
+.yard-block cite{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted-2);font-style:normal;margin-top:6px;display:block}
+
+/* ── Spec Pack Footer — 7 / 5 ── */
+.footer{
+  border-top:3px solid var(--ink);padding-top:1px;margin-top:8px;
+}
+.footer::before{content:'';display:block;height:1px;background:var(--rule);margin-bottom:32px}
+.footer-grid{display:grid;grid-template-columns:7fr 5fr;gap:40px;padding-bottom:40px}
+.footer h2{font-family:'Geist',sans-serif;font-size:22px;line-height:28px;font-weight:650;letter-spacing:-.01em;color:var(--ink)}
+.footer p{font-size:15px;line-height:22px;color:#44403C;margin-top:8px;max-width:52ch}
+.footer-form{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+.footer-form input{
+  flex:1;min-width:220px;height:44px;padding:0 14px;
+  border:1px solid var(--rule);border-radius:var(--r);background:var(--white);
+  font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink);
+}
+.footer-form input::placeholder{color:var(--muted-2)}
+.footer-form input:focus{outline:2px solid var(--amber);outline-offset:2px;border-color:var(--amber)}
+.footer-form .btn-amber{flex:0 0 auto}
+.footer-help{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted-2);margin-top:8px}
+.footer-index h4{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink);font-weight:600;
+}
+.footer-index ul{list-style:none;margin-top:12px}
+.footer-index li{border-bottom:1px solid var(--rule)}
+.footer-index li a{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:10px 0;font-size:13px;color:var(--muted);transition:color .15s;
+}
+.footer-index li a:hover{color:var(--ink)}
+.footer-index li a span:first-child{font-family:'IBM Plex Sans',sans-serif}
+.footer-index li a span:last-child{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted-2)}
+.footer-bottom{
+  border-top:1px solid var(--rule);padding:16px 0;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted-2);
+}
+.footer-bottom a{color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.footer-bottom a:hover{color:var(--ink)}
+
+/* ── Animations ── */
+@media(prefers-reduced-motion:no-preference){
+  .reveal{opacity:0;transform:translateY(10px);animation:reveal .38s ease forwards}
+  .reveal-2{opacity:0;transform:translateY(10px);animation:reveal .38s ease .08s forwards}
+  .reveal-3{opacity:0;transform:translateY(6px);animation:reveal .32s ease forwards}
+  @keyframes reveal{to{opacity:1;transform:translateY(0)}}
+  .sheet{opacity:0;transform:translateY(6px);animation:sheetIn .32s ease forwards}
+  @keyframes sheetIn{to{opacity:1;transform:translateY(0)}}
+}
+@media(prefers-reduced-motion:reduce){
+  .reveal,.reveal-2,.reveal-3,.sheet{opacity:1;transform:none;animation:none}
+}
+
+/* ── Responsive ── */
+@media(max-width:1100px){
+  .body-grid{grid-template-columns:1fr;gap:24px}
+  .sidenav{position:static;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+  .sidenav::-webkit-scrollbar{display:none}
+  .sidenav-label{display:none}
+  .side-item{flex:0 0 auto;min-width:148px}
+  .sidenav .side-divider{display:none}
+  .helper{position:static;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .helper-cta{grid-column:1 / -1}
+  .footer-grid{grid-template-columns:1fr;gap:32px}
+}
+@media(max-width:760px){
+  .spine{position:static;width:100%;height:4px;border-right:none;border-bottom:none}
+  .spine-stamp{display:none}
+  .spine-progress{width:100%;height:2px;transform-origin:left;transform:scaleX(0)}
+  .topnav{height:auto}
+  .topnav-inner{padding:12px 20px;flex-wrap:wrap;height:auto;gap:12px}
+  .nav-links{gap:14px;overflow-x:auto;scrollbar-width:none}
+  .nav-links a{white-space:nowrap}
+  .container{padding:0 20px}
+  .tabbar{top:0}
+  .tabbar-inner{padding:0 20px}
+  .tab{height:40px;font-size:12px}
+  .cover{padding:28px 0 24px}
+  .grid12{grid-template-columns:1fr;gap:16px}
+  .cover-left{grid-column:1}
+  .cover-right{grid-column:1;min-height:auto}
+  .cover h1{font-size:34px;line-height:36px}
+  .cover-meta{flex-direction:column;align-items:flex-start}
+  .callout-stack{gap:12px}
+  .callout:nth-child(2){margin:0}
+  .body{padding:20px 0 32px}
+  .sidenav{display:none}
+  .sidenav-select{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    width:100%;height:44px;padding:0 14px;
+    background:var(--white);border:1px solid var(--rule);border-radius:var(--r);
+    font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink);cursor:pointer;
+  }
+  .sheets{gap:16px}
+  .sheet{padding:18px 16px 0}
+  .sheet.is-featured{padding-left:14px}
+  .sheet-sub{white-space:normal}
+  .helper{grid-template-columns:1fr}
+  .yard{grid-template-columns:1fr;gap:20px}
+  .footer-form input{min-width:0}
+  .footer-bottom{flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<!-- Binder Spine -->
+<div class="spine" aria-hidden="true">
+  <div class="spine-progress" id="spineProgress"></div>
+  <div class="spine-stamp">SVIND — HAROHALLI KIADB — EST. 2006 — SVIND — HAROHALLI KIADB — EST. 2006 — SVIND — HAROHALLI KIADB — EST. 2006</div>
+</div>
+
+<!-- Top Nav -->
+<nav class="topnav" aria-label="Primary">
+  <div class="topnav-inner">
+    <div class="brand">
+      <div class="brand-mark">S</div>
+      <div>
+        <div class="brand-name">SVIND ENGINEERING</div>
+        <div class="brand-sub">Harohalli KIADB · Est. 2006</div>
+      </div>
+    </div>
+    <div class="nav-links" role="navigation" aria-label="Sections">
+      <a href="#" class="is-active">Resources</a>
+      <a href="#">Cranes</a>
+      <a href="#">Projects</a>
+      <a href="#">Contact</a>
+    </div>
+    <button class="nav-cta" type="button">Request pack</button>
+  </div>
+</nav>
+
+<!-- Cover Sheet — 5 / 7 -->
+<section class="container cover" aria-label="Cover sheet">
+  <div class="grid12">
+    <div class="cover-left reveal">
+      <div class="amber-rule" aria-hidden="true"></div>
+      <div class="stamp">Field Manual / No. 04</div>
+      <h1>Spec before you buy.</h1>
+      <p class="cover-lede">The tables our engineers mark up on site. Same excerpts, same revision dates, with plain notes. Read the chart before you book the crane.</p>
+      <div class="cover-meta">
+        <span>Rev. 2024.11 — IS 807 / IS 3177 / IS 4137 / FEM 9.511</span>
+        <span style="color:var(--muted-2)">42 sheets · 4 sections</span>
+      </div>
+      <div class="cover-actions">
+        <button class="btn-amber" type="button">Browse sheets <span aria-hidden="true">→</span></button>
+        <button class="btn-ghost" type="button">Download index PDF</button>
+      </div>
+      <div class="cover-footnote">Src: Factory FAT data, Harohalli. Every table verified against dispatch print. If the PDF has no date, do not use it.</div>
+    </div>
+    <div class="cover-right reveal-2">
+      <div class="callout-stack">
+        <div class="callout">
+          <div class="callout-top" aria-hidden="true"></div>
+          <div class="callout-head">
+            <strong>Sheet 01 — S-350 Excerpt</strong>
+            <span>Rev. 2024.11</span>
+          </div>
+          <table class="callout-table" aria-label="S-350 extract">
+            <thead><tr><th>Parameter</th><th>Value</th><th>Unit</th></tr></thead>
+            <tbody>
+              <tr><td>Max capacity</td><td>35</td><td>t at 6 m</td></tr>
+              <tr><td>At 20 m radius</td><td>8.2</td><td>t</td></tr>
+              <tr><td>Ground pressure</td><td>3.8</td><td>t/m²</td></tr>
+              <tr><td>Standard</td><td>IS 3177</td><td>Cl. A6</td></tr>
+            </tbody>
+          </table>
+          <div class="callout-foot">
+            <small>Src: Factory FAT data, Harohalli. Full table PDF verified.</small>
+            <a href="#">View table →</a>
+          </div>
+        </div>
+        <div class="callout">
+          <div class="callout-top" aria-hidden="true"></div>
+          <div class="callout-head">
+            <strong>Sheet 02 — Outrigger Pressure</strong>
+            <span>S Series</span>
+          </div>
+          <table class="callout-table" aria-label="Outrigger pressure">
+            <thead><tr><th>Check</th><th>Value</th><th>Note</th></tr></thead>
+            <tbody>
+              <tr><td>Pad load</td><td>3.8</td><td>t/m² max</td></tr>
+              <tr><td>Soil report</td><td>Req.</td><td>before lift</td></tr>
+              <tr><td>Derating</td><td>Plain</td><td>notes incl.</td></tr>
+              <tr><td>Ref</td><td>IS 4137</td><td>Heavy duty</td></tr>
+            </tbody>
+          </table>
+          <div class="callout-foot">
+            <small>Check soil report before lift. If numbers do not match, stop.</small>
+            <a href="#">View guide →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Tabbed Index Bar -->
+<div class="tabbar" role="tablist" aria-label="Sheet index">
+  <div class="tabbar-inner" id="tabbar">
+    <button class="tab is-active" role="tab" aria-selected="true" data-tab="all">01 All sheets <span class="tab-count">(42)</span></button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="charts">02 Load charts <span class="tab-count">(18)</span></button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="site">03 Site &amp; Rigging <span class="tab-count">(14)</span></button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="compliance">04 Compliance <span class="tab-count">(10)</span></button>
+  </div>
+</div>
+
+<!-- Manual Body — 3 / 6 / 3 -->
+<main class="container body">
+  <div class="body-grid">
+    <!-- Left: Section Nav -->
+    <nav class="sidenav" aria-label="Sections">
+      <div class="sidenav-label">Sheet index</div>
+      <button class="side-item is-active" data-filter="all" aria-current="true">
+        <div class="side-num">01</div>
+        <div class="side-name">All sheets</div>
+        <div class="side-count">42 sheets</div>
+        <div class="side-rule" aria-hidden="true"></div>
+      </button>
+      <div class="side-divider" aria-hidden="true"></div>
+      <button class="side-item" data-filter="charts">
+        <div class="side-num">02</div>
+        <div class="side-name">Load charts</div>
+        <div class="side-count">18 sheets</div>
+        <div class="side-rule" aria-hidden="true"></div>
+      </button>
+      <div class="side-divider" aria-hidden="true"></div>
+      <button class="side-item" data-filter="site">
+        <div class="side-num">03</div>
+        <div class="side-name">Site &amp; Rigging</div>
+        <div class="side-count">14 sheets</div>
+        <div class="side-rule" aria-hidden="true"></div>
+      </button>
+      <div class="side-divider" aria-hidden="true"></div>
+      <button class="side-item" data-filter="compliance">
+        <div class="side-num">04</div>
+        <div class="side-name">Compliance</div>
+        <div class="side-count">10 sheets</div>
+        <div class="side-rule" aria-hidden="true"></div>
+      </button>
+    </nav>
+
+    <!-- Mobile dropdown alternative -->
+    <label style="display:none" class="sidenav-mobile" aria-label="Select section">
+      <select class="sidenav-select" id="mobileSelect">
+        <option value="all">Section 01 — All sheets</option>
+        <option value="charts">Section 02 — Load charts</option>
+        <option value="site">Section 03 — Site &amp; Rigging</option>
+        <option value="compliance">Section 04 — Compliance</option>
+      </select>
+    </label>
+
+    <!-- Middle: Sheets -->
+    <div class="sheets" id="sheetStack" aria-live="polite">
+      <div class="group-divider" data-group="charts">02 — Load chart sheets</div>
+
+      <article class="sheet is-featured" data-cat="charts" style="animation-delay:.02s">
+        <div class="sheet-head">
+          <div class="sheet-num">01.01</div>
+          <div class="sheet-titles">
+            <div class="sheet-title">S-350 Load Chart — Full Radius Table</div>
+            <div class="sheet-sub">35 t · IS 3177 · Rev. 2024.11</div>
+          </div>
+          <span class="sheet-badge">Data sheet</span>
+        </div>
+        <div class="sheet-hook">WLL 35 t at 6 m, 8.2 t at 20 m <small>S-350 · Cl. A6</small></div>
+        <p class="sheet-desc">The radius table we print for every S-350 dispatch, with plain notes on derating for wind and duty.</p>
+        <div class="sheet-rule">
+          <a class="sheet-link" href="#">View sheet <span aria-hidden="true">→</span></a>
+          <span class="sheet-meta"><i aria-hidden="true"></i> PDF · 2 pages</span>
+        </div>
+      </article>
+
+      <article class="sheet" data-cat="charts" style="animation-delay:.05s">
+        <div class="sheet-head">
+          <div class="sheet-num">01.02</div>
+          <div class="sheet-titles">
+            <div class="sheet-title">S-250 Load Chart — Short Boom</div>
+            <div class="sheet-sub">25 t · IS 3177 · Rev. 2024.08</div>
+          </div>
+          <span class="sheet-badge">Data sheet</span>
+        </div>
+        <div class="sheet-hook">WLL 25 t at 5 m, 6.1 t at 18 m</div>
+        <p class="sheet-desc">Compact boom data for tight yards. Includes derating for side loading and intermediate jib.</p>
+        <div class="sheet-rule">
+          <a class="sheet-link" href="#">View sheet <span aria-hidden="true">→</span></a>
+          <span class="sheet-meta"><i aria-hidden="true"></i> PDF</span>
+        </div>
+      </article>
+
+      <article class="sheet" data-cat="charts" style="animation-delay:.08s">
+        <div class="sheet-head">
+          <div class="sheet-num">01.03</div>
+          <div class="sheet-titles">
+            <div class="sheet-title">S-500 Load Chart — Heavy Duty</div>
+            <div class="sheet-sub">50 t · IS 4137 · Rev. 2024.10</div>
+          </div>
+          <span class="sheet-badge">Data sheet</span>
+        </div>
+        <div class="sheet-hook">WLL 50 t at 7 m, 11.4 t at 22 m</div>
+        <p class="sheet-desc">Heavy duty table with ground pressure overlay. Use with outrigger sheet 01.04.</p>
+        <div class="sheet-rule">
+          <a class="sheet-link" href="#">View sheet <span aria-hidden="true">→</span></a>
+          <span class="sheet-meta">PDF · 3 pages</span>
+        </div>
+      </article>
+
+      <article class="sheet is-featured" data-cat="site" style="animation-delay:.11s">
+        <div class="sheet-head">
+          <div class="sheet-num">01.04</div>
+          <div class="sheet-titles">
+            <div class="sheet-title">Outrigger Load Distribution — S Series</div>
+            <div class="sheet-sub">Ground pressure 3.8 t/m² · IS 4137</div>
+          </div>
+          <span class="sheet-badge">Site guide</span>
+        </div>
+        <div class="sheet-hook">Ground pressure 3.8 t/m² <small>Check soil report before lift</small></div>
+        <p class="sheet-desc">How we mark and check pad loads on site. Includes pad sizing table and photographic reference.</p>
+        <div class="sheet-rule">
+          <a class="sheet-link" href="#">View guide <span aria-hidden="true">→</span></a>
+          <span class="sheet-meta"><i aria-hidden="true"></i> PDF · Field notes</span>
+        </div>
+      </article>
+
+      <div class="group-divider" data-group="site">03 — Site &amp; Rigging sheets</div>
+
+      <article class="sheet" data-cat="site" style="animation-delay:.14s">
+        <div class="sheet-head">
+          <div class="sheet-num">02.01</div>
+          <div class="sheet-titles">
+            <div class="sheet-title">Rigging Geometry — Sling Angles</div>
+            <div class="sheet-sub">WLL derating table · Rev. 2024.06</div>
+          </div>
+          <span class="sheet-badge">Site guide</span>
+        </div>
+        <div class="sheet-hook">Angle 60° — WLL × 0.87</div>
+        <p class="sheet-desc">Quick table for sling tension at 90, 60, 45 and 30 degrees. Print for the rigging box.</p>
+        <div class="sheet-rule">
+          <a class="sheet-link" href="#">View guide <span aria-hidden="true">→</span></a>
+          <span class="sheet-meta">PDF</span>
+        </div>
+      </article>
+
+      <article class="sheet" data-cat="site" style="animation-delay:.17s">
+        <div class="sheet-head">
+          <div class="sheet-num">02.03</div>
+          <div class="sheet-titles">
+            <div class="sheet-title">Wind Speed Derating — All Models</div>
+            <div class="sheet-sub">FEM 9.511 · Rev. 2024.09</div>
+          </div>
+          <span class="sheet-badge">Site guide</span>
+        </div>
+        <div class="sheet-hook">Cease lift above 20 m/s</div>
+        <p class="sheet-desc">Wind area and derating factors for lattice and box boom. Includes Beaufort cross reference.</p>
+        <div class="sheet-rule">
+          <a class="sheet-link" href="#">View guide <span aria-hidden="true">→</span></a>
+          <span class="sheet-meta">PDF · 1 page</span>
+        </div>
+      </article>
+
+      <article class="sheet" data-cat="site" style="animation-delay:.20s">
+        <div class="sheet-head">
+          <div class="sheet-num">02.05</div>
+          <div class="sheet-titles">
+            <div class="sheet-title">Lift Plan Template — A4 Printable</div>
+            <div class="sheet-sub">Site form · Rev. 2024.11</div>
+          </div>
+          <span class="sheet-badge">Site guide</span>
+        </div>
+        <div class="sheet-hook">One page · Fill on site</div>
+        <p class="sheet-desc">The one page our fitters carry. Radius, load, ground, wind, sign off. No extra fields.</p>
+        <div class="sheet-rule">
+          <a class="sheet-link" href="#">View template <span aria-hidden="true">→</span></a>
+          <span class="sheet-meta">PDF · Form</span>
+        </div>
+      </article>
+
+      <div class="group-divider" data-group="compliance">04 — Compliance sheets</div>
+
+      <article class="sheet is-featured" data-cat="compliance" style="animation-delay:.23s">
+        <div class="sheet-head">
+          <div class="sheet-num">03.02</div>
+          <div class="sheet-titles">
+            <div class="sheet-title">EN 13000 Pre Hire Checklist — 2024</div>
+            <div class="sheet-sub">33 point check · IS 4137</div>
+          </div>
+          <span class="sheet-badge">Compliance</span>
+        </div>
+        <div class="sheet-hook">33 point check before hire</div>
+        <p class="sheet-desc">What to verify against IS 4137 before you sign. Test certificates, NDT, and logbook entries.</p>
+        <div class="sheet-rule">
+          <a class="sheet-link" href="#">View checklist <span aria-hidden="true">→</span></a>
+          <span class="sheet-meta"><i aria-hidden="true"></i> PDF · 4 pages</span>
+        </div>
+      </article>
+
+      <article class="sheet" data-cat="compliance" style="animation-delay:.26s">
+        <div class="sheet-head">
+          <div class="sheet-num">03.04</div>
+          <div class="sheet-titles">
+            <div class="sheet-title">IS 807 Design Certificate — S Series</div>
+            <div class="sheet-sub">Design · Harohalli · Rev. 2024.03</div>
+          </div>
+          <span class="sheet-badge">Compliance</span>
+        </div>
+        <div class="sheet-hook">IS 807 verified · FEM 9.511</div>
+        <p class="sheet-desc">Design verification summary with classification and duty reference for procurement files.</p>
+        <div class="sheet-rule">
+          <a class="sheet-link" href="#">View certificate <span aria-hidden="true">→</span></a>
+          <span class="sheet-meta">PDF</span>
+        </div>
+      </article>
+
+      <article class="sheet" data-cat="compliance" style="animation-delay:.29s">
+        <div class="sheet-head">
+          <div class="sheet-num">04.01</div>
+          <div class="sheet-titles">
+            <div class="sheet-title">FAT Report Excerpt — S-350 Sample</div>
+            <div class="sheet-sub">Factory acceptance · 2024.11</div>
+          </div>
+          <span class="sheet-badge">Compliance</span>
+        </div>
+        <div class="sheet-hook">Sample FAT · Load test data</div>
+        <p class="sheet-desc">Redacted FAT pages showing proof load and deflection for one S-350 unit. Full report on request.</p>
+        <div class="sheet-rule">
+          <a class="sheet-link" href="#">View excerpt <span aria-hidden="true">→</span></a>
+          <span class="sheet-meta">PDF · Redacted</span>
+        </div>
+      </article>
+    </div>
+
+    <!-- Right: Spec Helper -->
+    <aside class="helper" aria-label="Spec helper">
+      <div class="helper-card">
+        <div class="helper-rule" aria-hidden="true"></div>
+        <div class="helper-title">At a glance</div>
+        <ul class="helper-list">
+          <li><span>IS 807 — Design</span> <em>✓</em></li>
+          <li><span>IS 3177 — EOT</span> <em>✓</em></li>
+          <li><span>IS 4137 — Heavy duty</span> <em>✓</em></li>
+          <li><span>FEM 9.511 — Classification</span> <em>✓</em></li>
+        </ul>
+      </div>
+      <div class="helper-card helper-note">
+        <p>We mark the ground pressure on every outrigger sheet. If the soil report does not match, call before you book.</p>
+        <cite>— M.K., Field Eng. — Harohalli</cite>
+      </div>
+      <div class="helper-cta">
+        <h3>Get the printable set.</h3>
+        <p>Every table as A4 PDF with revision stamp and source line.</p>
+        <button class="btn-amber" type="button" id="requestPack">Request pack</button>
+        <small>Response within 4 h. No spam.</small>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<!-- Yard Notes Strip -->
+<section class="container" aria-label="Yard notes">
+  <div class="yard">
+    <div class="yard-block">
+      <div class="yard-label">Yard note 01</div>
+      <blockquote>Mark the pad. Photograph the soil. If the number does not match the sheet, stop.</blockquote>
+      <cite>— M.K., Field Eng. — Harohalli</cite>
+    </div>
+    <div class="yard-block">
+      <div class="yard-label">Yard note 02</div>
+      <blockquote>We stamp every revision. If the PDF does not have a date, do not use it.</blockquote>
+      <cite>— R.S., QA Lead — Harohalli</cite>
+    </div>
+  </div>
+</section>
+
+<!-- Spec Pack Footer — 7 / 5 -->
+<footer class="container footer" aria-label="Footer">
+  <div class="footer-grid">
+    <div>
+      <h2>Print it. Mark it. Spec it.</h2>
+      <p>Request the full set as numbered A4 sheets. Same tables we print for dispatch, with revision stamp and source line on every page.</p>
+      <form class="footer-form" onsubmit="return false" aria-label="Request pack">
+        <input type="email" placeholder="Work email" aria-label="Work email" required>
+        <button class="btn-amber" type="submit">Request pack</button>
+      </form>
+      <div class="footer-help">We reply within 4 hours on working days. No newsletter.</div>
+    </div>
+    <div class="footer-index">
+      <h4>Index</h4>
+      <ul>
+        <li><a href="#"><span>S-350 Load Chart</span><span>01.01</span></a></li>
+        <li><a href="#"><span>Outrigger Pressure</span><span>01.04</span></a></li>
+        <li><a href="#"><span>Sling Angles</span><span>02.01</span></a></li>
+        <li><a href="#"><span>Pre Hire Checklist</span><span>03.02</span></a></li>
+        <li><a href="#"><span>Lift Plan Template</span><span>02.05</span></a></li>
+        <li><a href="#"><span>FAT Report</span><span>04.01</span></a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 SVIND Engineering, Harohalli KIADB, Karnataka. Field Manual No. 04 · Rev. 2024.11</span>
+    <span><a href="#">Terms</a> · <a href="#">Privacy</a> · <a href="#">Contact: +91 80 0000 0000</a></span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var progress=document.getElementById('spineProgress');
+  var isMobile=window.matchMedia('(max-width:760px)').matches;
+  function onScroll(){
+    var doc=document.documentElement;
+    var max=doc.scrollHeight - window.innerHeight;
+    var p=max>0? window.scrollY / max : 0;
+    if(isMobile){
+      progress.style.transform='scaleX('+p+')';
+    } else {
+      progress.style.transform='scaleY('+p+')';
+    }
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+
+  // Tabs + side nav filtering
+  var tabs=document.querySelectorAll('.tab');
+  var sides=document.querySelectorAll('.side-item');
+  var sheets=document.querySelectorAll('.sheet');
+  var dividers=document.querySelectorAll('.group-divider');
+  var mobileSelect=document.getElementById('mobileSelect');
+
+  function applyFilter(key){
+    tabs.forEach(function(t){ var on=t.dataset.tab===key; t.classList.toggle('is-active',on); t.setAttribute('aria-selected',on?'true':'false'); });
+    sides.forEach(function(s){ var on=s.dataset.filter===key; s.classList.toggle('is-active',on); if(on) s.setAttribute('aria-current','true'); else s.removeAttribute('aria-current'); });
+    if(mobileSelect) mobileSelect.value=key;
+    var showAll=key==='all';
+    sheets.forEach(function(sh){
+      var cat=sh.dataset.cat;
+      var vis=showAll || cat===key;
+      sh.style.display=vis?'':'none';
+      if(vis){ sh.style.animation='none'; void sh.offsetWidth; sh.style.animation=''; }
+    });
+    dividers.forEach(function(d){
+      var g=d.dataset.group;
+      d.style.display=(showAll || g===key)?'':'none';
+    });
+  }
+  tabs.forEach(function(t){ t.addEventListener('click',function(){ applyFilter(t.dataset.tab); }); });
+  sides.forEach(function(s){ s.addEventListener('click',function(){ applyFilter(s.dataset.filter); }); });
+  if(mobileSelect){
+    mobileSelect.addEventListener('change',function(){ applyFilter(this.value); });
+    // show mobile select only on small screens via JS helper
+    var mq=window.matchMedia('(max-width:1100px)');
+    function toggleSelect(){
+      var wrap=document.querySelector('.sidenav-mobile');
+      if(!wrap) return;
+      wrap.style.display = window.innerWidth<=760 ? 'block' : 'none';
+      wrap.style.marginBottom = window.innerWidth<=760 ? '16px' : '0';
+    }
+    toggleSelect(); window.addEventListener('resize',toggleSelect);
+  }
+
+  // Request pack feedback
+  var btn=document.getElementById('requestPack');
+  if(btn) btn.addEventListener('click',function(){
+    var prev=btn.textContent; btn.textContent='Sent — check email'; btn.disabled=true;
+    setTimeout(function(){ btn.textContent=prev; btn.disabled=false; },2200);
+  });
+  var form=document.querySelector('.footer-form');
+  if(form) form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var b=form.querySelector('button'); var prev=b.textContent;
+    b.textContent='Sent'; b.disabled=true;
+    setTimeout(function(){ b.textContent=prev; b.disabled=false; form.reset(); },2000);
+  });
+})();
+</script>
+</body>
+</html>

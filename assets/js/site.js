@@ -843,6 +843,17 @@
      and the pin must be measured before anything reads a rect off it. */
   function initReveal(pinnedFooter) {
     var items = qsa('.reveal');
+    // Also reveal engineering resources bento (sv-reveal -> is-in) - standalone observer
+    (function initSvReveal(){
+      var sv = qsa('.sv-reveal');
+      if (!sv.length) return;
+      if (reduceMotion() || !('IntersectionObserver' in window)) { sv.forEach(function(el){ el.classList.add('is-in'); }); return; }
+      var o = new IntersectionObserver(function(entries, obs){
+        entries.forEach(function(e){ if(!e.isIntersecting) return; e.target.classList.add('is-in'); obs.unobserve(e.target); });
+      }, { threshold: 0.14, rootMargin: '0px 0px -10% 0px' });
+      sv.forEach(function(el){ o.observe(el); });
+      onMotionChange(function(r){ if(r){ o.disconnect(); sv.forEach(function(el){ el.classList.add('is-in'); }); }});
+    })();
     if (!items.length) return;
 
     /* Closes over every .reveal on the page, including the footer group that

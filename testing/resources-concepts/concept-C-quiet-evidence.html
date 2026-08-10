@@ -1,0 +1,841 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SVIND — Quiet Evidence / Spec before you buy.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* — Quiet Evidence — System — */
+:root{
+  --paper:#FCFCF9;
+  --stone:#F6F5F2;
+  --stone-hover:#FAFAF8;
+  --white:#FFFFFF;
+  --zinc-950:#09090B;
+  --zinc-900:#18181B;
+  --zinc-600:#52525B;
+  --zinc-500:#71717A;
+  --zinc-400:#A1A1AA;
+  --zinc-300:#D4D4D8;
+  --zinc-200:#E4E4E7;
+  --zinc-100:#F4F4F5;
+  --blue:#1E40AF;
+  --amber:#D97706;
+  --max:1400px;
+  --gutter:24px;
+  --radius-card:12px;
+  --radius-pill:999px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{
+  font-family:"Geist", ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  background:var(--paper);
+  color:var(--zinc-900);
+  line-height:1.5;
+}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+img{display:block;max-width:100%}
+
+/* mono utility */
+.mono{font-family:"Geist Mono","IBM Plex Mono",ui-monospace,monospace}
+
+/* 12-col grid wrapper */
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gutter)}
+.grid-12{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--gutter)}
+
+/* — Header — */
+.site-header{
+  height:56px;
+  border-bottom:1px solid var(--zinc-200);
+  background:var(--paper);
+  position:sticky;top:0;z-index:40;
+  display:flex;align-items:center;
+}
+.header-inner{
+  width:100%;max-width:var(--max);margin:0 auto;padding:0 var(--gutter);
+  display:flex;align-items:center;justify-content:space-between;gap:24px;
+}
+.header-left{display:flex;align-items:center;gap:16px;min-width:0}
+.brand{
+  font-family:"Geist Mono", monospace;
+  font-size:11px;letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--zinc-900);white-space:nowrap;
+}
+.v-rule{width:1px;height:18px;background:var(--zinc-200);flex-shrink:0}
+.est{
+  font-family:"Geist Mono", monospace;
+  font-size:11px;letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--zinc-500);opacity:0.9;white-space:nowrap;
+}
+.header-right{display:flex;align-items:center;gap:20px}
+.icon-btn{
+  width:36px;height:36px;display:grid;place-items:center;
+  border:1px solid transparent;border-radius:999px;
+  color:var(--zinc-600);background:transparent;cursor:pointer;
+}
+.icon-btn:hover{border-color:var(--zinc-200);color:var(--zinc-900)}
+.lang{
+  font-family:"Geist Mono", monospace;
+  font-size:11px;letter-spacing:0.14em;color:var(--zinc-500);
+}
+.lang strong{color:var(--zinc-900);font-weight:500}
+.spec-link{
+  font-size:13px;letter-spacing:-0.01em;
+  border-bottom:1px solid var(--zinc-300);padding-bottom:2px;
+  text-underline-offset:4px;
+}
+.spec-link:hover{border-color:var(--zinc-900)}
+
+/* — Hero — */
+.hero{padding:48px 0 56px;min-height:68dvh;display:flex;align-items:center}
+.hero-grid{align-items:center}
+.hero-left{grid-column:1 / span 7;padding-right:32px}
+.eyebrow{
+  font-family:"Geist Mono", monospace;
+  font-size:10px;letter-spacing:0.20em;text-transform:uppercase;
+  color:var(--zinc-500);margin-bottom:28px;display:block;
+}
+.hero-title{
+  font-size:68px;line-height:0.9;letter-spacing:-0.04em;font-weight:550;
+  color:var(--zinc-900);
+}
+.hero-title em{font-style:italic;font-weight:500;letter-spacing:-0.04em}
+.hero-sub{
+  margin-top:20px;
+  font-size:17px;line-height:1.65;color:var(--zinc-500);
+  max-width:42ch;
+}
+.hero-ctas{margin-top:32px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.btn-primary{
+  display:inline-flex;align-items:center;justify-content:center;
+  background:var(--zinc-900);color:#fff;
+  border-radius:999px;padding:12px 24px;font-size:14px;font-weight:500;
+  border:1px solid var(--zinc-900);cursor:pointer;
+  transition:transform 120ms ease, background 150ms ease;
+}
+.btn-primary:hover{background:#000}
+.btn-primary:active{transform:scale(0.98) translateY(1px)}
+.link-underline{
+  font-size:14px;color:var(--zinc-900);
+  text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--zinc-300);
+}
+.link-underline:hover{text-decoration-color:var(--zinc-900)}
+.hero-right{grid-column:8 / span 5}
+/* Specimen card */
+.specimen{
+  background:var(--stone);
+  border:1px solid var(--zinc-200);
+  border-radius:var(--radius-card);
+  padding:32px;
+  position:relative;
+}
+.specimen-head{
+  display:flex;justify-content:space-between;align-items:baseline;
+  border-bottom:1px solid var(--zinc-200);padding-bottom:14px;margin-bottom:0;
+}
+.specimen-art{
+  font-family:"Geist Mono", monospace;
+  font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--zinc-500)
+}
+.specimen-year{
+  font-family:"Geist Mono", monospace;
+  font-size:11px;letter-spacing:0.12em;color:var(--zinc-400)
+}
+.specimen-title{
+  margin-top:18px;
+  font-size:18px;font-weight:500;letter-spacing:-0.02em;line-height:1.2
+}
+.specimen-title span{color:var(--zinc-500);font-weight:400}
+.spec-table{margin-top:18px;border-top:1px solid var(--zinc-200)}
+.spec-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 0;border-bottom:1px solid var(--zinc-200);
+  font-family:"Geist Mono", monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;
+}
+.spec-row dt{color:var(--zinc-500)}
+.spec-row dd{color:var(--zinc-900);font-weight:500;letter-spacing:0.04em}
+.spec-stamp{
+  margin-top:22px;padding-top:12px;border-top:1px solid var(--zinc-900);
+  display:flex;align-items:center;gap:8px;
+  font-family:"Geist Mono", monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--zinc-600);
+  opacity:0;animation:stampIn 400ms ease 200ms forwards;
+}
+@keyframes stampIn{to{opacity:1}}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--blue);display:inline-block;flex-shrink:0}
+
+/* — Evidence Bar — */
+.evidence-bar{border-top:1px solid var(--zinc-200);border-bottom:1px solid var(--zinc-200);background:var(--white)}
+.evidence-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+.evidence-cell{padding:28px 24px;position:relative}
+.evidence-cell + .evidence-cell{border-left:1px solid var(--zinc-200)}
+.evidence-num{font-size:32px;line-height:1;letter-spacing:-0.04em;font-weight:500;color:var(--zinc-900)}
+.evidence-num small{font-size:18px;letter-spacing:-0.02em;font-weight:400;color:var(--zinc-900)}
+.evidence-label{
+  margin-top:8px;
+  font-family:"Geist Mono", monospace;
+  font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--zinc-500)
+}
+
+/* — Taxonomy — */
+.section-pad{padding:88px 0}
+.taxonomy{border-bottom:1px solid var(--zinc-200)}
+.tax-grid{align-items:start}
+.filter-rail{grid-column:1 / span 4;position:sticky;top:80px;align-self:start;padding-right:24px}
+.index-col{grid-column:5 / span 8;min-width:0}
+.rail-search{
+  width:100%;border:none;border-bottom:1px solid var(--zinc-300);
+  background:transparent;padding:10px 0 10px 0;
+  font-family:"Geist Mono", monospace;font-size:13px;letter-spacing:0.02em;
+  color:var(--zinc-900);outline:none;
+}
+.rail-search::placeholder{color:var(--zinc-400)}
+.rail-search:focus{border-color:var(--zinc-900)}
+.rail-group{margin-top:28px}
+.rail-title{
+  font-family:"Geist Mono", monospace;
+  font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--zinc-900);
+  margin-bottom:12px;
+}
+.rail-list{list-style:none}
+.rail-item{
+  display:block;width:100%;text-align:left;
+  font-size:14px;line-height:1.4;color:var(--zinc-500);
+  padding:7px 0 7px 12px;margin-left:-12px;
+  border-left:2px solid transparent;cursor:pointer;
+  background:none;border-right:none;border-top:none;border-bottom:none;
+  transition:color 150ms, border-color 150ms;
+}
+.rail-item:hover{color:var(--zinc-900)}
+.rail-item.is-active{color:var(--zinc-900);border-left-color:var(--zinc-900);font-weight:500}
+.rail-meta{
+  margin-top:28px;padding-top:18px;border-top:1px solid var(--zinc-200);
+  font-family:"Geist Mono", monospace;font-size:11px;line-height:1.6;color:var(--zinc-400)
+}
+
+/* Index rows */
+.index-head{
+  display:flex;justify-content:space-between;align-items:baseline;
+  padding-bottom:16px;border-bottom:1px solid var(--zinc-900);
+  margin-bottom:0;
+}
+.index-head h2{font-size:13px;letter-spacing:0.14em;text-transform:uppercase;font-family:"Geist Mono", monospace;font-weight:500}
+.index-count{font-family:"Geist Mono", monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--zinc-500)}
+.rows{list-style:none}
+.row{
+  display:flex;justify-content:space-between;align-items:center;gap:24px;
+  padding:22px 8px;margin:0 -8px;
+  border-bottom:1px solid var(--zinc-200);
+  transition:background 150ms ease;
+  cursor:pointer;
+}
+.row:hover{background:var(--stone-hover)}
+.row-left{min-width:0;flex:1}
+.row-art{
+  font-family:"Geist Mono", monospace;
+  font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--zinc-400);
+  margin-bottom:6px;
+}
+.row-title{font-size:15px;font-weight:500;letter-spacing:-0.015em;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row-spec{
+  margin-top:4px;
+  font-family:"Geist Mono", monospace;
+  font-size:12.5px;letter-spacing:0.02em;color:var(--zinc-500);
+}
+.row-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.pill{
+  display:inline-flex;align-items:center;
+  border:1px solid var(--zinc-200);border-radius:999px;
+  padding:5px 10px;
+  font-family:"Geist Mono", monospace;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;
+  color:var(--zinc-600);background:var(--white);white-space:nowrap;
+}
+.verified{
+  font-family:"Geist Mono", monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--zinc-500);white-space:nowrap;display:flex;align-items:center;gap:6px;
+}
+.verified .dot{width:6px;height:6px}
+.row-arrow{
+  width:28px;height:28px;display:grid;place-items:center;
+  border:1px solid var(--zinc-200);border-radius:50%;
+  opacity:0;transform:translateX(-4px);
+  transition:opacity 150ms, transform 150ms, border-color 150ms;
+  font-size:13px;color:var(--zinc-600);background:var(--white);flex-shrink:0;
+}
+.row:hover .row-arrow{opacity:1;transform:translateX(0);border-color:var(--zinc-900);color:var(--zinc-900)}
+
+.rows-empty{
+  padding:56px 24px;text-align:center;
+  border-bottom:1px solid var(--zinc-200);
+}
+.rows-empty p{
+  font-family:"Geist Mono", monospace;font-size:13px;line-height:1.6;color:var(--zinc-500);
+}
+.rows-empty a{color:var(--zinc-900);text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--zinc-300)}
+.rows-empty a:hover{text-decoration-color:var(--zinc-900)}
+
+/* skeleton */
+.skeleton{height:73px;border-bottom:1px solid var(--zinc-200);display:flex;align-items:center;gap:16px;padding:0 8px}
+.sk-line{height:10px;background:var(--zinc-100);border-radius:999px}
+.sk-a{width:84px}.sk-b{width:42%;height:14px}.sk-c{width:120px}
+.shimmer{position:relative;overflow:hidden}
+.shimmer::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+  transform:translateX(-100%);animation:shim 1.2s infinite;
+}
+@keyframes shim{100%{transform:translateX(100%)}}
+
+/* inline error */
+.inline-error{
+  margin-top:16px;
+  border-left:2px solid #D97706;
+  padding:10px 14px;
+  background:#FFFBEB;
+  font-size:13px;line-height:1.5;color:var(--zinc-600);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.inline-error button{
+  font-family:"Geist Mono", monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;
+  border:1px solid var(--zinc-300);background:var(--white);border-radius:999px;padding:6px 12px;cursor:pointer;
+}
+
+/* — Featured Proof — */
+.proof{padding:88px 0;border-bottom:1px solid var(--zinc-200)}
+.proof-grid{align-items:stretch}
+.proof-media{grid-column:1 / span 6;position:relative;overflow:hidden;border:1px solid var(--zinc-200);background:var(--zinc-100);min-height:420px}
+.proof-media img{width:100%;height:100%;object-fit:cover;filter:saturate(0.15) contrast(1.05)}
+.proof-media figcaption{
+  position:absolute;left:12px;bottom:12px;
+  font-family:"Geist Mono", monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;
+  background:rgba(255,255,255,0.92);border:1px solid var(--zinc-200);padding:6px 8px;color:var(--zinc-600)
+}
+.proof-card-wrap{grid-column:6 / span 7;display:flex;align-items:center;margin-left:-24px;z-index:1;pointer-events:none}
+.proof-card-wrap > *{pointer-events:auto}
+.proof-card{
+  background:var(--white);
+  border:1px solid var(--zinc-200);
+  border-radius:var(--radius-card);
+  padding:40px;
+  box-shadow:0 1px 24px rgba(0,0,0,0.06);
+  position:relative;overflow:hidden;
+}
+.ghost-num{
+  position:absolute;right:18px;top:6px;
+  font-size:88px;line-height:1;letter-spacing:-0.06em;font-weight:300;color:var(--zinc-200);
+  pointer-events:none;user-select:none;
+}
+.proof-kicker{
+  font-family:"Geist Mono", monospace;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--zinc-500)
+}
+.proof-title{margin-top:10px;font-size:28px;line-height:1.1;letter-spacing:-0.03em;font-weight:500;max-width:18ch}
+.proof-body{margin-top:14px;font-size:15px;line-height:1.6;color:var(--zinc-600);max-width:38ch}
+.proof-list{margin-top:18px;list-style:none;display:grid;gap:8px}
+.proof-list li{
+  font-family:"Geist Mono", monospace;font-size:12px;letter-spacing:0.04em;color:var(--zinc-600);
+  display:flex;align-items:center;gap:8px;
+}
+.proof-list li::before{content:"—";color:var(--zinc-400)}
+.proof-link{margin-top:22px;display:inline-flex;align-items:center;gap:6px;font-size:14px;text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--zinc-300)}
+.proof-link:hover{text-decoration-color:var(--zinc-900)}
+
+/* — How We Verify — */
+.verify{padding:88px 0;border-bottom:1px solid var(--zinc-200)}
+.verify-head{grid-column:1 / span 12;display:grid;grid-template-columns:repeat(12,1fr);gap:var(--gutter);margin-bottom:48px}
+.verify-head-left{grid-column:1 / span 6}
+.verify-title{font-size:40px;line-height:0.95;letter-spacing:-0.03em;font-weight:500}
+.verify-sub{margin-top:14px;font-size:15px;line-height:1.6;color:var(--zinc-500);max-width:42ch}
+.verify-grid{grid-column:1 / span 12;display:grid;grid-template-columns:repeat(3,1fr)}
+.verify-col{padding:0 28px}
+.verify-col + .verify-col{border-left:1px solid var(--zinc-200)}
+.verify-col:first-child{padding-left:0}
+.verify-num{font-family:"Geist Mono", monospace;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--zinc-400);margin-bottom:14px}
+.verify-col h3{font-size:15px;font-weight:500;letter-spacing:-0.015em}
+.verify-col p{margin-top:10px;font-size:14px;line-height:1.6;color:var(--zinc-600)}
+.verify-foot{margin-top:16px;font-family:"Geist Mono", monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--zinc-400)}
+
+/* — CTA / Archive Footer — */
+.cta{padding:0;border-top:1px solid var(--zinc-200);display:grid;grid-template-columns:8fr 4fr;min-height:360px}
+.cta-left{background:var(--white);padding:64px;border-right:1px solid var(--zinc-200);display:flex;flex-direction:column;justify-content:center}
+.cta-right{background:var(--zinc-950);padding:40px 32px;color:#fff;display:flex;flex-direction:column}
+.cta-title{font-size:36px;line-height:0.95;letter-spacing:-0.03em;font-weight:500}
+.cta-sub{margin-top:12px;font-size:15px;line-height:1.6;color:var(--zinc-500);max-width:42ch}
+.cta-actions{margin-top:28px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.helper{margin-top:14px;font-family:"Geist Mono", monospace;font-size:11px;letter-spacing:0.06em;color:var(--zinc-400)}
+.archive-kicker{
+  font-family:"Geist Mono", monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.5);
+  padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.12);margin-bottom:18px;
+}
+.archive-list{list-style:none;display:grid;gap:0;flex:1}
+.archive-row{
+  display:grid;grid-template-columns:1fr auto;
+  gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.08);
+  font-family:"Geist Mono", monospace;font-size:12px;line-height:1.4;
+}
+.archive-row dt{color:rgba(255,255,255,0.92);letter-spacing:0.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.archive-row dd{color:rgba(255,255,255,0.45);font-size:11px;white-space:nowrap}
+.archive-foot{margin-top:18px}
+.archive-foot a{
+  font-family:"Geist Mono", monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;
+  color:rgba(255,255,255,0.7);border-bottom:1px solid rgba(255,255,255,0.2);padding-bottom:2px;
+}
+.archive-foot a:hover{color:#fff;border-color:#fff}
+
+/* — Site footer — */
+.site-footer{padding:28px 0;border-top:1px solid var(--zinc-200);background:var(--paper)}
+.footer-inner{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+.footer-left{font-family:"Geist Mono", monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--zinc-500)}
+.footer-nav{display:flex;gap:18px;flex-wrap:wrap}
+.footer-nav a{font-family:"Geist Mono", monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--zinc-500)}
+.footer-nav a:hover{color:var(--zinc-900)}
+
+/* — Responsive — */
+@media (max-width: 1024px){
+  .hero-title{font-size:52px}
+  .evidence-num{font-size:26px}
+  .verify-col{padding:0 18px}
+}
+@media (max-width: 860px){
+  .hero{padding:28px 0 32px;min-height:auto}
+  .hero-grid{grid-template-columns:1fr}
+  .hero-left{grid-column:1 / -1;padding-right:0}
+  .hero-right{grid-column:1 / -1;margin-top:28px}
+  .hero-title{font-size:42px}
+  .evidence-grid{grid-template-columns:repeat(2,1fr)}
+  .evidence-cell:nth-child(3){border-left:none;border-top:1px solid var(--zinc-200)}
+  .evidence-cell:nth-child(4){border-top:1px solid var(--zinc-200)}
+  .tax-grid{grid-template-columns:1fr}
+  .filter-rail{grid-column:1 / -1;position:static;padding-right:0;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .filter-rail .rail-search-wrap{grid-column:1 / -1}
+  .index-col{grid-column:1 / -1;margin-top:8px}
+  .proof-grid{grid-template-columns:1fr}
+  .proof-media{grid-column:1 / -1;min-height:320px}
+  .proof-card-wrap{grid-column:1 / -1;margin-left:0;margin-top:-32px;padding:0 16px}
+  .proof-card{padding:28px}
+  .verify-head{grid-template-columns:1fr}
+  .verify-head-left{grid-column:1 / -1}
+  .verify-grid{grid-template-columns:1fr}
+  .verify-col{padding:18px 0}
+  .verify-col + .verify-col{border-left:none;border-top:1px solid var(--zinc-200)}
+  .verify-col:first-child{padding-top:0}
+  .cta{grid-template-columns:1fr}
+  .cta-left{border-right:none;border-bottom:1px solid var(--zinc-200);padding:40px 24px}
+  .cta-right{padding:28px 24px}
+  .row{flex-wrap:wrap}
+  .row-right{width:100%;justify-content:space-between}
+  .row-arrow{display:none}
+}
+@media (max-width: 520px){
+  .header-inner{padding:0 16px}
+  .est{display:none}
+  .v-rule{display:none}
+  .brand{font-size:10px}
+  .wrap{padding:0 16px}
+  .specimen{padding:22px}
+  .hero-title{font-size:36px}
+  .filter-rail{grid-template-columns:1fr}
+  .evidence-grid{grid-template-columns:1fr}
+  .evidence-cell + .evidence-cell{border-left:none;border-top:1px solid var(--zinc-200)}
+}
+
+/* reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *{animation:none !important;transition:none !important;scroll-behavior:auto !important}
+  .spec-stamp{opacity:1}
+}
+
+/* focus */
+:focus-visible{outline:2px solid var(--zinc-900);outline-offset:2px}
+</style>
+</head>
+<body>
+
+<!-- A — Utility Header -->
+<header class="site-header" role="banner">
+  <div class="header-inner">
+    <div class="header-left">
+      <a href="#" class="brand" aria-label="SVIND Engineering Resources">SVIND — Engineering Resources</a>
+      <span class="v-rule" aria-hidden="true"></span>
+      <span class="est">EST. Stockholm</span>
+    </div>
+    <div class="header-right">
+      <button class="icon-btn" aria-label="Search" id="headerSearchBtn">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="6.5" cy="6.5" r="4.2" stroke="currentColor" stroke-width="1.2"/><path d="M10 10 L13.5 13.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </button>
+      <span class="lang" aria-label="Language">EN / <strong>SV</strong></span>
+      <a href="#request" class="spec-link">Spec Assistance →</a>
+    </div>
+  </div>
+</header>
+
+<!-- B — Hero 7/5 -->
+<section class="hero">
+  <div class="wrap" style="width:100%">
+    <div class="grid-12 hero-grid">
+      <div class="hero-left">
+        <span class="eyebrow">Library 03 / 2026 — Verified Specifications</span>
+        <h1 class="hero-title">Spec before<br>you <em>buy.</em></h1>
+        <p class="hero-sub">Datasheets, tolerances, and provenance for every component. Take the numbers to your drawing board.</p>
+        <div class="hero-ctas">
+          <a href="#index" class="btn-primary" id="browseBtn">Browse datasheets</a>
+          <a href="#verify" class="link-underline">How we verify →</a>
+        </div>
+      </div>
+      <div class="hero-right">
+        <aside class="specimen" aria-label="Provenance specimen">
+          <div class="specimen-head">
+            <span class="specimen-art">Art. 1047 — Cast Iron Bracket</span>
+            <span class="specimen-year">EN 1561 · GJL-250</span>
+          </div>
+          <div class="specimen-title">4.2 kN <span>/ ±0.08 mm / EN 1561</span></div>
+          <dl class="spec-table">
+            <div class="spec-row"><dt>Load — static</dt><dd>4.2 kN</dd></div>
+            <div class="spec-row"><dt>Tolerance — bore</dt><dd>±0.08 mm</dd></div>
+            <div class="spec-row"><dt>Material</dt><dd>EN-GJL-250</dd></div>
+            <div class="spec-row"><dt>Surface — Ra</dt><dd>3.2 µm</dd></div>
+            <div class="spec-row"><dt>Batch</dt><dd>2025-C · 840 pcs</dd></div>
+          </dl>
+          <div class="spec-stamp"><span class="dot" aria-hidden="true"></span> Verified 2026-02-14 — Lab 02 · Stockholm</div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- C — Evidence Bar -->
+<section class="evidence-bar" aria-label="Evidence at a glance">
+  <div class="wrap">
+    <div class="evidence-grid">
+      <div class="evidence-cell"><div class="evidence-num">847</div><div class="evidence-label">Datasheets</div></div>
+      <div class="evidence-cell"><div class="evidence-num">±0.02<small>mm</small></div><div class="evidence-label">Mean tolerance</div></div>
+      <div class="evidence-cell"><div class="evidence-num">12</div><div class="evidence-label">Material families</div></div>
+      <div class="evidence-cell"><div class="evidence-num">100%</div><div class="evidence-label">Traceable lots</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- D — Taxonomy 4/8 -->
+<section class="section-pad taxonomy" id="index">
+  <div class="wrap">
+    <div class="grid-12 tax-grid">
+      <!-- Filter rail -->
+      <aside class="filter-rail" aria-label="Filters">
+        <div class="rail-search-wrap">
+          <label for="filterInput" class="rail-title" style="margin-bottom:8px;display:block">Filter</label>
+          <input id="filterInput" class="rail-search" type="search" placeholder="Filter by article no…" autocomplete="off" spellcheck="false">
+        </div>
+
+        <div class="rail-group" data-filter-group="material">
+          <div class="rail-title">Material</div>
+          <ul class="rail-list">
+            <li><button class="rail-item is-active" data-filter="material" data-value="all">All</button></li>
+            <li><button class="rail-item" data-filter="material" data-value="steel">Steel</button></li>
+            <li><button class="rail-item" data-filter="material" data-value="iron">Iron</button></li>
+            <li><button class="rail-item" data-filter="material" data-value="polymer">Polymer</button></li>
+            <li><button class="rail-item" data-filter="material" data-value="composite">Composite</button></li>
+          </ul>
+        </div>
+
+        <div class="rail-group" data-filter-group="type">
+          <div class="rail-title">Document type</div>
+          <ul class="rail-list">
+            <li><button class="rail-item is-active" data-filter="type" data-value="all">All</button></li>
+            <li><button class="rail-item" data-filter="type" data-value="datasheet">Datasheet</button></li>
+            <li><button class="rail-item" data-filter="type" data-value="tolerance">Tolerance report</button></li>
+            <li><button class="rail-item" data-filter="type" data-value="protocol">Test protocol</button></li>
+            <li><button class="rail-item" data-filter="type" data-value="cad">CAD</button></li>
+          </ul>
+        </div>
+
+        <div class="rail-group" data-filter-group="provenance">
+          <div class="rail-title">Provenance</div>
+          <ul class="rail-list">
+            <li><button class="rail-item is-active" data-filter="provenance" data-value="all">All</button></li>
+            <li><button class="rail-item" data-filter="provenance" data-value="inhouse">In-house lab</button></li>
+            <li><button class="rail-item" data-filter="provenance" data-value="third">Third-party</button></li>
+            <li><button class="rail-item" data-filter="provenance" data-value="field">Field</button></li>
+          </ul>
+        </div>
+
+        <div class="rail-meta">
+          Showing verified only.<br>
+          Files include PDF + DWG + CSV where measured.<br>
+          <a href="#" id="clearFilters" style="color:var(--zinc-900);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--zinc-300)">Clear filters</a>
+        </div>
+      </aside>
+
+      <!-- Index -->
+      <div class="index-col">
+        <div class="index-head">
+          <h2>Index — Resources</h2>
+          <span class="index-count" id="indexCount">12 documents</span>
+        </div>
+
+        <div id="skeletonWrap" style="display:none">
+          <div class="skeleton shimmer"><div class="sk-line sk-a" style="margin-left:8px"></div><div class="sk-line sk-b"></div><div class="sk-line sk-c" style="margin-left:auto;margin-right:8px"></div></div>
+          <div class="skeleton shimmer"><div class="sk-line sk-a" style="margin-left:8px"></div><div class="sk-line sk-b"></div><div class="sk-line sk-c" style="margin-left:auto;margin-right:8px"></div></div>
+          <div class="skeleton shimmer"><div class="sk-line sk-a" style="margin-left:8px"></div><div class="sk-line sk-b"></div><div class="sk-line sk-c" style="margin-left:auto;margin-right:8px"></div></div>
+        </div>
+
+        <div id="inlineError" class="inline-error" style="display:none" role="alert">
+          <span>We couldn't load tolerances. Check your connection and retry.</span>
+          <button id="retryBtn" type="button">Retry</button>
+        </div>
+
+        <ul class="rows" id="rows" role="list"></ul>
+
+        <div id="emptyState" class="rows-empty" style="display:none">
+          <p>No resources match “<span id="emptyQuery"></span>” — Try broadening material or <a href="#" id="emptyClear">clear filters</a>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- E — Featured Proof 6/6 -->
+<section class="proof">
+  <div class="wrap">
+    <div class="grid-12 proof-grid">
+      <figure class="proof-media" aria-label="Metrology lab photograph">
+        <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200&q=80&auto=format&fit=crop" alt="Caliper measuring cast iron surface in metrology lab" loading="lazy" width="800" height="600">
+        <figcaption>Lab 02 — Stockholm · Mitutoyo ID-C · 20 ±1 °C</figcaption>
+      </figure>
+      <div class="proof-card-wrap">
+        <div class="proof-card">
+          <span class="ghost-num" aria-hidden="true">01</span>
+          <div class="proof-kicker">Featured proof — Tolerance report</div>
+          <h2 class="proof-title">This is what a tolerance report actually contains.</h2>
+          <p class="proof-body">Not a summary. Full lot traceability, instrument ID, calibration date, and raw CSV. The numbers you stake a weld on.</p>
+          <ul class="proof-list">
+            <li>Lot traceability</li>
+            <li>Measurement rig</li>
+            <li>Raw data CSV</li>
+          </ul>
+          <a href="#" class="proof-link" id="openReport">Open example report (PDF) →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- F — How We Verify -->
+<section class="verify" id="verify">
+  <div class="wrap">
+    <div class="grid-12">
+      <div class="verify-head">
+        <div class="verify-head-left">
+          <h2 class="verify-title">Provenance<br>over promise.</h2>
+          <p class="verify-sub">Every value states where it was measured, when, and by whom. No claim without a rig behind it.</p>
+        </div>
+      </div>
+      <div class="verify-grid">
+        <div class="verify-col">
+          <div class="verify-num">01 / In-house metrology</div>
+          <h3>Measured here.</h3>
+          <p>Climate-controlled lab, calibrated CMM and bore gauges. Each datasheet links to fixture, operator, and temperature log at time of capture.</p>
+          <div class="verify-foot">Lab 01 · Stockholm · ISO 17025</div>
+        </div>
+        <div class="verify-col">
+          <div class="verify-num">02 / Third-party audit</div>
+          <h3>Checked elsewhere.</h3>
+          <p>Fatigue and tensile series run at accredited external labs. Reports carry lab signature, accreditation number, and raw export — not our summary.</p>
+          <div class="verify-foot">Lab 03 · Göteborg · ISO 17025</div>
+        </div>
+        <div class="verify-col">
+          <div class="verify-num">03 / Field returns</div>
+          <h3>Proven in service.</h3>
+          <p>Batch-tracked field data from installed components. When a tolerance drifts in use, the lot is flagged and the datasheet is revised — openly.</p>
+          <div class="verify-foot">Field · Nordic sites · Since 2018</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- G — CTA / Archive Footer -->
+<section class="cta" id="request" aria-label="Request verification">
+  <div class="cta-left">
+    <h2 class="cta-title">Need a spec<br>you don't see?</h2>
+    <p class="cta-sub">Tell us the article, load case, or tolerance. We measure and send the sheet — no catalogue pitch.</p>
+    <div class="cta-actions">
+      <button class="btn-primary" id="requestBtn" type="button">Request verification</button>
+      <span class="helper">Response within one business day. No sales cadence.</span>
+    </div>
+    <p class="helper" id="requestFeedback" style="display:none;color:var(--zinc-600);margin-top:12px">Request noted — check your email for the verification thread.</p>
+  </div>
+  <aside class="cta-right" aria-label="Recently added">
+    <div class="archive-kicker">Recently added — Index</div>
+    <dl class="archive-list">
+      <div class="archive-row"><dt>Art. 1184 — S355J2 · Charpy V-notch</dt><dd>2026-02-10</dd></div>
+      <div class="archive-row"><dt>Art. 1179 — EN-GJS-500-7 · Elongation</dt><dd>2026-02-08</dd></div>
+      <div class="archive-row"><dt>Art. 1171 — POM-C · Creep · 23 °C</dt><dd>2026-02-06</dd></div>
+      <div class="archive-row"><dt>Art. 1166 — CFRP Tube · Flexural</dt><dd>2026-02-03</dd></div>
+      <div class="archive-row"><dt>Art. 1160 — Weld S355 · Fatigue R=0.1</dt><dd>2026-01-29</dd></div>
+      <div class="archive-row"><dt>Art. 1154 — GJL-250 · Hardness HB</dt><dd>2026-01-25</dd></div>
+    </dl>
+    <div class="archive-foot"><a href="#index">View full index →</a></div>
+  </aside>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <span class="footer-left">© 2026 SVIND AB · Stockholm · Measurements, not marketing.</span>
+    <nav class="footer-nav" aria-label="Footer">
+      <a href="#">Imprint</a>
+      <a href="#">Privacy</a>
+      <a href="#">Lab accreditation</a>
+      <a href="#">Contact</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+const RESOURCES = [
+  {art:"ART. 1184", title:"S355J2 — Charpy V-notch — Impact Test", spec:"27 J · −20 °C · EN 10025", file:"PDF 3.1 MB", dwg:true, verified:"2026-02-10", material:"steel", type:"protocol", provenance:"third"},
+  {art:"ART. 1179", title:"EN-GJS-500-7 — Tensile & Elongation — Batch 2025-C", spec:"312 MPa · R=0.1 · N=2×10⁶", file:"PDF 2.4 MB", dwg:true, verified:"2026-02-08", material:"iron", type:"datasheet", provenance:"inhouse"},
+  {art:"ART. 1171", title:"POM-C — Creep Behaviour — 1 000 h · 23 °C", spec:"ε 0.8% · 10 MPa · ISO 899", file:"PDF 1.8 MB", dwg:false, verified:"2026-02-06", material:"polymer", type:"protocol", provenance:"third"},
+  {art:"ART. 1166", title:"CFRP Tube Ø42 — Flexural Modulus — 3-Point", spec:"68 GPa · span 300 mm", file:"PDF 2.0 MB", dwg:true, verified:"2026-02-03", material:"composite", type:"datasheet", provenance:"inhouse"},
+  {art:"ART. 1160", title:"Welded Joint — S355 — Fatigue Test", spec:"312 MPa · R=0.1 · N=2×10⁶", file:"PDF 4.2 MB", dwg:false, verified:"2026-01-29", material:"steel", type:"protocol", provenance:"third"},
+  {art:"ART. 1154", title:"GJL-250 — Brinell Hardness — HBW 10/3000", spec:"210 HBW · EN ISO 6506", file:"PDF 0.9 MB", dwg:true, verified:"2026-01-25", material:"iron", type:"tolerance", provenance:"inhouse"},
+  {art:"ART. 1148", title:"PA6-GF30 — Tensile — Dry vs Conditioned", spec:"165 MPa · ISO 527 · 5 mm/min", file:"PDF 1.4 MB", dwg:false, verified:"2026-01-20", material:"polymer", type:"datasheet", provenance:"field"},
+  {art:"ART. 1141", title:"GFRP Bracket — Pull-Out — Insert M8", spec:"5.8 kN · n=12 · COV 6%", file:"PDF 1.1 MB", dwg:true, verified:"2026-01-18", material:"composite", type:"protocol", provenance:"third"},
+  {art:"ART. 1136", title:"42CrMo4 — Hardened — Bore Tolerance", spec:"Ø 30 H7 · ±0.01 mm · Ra 0.8", file:"PDF 1.6 MB", dwg:true, verified:"2026-01-15", material:"steel", type:"tolerance", provenance:"inhouse"},
+  {art:"ART. 1129", title:"EN-GJS-400-15 — Elongation — A5", spec:"15.2% · ISO 1083 · n=30", file:"PDF 2.2 MB", dwg:false, verified:"2026-01-12", material:"iron", type:"datasheet", provenance:"inhouse"},
+  {art:"ART. 1122", title:"PEEK — Wear — Pin-on-Disc", spec:"k 2.1×10⁻⁶ mm³/Nm · 1 MPa", file:"PDF 1.9 MB", dwg:false, verified:"2026-01-09", material:"polymer", type:"protocol", provenance:"third"},
+  {art:"ART. 1047", title:"Cast Iron Bracket — Static Load — 4.2 kN", spec:"4.2 kN · ±0.08 mm · EN 1561", file:"PDF 2.9 MB", dwg:true, verified:"2026-02-14", material:"iron", type:"cad", provenance:"inhouse"},
+];
+const rowsEl = document.getElementById('rows');
+const countEl = document.getElementById('indexCount');
+const inputEl = document.getElementById('filterInput');
+const emptyEl = document.getElementById('emptyState');
+const emptyQueryEl = document.getElementById('emptyQuery');
+const skeletonWrap = document.getElementById('skeletonWrap');
+const inlineError = document.getElementById('inlineError');
+let filters = {material:"all", type:"all", provenance:"all"};
+let query = "";
+
+function render(){
+  const q = query.trim().toLowerCase();
+  let filtered = RESOURCES.filter(r=>{
+    if(filters.material!=="all" && r.material!==filters.material) return false;
+    if(filters.type!=="all" && r.type!==filters.type) return false;
+    if(filters.provenance!=="all" && r.provenance!==filters.provenance) return false;
+    if(q && !(r.art.toLowerCase().includes(q) || r.title.toLowerCase().includes(q) || r.spec.toLowerCase().includes(q))) return false;
+    return true;
+  });
+  rowsEl.innerHTML = "";
+  inlineError.style.display="none";
+  if(filtered.length===0){
+    emptyEl.style.display="block";
+    emptyQueryEl.textContent = query.trim() || "—";
+    countEl.textContent = "0 documents";
+    return;
+  }
+  emptyEl.style.display="none";
+  countEl.textContent = filtered.length + (filtered.length===1 ? " document" : " documents");
+  filtered.forEach(r=>{
+    const li = document.createElement('li');
+    li.className="row";
+    li.setAttribute('role','listitem');
+    li.tabIndex=0;
+    li.innerHTML = `
+      <div class="row-left">
+        <div class="row-art">${r.art}</div>
+        <div class="row-title">${r.title}</div>
+        <div class="row-spec">${r.spec}</div>
+      </div>
+      <div class="row-right">
+        <span class="pill">${r.file}</span>
+        ${r.dwg ? '<span class="pill">DWG</span>' : ''}
+        <span class="verified"><span class="dot" aria-hidden="true"></span> Verified · ${r.verified}</span>
+        <span class="row-arrow" aria-hidden="true">→</span>
+      </div>
+    `;
+    li.addEventListener('click', ()=> openDoc(r));
+    li.addEventListener('keydown', e=>{ if(e.key==='Enter') openDoc(r); });
+    rowsEl.appendChild(li);
+  });
+}
+function openDoc(r){
+  // quiet toast — no modal library
+  const t = document.createElement('div');
+  t.textContent = `Opening ${r.art} — ${r.file}`;
+  t.style.cssText="position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--zinc-900);color:#fff;font-family:Geist Mono,monospace;font-size:12px;letter-spacing:0.06em;padding:10px 16px;border-radius:999px;z-index:60;opacity:0;transition:opacity 150ms";
+  document.body.appendChild(t);
+  requestAnimationFrame(()=> t.style.opacity="1");
+  setTimeout(()=>{ t.style.opacity="0"; setTimeout(()=>t.remove(),160)},2200);
+}
+function setActive(group, value){
+  document.querySelectorAll(`[data-filter="${group}"]`).forEach(b=>{
+    b.classList.toggle('is-active', b.dataset.value===value);
+  });
+}
+document.querySelectorAll('.rail-item').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const g = btn.dataset.filter, v = btn.dataset.value;
+    filters[g]=v;
+    setActive(g,v);
+    // simulate brief loading for taste
+    skeletonWrap.style.display="block";
+    rowsEl.style.display="none";
+    emptyEl.style.display="none";
+    setTimeout(()=>{ skeletonWrap.style.display="none"; rowsEl.style.display=""; render(); }, 280);
+  });
+});
+inputEl.addEventListener('input', e=>{
+  query = e.target.value;
+  render();
+});
+document.getElementById('clearFilters').addEventListener('click', e=>{
+  e.preventDefault();
+  filters={material:"all", type:"all", provenance:"all"};
+  query=""; inputEl.value="";
+  ["material","type","provenance"].forEach(g=> setActive(g,"all"));
+  render();
+});
+document.getElementById('emptyClear').addEventListener('click', e=>{
+  e.preventDefault();
+  filters={material:"all", type:"all", provenance:"all"};
+  query=""; inputEl.value="";
+  ["material","type","provenance"].forEach(g=> setActive(g,"all"));
+  render();
+});
+document.getElementById('retryBtn').addEventListener('click', ()=>{ inlineError.style.display="none"; render(); });
+document.getElementById('headerSearchBtn').addEventListener('click', ()=>{ document.getElementById('filterInput').focus(); document.getElementById('index').scrollIntoView({behavior:'smooth'}); });
+document.getElementById('browseBtn').addEventListener('click', e=>{ e.preventDefault(); document.getElementById('index').scrollIntoView({behavior:'smooth'}); });
+document.getElementById('openReport').addEventListener('click', e=>{ e.preventDefault(); inlineError.style.display="none"; openDoc({art:"Example — Tolerance Report 01", file:"PDF 2.4 MB"}); });
+document.getElementById('requestBtn').addEventListener('click', ()=>{
+  const fb = document.getElementById('requestFeedback');
+  fb.style.display="block";
+  fb.textContent="Request noted — verification thread opened. We reply within one business day.";
+  setTimeout(()=> fb.style.display="none", 4200);
+});
+// demo error trigger: press 'e' to show error handling (for QA)
+document.addEventListener('keydown', e=>{ if(e.key==='e' && e.altKey){ inlineError.style.display="flex"; }});
+
+render();
+
+// subtle proof image parallax — respects reduced motion
+if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+  const media = document.querySelector('.proof-media img');
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(ent=>{
+      if(ent.isIntersecting){
+        media.style.transition="transform 800ms ease";
+        media.style.transform="scale(1)";
+      }
+    });
+  },{threshold:0.2});
+  if(media){
+    media.style.transform="scale(1.02)";
+    obs.observe(media);
+  }
+}
+</script>
+</body>
+</html>

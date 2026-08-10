@@ -1,0 +1,1241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SVIND: Spec before you buy / Concept B Blueprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter+Tight:wght@400;500;600;620&display=swap" rel="stylesheet">
+<style>
+ :root{
+  --field:#EFEFEF;
+  --surface:#FFFFFF;
+  --ink:#1A1D21;
+  --muted:#8A8F96;
+  --secondary:#5A6067;
+  --rule:#D8DADE;
+  --rule-strong:#B2B5C6;
+  --navy:#1E3A6B;
+  --navy-hover:#162C52;
+  --navy-wash:rgba(30,58,107,0.08);
+  --row-wash:rgba(231,231,231,0.4);
+  --radius:4px;
+  --max:1280px;
+  --gutter:24px;
+  --outer:32px;
+ }
+ *{box-sizing:border-box}
+ html{scroll-behavior:smooth}
+ body{
+  margin:0;
+  background-color:var(--field);
+  background-image:
+   linear-gradient(to right, rgba(26,29,33,0.045) 1px, transparent 1px),
+   linear-gradient(to bottom, rgba(26,29,33,0.045) 1px, transparent 1px),
+   linear-gradient(to right, rgba(30,58,107,0.055) 1px, transparent 1px),
+   linear-gradient(to bottom, rgba(30,58,107,0.055) 1px, transparent 1px);
+  background-size: 8px 8px, 8px 8px, 40px 40px, 40px 40px;
+  color:var(--ink);
+  font-family:"Inter Tight",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+ }
+ a{color:inherit;text-decoration:none}
+ button{font:inherit}
+ img{display:block;max-width:100%}
+
+ /* layout helpers */
+ .wrap{
+  max-width:var(--max);
+  margin-inline:auto;
+  padding-inline:var(--outer);
+ }
+ .grid-12{
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  gap:var(--gutter);
+ }
+ .mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+ .hair{height:1px;background:var(--rule);border:0;margin:0}
+
+ /* title block rule draw */
+ .title-draw{
+  height:1px;
+  background:var(--rule);
+  position:relative;
+  overflow:hidden;
+ }
+ .title-draw::after{
+  content:"";
+  position:absolute;left:0;top:0;bottom:0;width:0;
+  background:var(--navy);
+  animation:draw 640ms cubic-bezier(.22,1,.36,1) forwards;
+ }
+ @keyframes draw{to{width:132px}}
+ @media(prefers-reduced-motion:reduce){
+  .title-draw::after{animation:none;width:132px}
+ }
+
+ /* nav title block */
+ .nav-block{
+  background:var(--surface);
+  border-bottom:1px solid var(--rule);
+  position:sticky;top:0;z-index:20;
+  backdrop-filter:saturate(1);
+ }
+ .nav-inner{
+  height:72px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:24px;
+ }
+ .wordmark{
+  display:flex;align-items:baseline;gap:14px;
+  letter-spacing:-0.02em;
+ }
+ .wordmark b{
+  font-size:18px;font-weight:620;letter-spacing:-0.03em;line-height:1;
+ }
+ .wordmark span{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:10px;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--muted);font-weight:500;
+  border-left:1px solid var(--rule);
+  padding-left:14px;line-height:1.1;
+ }
+ .sheet-index{
+  display:flex;align-items:center;gap:12px;
+  font-family:"IBM Plex Mono",monospace;
+  font-size:11px;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--muted);
+ }
+ .sheet-index strong{
+  color:var(--ink);font-weight:600;letter-spacing:0.08em;
+ }
+ .sheet-index i{
+  display:block;width:36px;height:1px;background:var(--rule);
+ }
+ .cta-primary{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--navy);color:#fff;
+  font-weight:600;font-size:14px;letter-spacing:-0.01em;
+  padding:13px 22px;border-radius:var(--radius);
+  border:1px solid var(--navy);
+  transition:background 160ms ease, transform 160ms ease;
+  white-space:nowrap;
+ }
+ .cta-primary:hover{background:var(--navy-hover);transform:translateY(-1px)}
+ .cta-primary:active{transform:scale(0.98)}
+ .cta-ghost{
+  display:inline-flex;align-items:center;gap:8px;
+  font-weight:600;font-size:14px;color:var(--ink);
+  padding:6px 0;
+  border-bottom:1px solid transparent;
+ }
+ .cta-ghost .arr{transition:transform 160ms ease}
+ .cta-ghost:hover .arr{transform:translateX(4px)}
+ .cta-ghost:hover{border-color:var(--ink)}
+
+ /* sheets */
+ .sheet{
+  background:var(--surface);
+  border-radius:var(--radius);
+  border:1px solid transparent;
+  transition:background 160ms ease, border-color 160ms ease;
+ }
+ .sheet:hover{
+  background:var(--navy-wash);
+  border-color:rgba(30,58,107,0.12);
+ }
+ .sheet-accent{
+  border-left:3px solid transparent;
+ }
+ .sheet-accent:hover{border-left-color:var(--navy)}
+
+ /* eyebrow */
+ .eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:"IBM Plex Mono",monospace;
+  font-size:10px;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--navy);
+  max-width:33%;
+ }
+ .eyebrow::before{
+  content:"";width:16px;height:2px;background:var(--navy);flex:0 0 16px;
+ }
+ .eyebrow.pill{
+  background:var(--navy-wash);
+  padding:6px 10px;border-radius:999px;
+ }
+ .eyebrow.pill::before{display:none}
+
+ /* hero */
+ .hero-sheet{
+  background:var(--surface);
+  border-radius:var(--radius);
+  overflow:hidden;
+  border:1px solid var(--rule);
+ }
+ .hero-grid{
+  display:grid;
+  grid-template-columns:7fr 5fr;
+  min-height:520px;
+ }
+ .hero-copy{padding:28px 28px 0 28px;display:flex;flex-direction:column}
+ .hero-copy h1{
+  margin:14px 0 0;
+  font-size:48px;line-height:52px;font-weight:620;
+  letter-spacing:-0.03em;
+ }
+ .lede{
+  margin:14px 0 0;
+  font-size:17px;line-height:26px;color:var(--secondary);
+  max-width:60ch;
+ }
+ .hero-actions{margin-top:22px;display:flex;align-items:center;gap:16px}
+ .hero-meta{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:11px;color:var(--muted);
+  display:flex;gap:16px;align-items:center;
+ }
+ .hero-meta b{color:var(--ink);font-weight:600}
+ .revision{
+  margin-top:auto;
+  border-top:1px solid var(--rule);
+  display:grid;grid-template-columns:52px 92px 1fr 64px;
+  font-family:"IBM Plex Mono",monospace;
+ }
+ .revision .rh{
+  font-size:10px;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--muted);padding:10px 12px;border-right:1px solid rgba(216,218,222,0.6);
+  border-bottom:1px solid rgba(216,218,222,0.6);
+  background:rgba(239,239,239,0.6);
+ }
+ .revision .rv{
+  font-size:11px;padding:9px 12px;border-right:1px solid rgba(216,218,222,0.6);
+  border-bottom:1px solid rgba(216,218,222,0.6);color:var(--ink);
+ }
+ .revision .rv.muted{color:var(--muted)}
+ .revision .rv.active{background:var(--navy-wash)}
+
+ .hero-draw{
+  position:relative;
+  background:
+   linear-gradient(to right, rgba(216,218,222,0.45) 1px, transparent 1px),
+   linear-gradient(to bottom, rgba(216,218,222,0.45) 1px, transparent 1px),
+   #FAFBFC;
+  background-size: 8px 8px, 8px 8px;
+  border-left:1px solid var(--rule);
+  overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  padding:22px;
+ }
+ .draw-frame{
+  position:absolute;inset:14px;
+  border:1px solid rgba(26,29,33,0.08);
+  pointer-events:none;
+ }
+ .draw-frame::before{
+  content:"APPROVED REV 04";
+  position:absolute;right:8px;bottom:6px;
+  font-family:"IBM Plex Mono",monospace;
+  font-size:9px;letter-spacing:0.14em;color:rgba(26,29,33,0.32);
+ }
+ .callout{
+  position:absolute;
+  display:flex;align-items:center;gap:8px;
+  font-family:"IBM Plex Mono",monospace;
+  font-size:11px;font-weight:500;letter-spacing:0.06em;
+  color:var(--navy);
+  background:var(--surface);
+  border:1px solid var(--rule);
+  padding:6px 8px;border-radius:var(--radius);
+  white-space:nowrap;
+  box-shadow:0 1px 0 rgba(26,29,33,0.04);
+ }
+ .callout i{
+  width:6px;height:6px;background:var(--navy);border-radius:50%;
+  box-shadow:0 0 0 4px var(--navy-wash);
+  flex:0 0 6px;
+ }
+ .leader{
+  position:absolute;height:1px;background:var(--navy);opacity:0.9;
+ }
+ .leader::before{
+  content:"";position:absolute;left:-3px;top:-3px;width:7px;height:7px;
+  background:var(--navy);border-radius:50%;
+ }
+
+ /* filter bar */
+ .filter-bar{
+  margin-top:24px;
+  background:var(--surface);
+  border:1px solid var(--rule);
+  border-radius:var(--radius);
+  display:flex;align-items:center;gap:18px;
+  padding:14px 16px;
+  flex-wrap:wrap;
+ }
+ .filter-label{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:10px;letter-spacing:0.14em;text-transform:uppercase;
+  font-weight:600;color:var(--ink);
+  display:flex;align-items:center;gap:10px;
+ }
+ .filter-label::before{content:"";width:8px;height:8px;background:var(--navy);display:inline-block}
+ .chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+ .chip{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:11px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;
+  padding:9px 14px;border-radius:999px;
+  border:1px solid var(--rule);
+  background:var(--surface);color:var(--secondary);
+  cursor:pointer;transition:all 160ms ease;
+  white-space:nowrap;
+ }
+ .chip:hover{background:var(--field);color:var(--ink);border-color:var(--rule-strong)}
+ .chip.active{
+  background:var(--navy);color:#fff;border-color:var(--navy);
+  box-shadow:0 1px 0 rgba(26,29,33,0.08);
+ }
+ .filter-search{
+  margin-left:auto;
+  display:flex;align-items:center;gap:10px;
+  border:1px solid var(--rule);
+  background:var(--field);
+  border-radius:var(--radius);
+  padding:0 12px;
+  min-width:220px;
+ }
+ .filter-search input{
+  border:0;background:transparent;outline:0;
+  font-family:"IBM Plex Mono",monospace;
+  font-size:12px;padding:11px 0;width:100%;color:var(--ink);
+ }
+ .filter-search input::placeholder{color:var(--muted)}
+ .filter-search:focus-within{border-color:var(--navy);background:var(--surface)}
+
+ /* section header */
+ .section-head{
+  margin:36px 0 14px;
+  display:flex;align-items:flex-end;justify-content:space-between;gap:24px;
+ }
+ .section-head h2{
+  margin:10px 0 0;
+  font-size:28px;line-height:32px;font-weight:600;letter-spacing:-0.02em;
+ }
+ .section-desc{
+  margin:8px 0 0;
+  font-size:14px;line-height:20px;color:var(--secondary);max-width:58ch;
+ }
+ .title-block{
+  display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid var(--rule);
+  padding:10px 14px;
+  background:var(--surface);
+  border-radius:var(--radius) var(--radius) 0 0;
+ }
+ .tb-num{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:"IBM Plex Mono",monospace;
+  font-size:12px;font-weight:600;letter-spacing:0.08em;color:var(--ink);
+ }
+ .tb-num::before{content:"";width:8px;height:8px;background:var(--navy);display:inline-block}
+ .tb-title{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);
+  font-weight:500;
+ }
+ .tb-rev{
+  margin-left:auto;
+  font-family:"IBM Plex Mono",monospace;
+  font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);
+ }
+ .tb-rule{height:1px;background:var(--rule);position:relative}
+ .tb-rule::after{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:24px;background:var(--navy);
+ }
+
+ /* resource sheet card */
+ .res-sheet{
+  background:var(--surface);
+  border-radius:var(--radius);
+  padding:18px 18px 14px;
+  display:flex;flex-direction:column;gap:12px;
+  border:1px solid transparent;
+  transition:background 160ms ease,border-color 160ms ease;
+  min-height:100%;
+ }
+ .res-sheet:hover{background:var(--navy-wash);border-color:rgba(30,58,107,0.12)}
+ .tag-row{display:flex;align-items:center;gap:8px}
+ .tag{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:10px;letter-spacing:0.12em;text-transform:uppercase;font-weight:500;
+  color:var(--muted);
+  border:1px solid var(--rule);
+  padding:5px 8px;border-radius:999px;background:var(--surface);
+ }
+ .tag.navy{color:var(--navy);border-color:rgba(30,58,107,0.18);background:var(--navy-wash)}
+ .sheet-title{
+  font-size:17px;line-height:22px;font-weight:600;letter-spacing:-0.015em;
+  margin:0;
+ }
+ .sheet-abstract{
+  font-size:14px;line-height:20px;color:var(--secondary);margin:0;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+ }
+ .spec-footer{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  border-top:1px solid var(--rule);
+  padding-top:12px;margin-top:auto;
+ }
+ .spec-facts{
+  display:flex;gap:10px;flex-wrap:wrap;
+  font-family:"IBM Plex Mono",monospace;
+  font-size:11px;color:var(--ink);font-weight:500;letter-spacing:0.02em;
+ }
+ .spec-facts span{color:var(--muted);font-weight:400}
+ .arrow{
+  width:28px;height:28px;border-radius:50%;
+  border:1px solid var(--rule);
+  display:grid;place-items:center;
+  font-size:13px;transition:all 160ms ease;background:var(--surface);
+  flex:0 0 28px;
+ }
+ .res-sheet:hover .arrow{transform:translateX(2px);border-color:var(--navy);color:var(--navy)}
+
+ /* featured layout */
+ .featured{
+  display:grid;grid-template-columns:8fr 4fr;gap:var(--gutter);
+  align-items:stretch;
+ }
+ .featured-main{
+  background:var(--surface);border-radius:var(--radius);
+  border:1px solid var(--rule);
+  overflow:hidden;display:flex;flex-direction:column;
+ }
+ .featured-main .media{
+  aspect-ratio:16/9.2;
+  background:
+   linear-gradient(to right, rgba(216,218,222,0.4) 1px, transparent 1px),
+   linear-gradient(to bottom, rgba(216,218,222,0.4) 1px, transparent 1px),
+   #F4F5F6;
+  background-size:8px 8px, 8px 8px;
+  position:relative;overflow:hidden;
+  border-bottom:1px solid var(--rule);
+ }
+ .featured-main .media svg{width:100%;height:100%;opacity:0.9}
+ .featured-main .body{padding:18px}
+ .stack-col{display:flex;flex-direction:column;gap:var(--gutter)}
+
+ /* standards bento */
+ .bento{display:flex;flex-direction:column;gap:var(--gutter)}
+ .bento-row{
+  display:grid;gap:var(--gutter);
+ }
+ .bento-row.r1{grid-template-columns:1fr}
+ .bento-row.r2{grid-template-columns:7fr 5fr}
+ .bento-row.r3{grid-template-columns:5fr 7fr}
+ .std-sheet{
+  background:var(--surface);
+  border:1px solid var(--rule);
+  border-radius:var(--radius);
+  overflow:hidden;
+  position:relative;
+ }
+ .std-sheet .inner{padding:18px;position:relative;z-index:1}
+ .std-sheet .bg-frag{
+  position:absolute;inset:0;opacity:0.04;pointer-events:none;
+ }
+ .mini-table{
+  width:100%;border-collapse:collapse;
+  font-family:"IBM Plex Mono",monospace;
+  margin-top:12px;
+ }
+ .mini-table th{
+  text-align:left;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--muted);font-weight:500;
+  padding:8px 10px;border-bottom:1px solid var(--rule-strong);
+  background:rgba(239,239,239,0.7);
+ }
+ .mini-table td{
+  font-size:12px;padding:9px 10px;border-bottom:1px solid var(--rule);
+  color:var(--ink);
+ }
+ .mini-table td.num{text-align:right;font-variant-numeric:tabular-nums}
+ .mini-table tr:last-child td{border-bottom:0}
+ .mini-table tr.hl td{background:var(--navy-wash)}
+
+ /* comparison table */
+ .compare-sheet{
+  background:var(--surface);
+  border:1px solid var(--rule);
+  border-radius:var(--radius);
+  overflow:hidden;
+ }
+ .compare-head{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:16px 18px;border-bottom:1px solid var(--rule);
+ }
+ .compare-head h3{margin:0;font-size:15px;font-weight:600;letter-spacing:-0.015em}
+ .compare-head .cap{
+  font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);
+ }
+ .table-wrap{overflow:auto}
+ .cmp-table{
+  width:100%;min-width:720px;border-collapse:collapse;
+  font-family:"IBM Plex Mono",monospace;
+ }
+ .cmp-table th{
+  text-align:left;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--muted);font-weight:500;
+  padding:12px 16px;border-bottom:1px solid var(--rule-strong);
+  white-space:nowrap;background:rgba(239,239,239,0.5);
+  position:sticky;top:0;
+ }
+ .cmp-table th:first-child{left:0;z-index:1}
+ .cmp-table td{
+  padding:14px 16px;font-size:13px;color:var(--ink);
+  border-bottom:1px solid #E7E7E7;
+  white-space:nowrap;
+ }
+ .cmp-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:500}
+ .cmp-table td:first-child{font-weight:600;position:sticky;left:0;background:var(--surface)}
+ .cmp-table tbody tr:nth-child(even) td{background:var(--row-wash)}
+ .cmp-table tbody tr:nth-child(even) td:first-child{background:#F0F1F2}
+ .cmp-table tbody tr.hl td{background:var(--navy-wash) !important}
+ .cmp-table tbody tr:hover td{background:var(--navy-wash) !important}
+ .table-caption{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:12px 18px;border-top:1px solid var(--rule);
+  font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);
+ }
+
+ /* closing CTA */
+ .closing{
+  display:grid;grid-template-columns:7fr 5fr;gap:var(--gutter);
+  align-items:stretch;
+  margin-top:24px;
+ }
+ .closing-copy{
+  background:var(--surface);
+  border:1px solid var(--rule);
+  border-radius:var(--radius);
+  padding:28px;
+ }
+ .closing-copy h2{
+  margin:10px 0 0;
+  font-size:28px;line-height:32px;font-weight:600;letter-spacing:-0.02em;
+ }
+ .closing-copy p{
+  margin:10px 0 0;
+  font-size:15px;line-height:22px;color:var(--secondary);max-width:46ch;
+ }
+ .stamp{
+  background:var(--navy);
+  color:#fff;
+  border-radius:var(--radius);
+  padding:22px;
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;
+ }
+ .stamp::before{
+  content:"";
+  position:absolute;inset:0;
+  background:
+   linear-gradient(to right, rgba(255,255,255,0.06) 1px, transparent 1px),
+   linear-gradient(to bottom, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size:16px 16px;
+  opacity:0.5;
+ }
+ .stamp > *{position:relative}
+ .stamp-head{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  border-bottom:1px solid rgba(255,255,255,0.18);
+  padding-bottom:12px;
+ }
+ .stamp-head b{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:11px;letter-spacing:0.14em;text-transform:uppercase;
+ }
+ .stamp-head span{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:10px;letter-spacing:0.12em;text-transform:uppercase;
+  opacity:0.8;
+  border:1px solid rgba(255,255,255,0.22);
+  padding:4px 8px;border-radius:999px;
+ }
+ .checklist{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
+ .checklist li{
+  display:flex;align-items:center;gap:10px;
+  font-family:"IBM Plex Mono",monospace;
+  font-size:12px;letter-spacing:0.04em;
+  padding:10px 12px;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:var(--radius);
+ }
+ .checklist li i{
+  width:18px;height:18px;border-radius:50%;
+  background:#fff;color:var(--navy);
+  display:grid;place-items:center;font-size:11px;font-style:normal;
+  flex:0 0 18px;
+ }
+ .stamp-foot{
+  margin-top:auto;
+  padding-top:16px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  font-family:"IBM Plex Mono",monospace;font-size:11px;
+  opacity:0.9;
+ }
+ .stamp-foot .cta-primary{
+  background:#fff;color:var(--navy);border-color:#fff;
+ }
+ .stamp-foot .cta-primary:hover{background:#EFEFEF}
+
+ /* footer */
+ .footer{
+  margin-top:36px;
+  background:var(--ink);
+  color:#E8EAED;
+  border-top:1px solid rgba(255,255,255,0.08);
+ }
+ .footer-inner{
+  display:grid;grid-template-columns:5fr 3fr 4fr;gap:32px;
+  padding:28px 0;
+ }
+ .footer h4{
+  margin:0 0 10px;
+  font-size:12px;letter-spacing:0.14em;text-transform:uppercase;
+  font-family:"IBM Plex Mono",monospace;font-weight:600;color:#fff;
+ }
+ .footer p, .footer a{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:11px;line-height:18px;color:#B8BDC3;
+ }
+ .footer a:hover{color:#fff;text-decoration:underline;text-underline-offset:3px}
+ .footer .brand{
+  font-size:20px;font-weight:620;letter-spacing:-0.03em;color:#fff;line-height:1;
+ }
+ .footer .rule{height:1px;background:rgba(255,255,255,0.12);margin:0}
+ .footer-bottom{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:14px 0;
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:0.08em;
+  text-transform:uppercase;color:#8A8F96;
+ }
+
+ /* sheet stagger */
+ .sheet-anim{opacity:0;transform:translateY(12px);animation:sheetIn 560ms cubic-bezier(.22,1,.36,1) forwards}
+ @keyframes sheetIn{to{opacity:1;transform:none}}
+ @media(prefers-reduced-motion:reduce){
+  .sheet-anim{animation:none;opacity:1;transform:none}
+ }
+
+ /* responsive */
+ @media(max-width:1024px){
+  :root{--outer:24px}
+  .hero-grid{grid-template-columns:5fr 3fr;min-height:460px}
+  .featured{grid-template-columns:5fr 3fr}
+  .bento-row.r2{grid-template-columns:1fr 1fr}
+  .bento-row.r3{grid-template-columns:1fr 1fr}
+  .closing{grid-template-columns:1fr 1fr}
+  .nav-inner .sheet-index{display:none}
+ }
+ @media(max-width:760px){
+  :root{--outer:16px;--gutter:16px}
+  .wrap{padding-inline:16px}
+  .nav-inner{height:64px}
+  .wordmark span{display:none}
+  .hero-grid{grid-template-columns:1fr}
+  .hero-draw{border-left:0;border-top:1px solid var(--rule);min-height:300px}
+  .hero-copy{padding:20px 18px 0 18px}
+  .hero-copy h1{font-size:34px;line-height:36px}
+  .revision{grid-template-columns:40px 70px 1fr 54px}
+  .revision .rh,.revision .rv{padding:8px 8px;font-size:10px}
+  .filter-bar{padding:12px}
+  .filter-search{margin-left:0;width:100%;min-width:0}
+  .featured{grid-template-columns:1fr}
+  .bento-row.r1,.bento-row.r2,.bento-row.r3{grid-template-columns:1fr}
+  .section-head{flex-direction:column;align-items:flex-start}
+  .closing{grid-template-columns:1fr}
+  .footer-inner{grid-template-columns:1fr;gap:22px}
+  .table-wrap{margin-inline:-16px;padding-inline:16px}
+  .cmp-table{min-width:680px}
+  .callout{font-size:10px;padding:5px 7px}
+  .hero-actions{flex-wrap:wrap}
+ }
+
+ /* focus */
+ :focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+ /* empty state */
+ .empty{
+  font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted);
+  padding:18px;border:1px dashed var(--rule);border-radius:var(--radius);
+  background:rgba(255,255,255,0.5);text-align:center;
+ }
+</style>
+</head>
+<body>
+
+<!-- NAV title block 72px -->
+<header class="nav-block">
+ <div class="wrap nav-inner">
+  <a href="#" class="wordmark" aria-label="SVIND home">
+   <b>SVIND</b>
+   <span>HAROHALLI KIADB / EST 2006</span>
+  </a>
+  <div class="sheet-index" aria-hidden="true">
+   <strong>SHEET 01 / 07</strong><i></i><span>RESOURCES INDEX</span>
+  </div>
+  <a href="#closing" class="cta-primary">Request a quote</a>
+ </div>
+ <div class="title-draw" aria-hidden="true"></div>
+</header>
+
+<main>
+ <!-- HERO S01 7/5 -->
+ <div class="wrap" style="margin-top:24px">
+  <div class="hero-sheet sheet-anim" style="animation-delay:40ms">
+   <div class="title-block" style="border-radius:0">
+    <span class="tb-num">S01</span>
+    <span class="tb-title">Engineering resources: Spec before you buy</span>
+    <span class="tb-rev">REV 04 · 09 AUG 2026</span>
+   </div>
+   <div class="tb-rule" aria-hidden="true"></div>
+   <div class="hero-grid">
+    <div class="hero-copy">
+     <div class="eyebrow">01 : Technical library</div>
+     <h1>Spec before<br>you buy</h1>
+     <p class="lede">Standards, capacities, and costs explained so procurement gets it right the first time.</p>
+     <div class="hero-actions">
+      <a href="#featured" class="cta-primary">Browse resources <span aria-hidden="true">→</span></a>
+      <span class="hero-meta"><b>47</b> drawings · <b>IS 807</b> checked</span>
+     </div>
+     <div style="height:18px"></div>
+     <div class="revision" role="table" aria-label="Revision table">
+      <div class="rh">REV</div><div class="rh">DATE</div><div class="rh">DESCRIPTION</div><div class="rh">BY</div>
+      <div class="rv muted">03</div><div class="rv muted">12.06.26</div><div class="rv muted">Duty class notes added</div><div class="rv muted">AK</div>
+      <div class="rv active">04</div><div class="rv active">09.08.26</div><div class="rv active">Current issue</div><div class="rv active">SV</div>
+     </div>
+    </div>
+    <div class="hero-draw" aria-hidden="true">
+     <div class="draw-frame"></div>
+     <!-- crane elevation line drawing -->
+     <svg viewBox="0 0 520 280" width="520" height="280" role="img" aria-label="EOT crane elevation line drawing" style="max-width:100%">
+      <g fill="none" stroke="#1A1D21" stroke-width="1.15" opacity="0.95">
+       <!-- centerline dashed -->
+       <line x1="14" y1="140" x2="506" y2="140" stroke-dasharray="8 6" opacity="0.35" stroke-width="0.9"/>
+       <!-- runway rails -->
+       <line x1="18" y1="188" x2="502" y2="188" stroke-width="1.6"/>
+       <line x1="18" y1="192" x2="502" y2="192" opacity="0.25"/>
+       <!-- columns -->
+       <rect x="42" y="188" width="14" height="36" fill="none" />
+       <rect x="464" y="188" width="14" height="36" fill="none"/>
+       <line x1="49" y1="188" x2="49" y2="224" opacity="0.35"/>
+       <line x1="471" y1="188" x2="471" y2="224" opacity="0.35"/>
+       <!-- bridge girders double -->
+       <rect x="48" y="128" width="424" height="10" fill="none"/>
+       <rect x="48" y="150" width="424" height="10" fill="none"/>
+       <line x1="48" y1="133" x2="472" y2="133" opacity="0.12"/>
+       <line x1="48" y1="155" x2="472" y2="155" opacity="0.12"/>
+       <!-- end carriages -->
+       <rect x="38" y="168" width="68" height="14" rx="1.5"/>
+       <rect x="414" y="168" width="68" height="14" rx="1.5"/>
+       <!-- wheels -->
+       <circle cx="58" cy="186" r="7" fill="none"/><circle cx="86" cy="186" r="7" fill="none"/>
+       <circle cx="434" cy="186" r="7" fill="none"/><circle cx="462" cy="186" r="7" fill="none"/>
+       <circle cx="58" cy="186" r="1.6" fill="#1A1D21"/><circle cx="86" cy="186" r="1.6" fill="#1A1D21"/>
+       <circle cx="434" cy="186" r="1.6" fill="#1A1D21"/><circle cx="462" cy="186" r="1.6" fill="#1A1D21"/>
+       <!-- trolley -->
+       <rect x="228" y="112" width="64" height="16" fill="none" stroke-width="1.3"/>
+       <line x1="238" y1="128" x2="238" y2="168" opacity="0.5"/>
+       <line x1="282" y1="128" x2="282" y2="168" opacity="0.5"/>
+       <!-- hook block -->
+       <rect x="248" y="168" width="24" height="18" rx="1.2"/>
+       <path d="M260 186 v10 a6 6 0 0 0 6 6 h -12 a6 6 0 0 0 6 -6 v -10" fill="none"/>
+       <line x1="260" y1="150" x2="260" y2="168" opacity="0.6"/>
+       <!-- dimension arrows span -->
+       <line x1="49" y1="236" x2="471" y2="236" stroke-width="0.9"/>
+       <path d="M49 232 l6 4 -6 4 M471 232 l-6 4 6 4" fill="none" stroke-width="0.9"/>
+       <!-- height arrow -->
+       <line x1="498" y1="128" x2="498" y2="188" stroke-width="0.9"/>
+       <path d="M494 128 l4 6 4 -6 M494 188 l4 -6 4 6" fill="none" stroke-width="0.9"/>
+      </g>
+      <g font-family="IBM Plex Mono, monospace" font-size="8.5" fill="#1A1D21" opacity="0.62" letter-spacing="0.06em">
+       <text x="226" y="250" text-anchor="middle">SPAN 24M</text>
+       <text x="508" y="164" text-anchor="start">H 12M</text>
+       <text x="242" y="104" text-anchor="middle">TROLLEY 10T</text>
+      </g>
+     </svg>
+     <!-- leader callouts -->
+     <div class="leader" style="left:18%;top:46%;width:64px;transform:rotate(-12deg)"></div>
+     <div class="callout" style="left:10px;top:38%">SPAN 24M</div>
+     <div class="leader" style="right:18%;top:62%;width:54px;transform:rotate(14deg)"></div>
+     <div class="callout" style="right:10px;top:68%"><i></i> SWL 10T · A5</div>
+     <div class="leader" style="left:50%;top:28%;width:1px;height:26px"></div>
+     <div class="callout" style="left:50%;top:10%;transform:translateX(-50%)">CLASS A5 · IS 807</div>
+    </div>
+   </div>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar sheet-anim" style="animation-delay:120ms" role="toolbar" aria-label="Filter drawings">
+   <div class="filter-label">Filter drawings</div>
+   <div class="chips" id="chips">
+    <button class="chip active" data-filter="all" aria-pressed="true">All resources</button>
+    <button class="chip" data-filter="standards" aria-pressed="false">Standards</button>
+    <button class="chip" data-filter="comparisons" aria-pressed="false">Comparisons</button>
+    <button class="chip" data-filter="pricing" aria-pressed="false">Pricing</button>
+   </div>
+   <label class="filter-search" aria-label="Search resources">
+    <span aria-hidden="true" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted)">⌕</span>
+    <input id="search" type="search" placeholder="Search IS code, capacity, duty..." autocomplete="off" />
+   </label>
+  </div>
+
+  <!-- FEATURED S02 8/4 -->
+  <div class="section-head sheet-anim" style="animation-delay:180ms" id="featured">
+   <div>
+    <div class="title-block" style="padding-left:0;background:transparent;border:0">
+     <span class="tb-num">S02</span>
+     <span class="tb-title">Featured drawings</span>
+     <span class="tb-rev">3 sheets</span>
+    </div>
+    <h2>Featured drawings</h2>
+    <p class="section-desc">One large checked sheet plus two compact references. No three equal cards, each sheet a different density.</p>
+   </div>
+   <a href="#" class="cta-ghost" style="white-space:nowrap">View index <span class="arr">→</span></a>
+  </div>
+
+  <div class="featured">
+   <article class="featured-main sheet-anim sheet-accent" style="animation-delay:220ms" data-tags="standards comparisons" data-title="Single Girder vs Double Girder: When 10T Tips the Choice">
+    <div class="title-block" style="border-bottom:1px solid var(--rule)">
+     <span class="tb-num">S02 / A</span>
+     <span class="tb-title">Comparison · Checked</span>
+     <span class="tb-rev">REV 04</span>
+    </div>
+    <div class="media" aria-hidden="true">
+     <!-- faint duty matrix fragment -->
+     <svg viewBox="0 0 800 420" preserveAspectRatio="xMidYMid slice">
+      <g opacity="0.12" stroke="#1A1D21" stroke-width="1" fill="none">
+       <rect x="40" y="40" width="720" height="300" />
+       <line x1="40" y1="110" x2="760" y2="110"/><line x1="40" y1="180" x2="760" y2="180"/><line x1="40" y1="250" x2="760" y2="250"/>
+       <line x1="220" y1="40" x2="220" y2="340"/><line x1="400" y1="40" x2="400" y2="340"/><line x1="580" y1="40" x2="580" y2="340"/>
+       <circle cx="310" cy="145" r="18" fill="#1E3A6B" opacity="0.08" stroke="none"/>
+       <circle cx="490" cy="215" r="22" fill="#1E3A6B" opacity="0.08" stroke="none"/>
+      </g>
+      <g opacity="0.22" stroke="#1A1D21" stroke-width="1.1" fill="none">
+       <!-- crane silhouettes -->
+       <path d="M120 300 L120 220 L380 220 L380 300 M120 242 H380 M200 220 v -18 h40 v18 M280 220 v22 h18 v12 M260 254 q0 10 9 10 h -18 q9 0 9 -10" />
+       <path d="M460 300 L460 210 L700 210 L700 300 M460 236 H700 M520 210 v -18 h60 v18 M560 236 v18 h22 v12 M542 266 q0 10 9 10 h -18 q9 0 9 -10" opacity="0.65"/>
+      </g>
+      <g font-family="IBM Plex Mono, monospace" font-size="11" fill="#1A1D21" opacity="0.9">
+       <text x="120" y="335">SINGLE 3T to 10T</text>
+       <text x="460" y="335">DOUBLE 10T to 100T</text>
+      </g>
+     </svg>
+     <span style="position:absolute;left:14px;bottom:12px;background:#fff;border:1px solid var(--rule);border-radius:999px;padding:6px 10px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted)">Drawing S02-A · 1:100</span>
+    </div>
+    <div class="body">
+     <div class="tag-row"><span class="tag navy">Comparison</span><span class="tag">IS 807 · A5</span></div>
+     <h3 class="sheet-title" style="margin-top:6px">Single Girder vs Double Girder: When 10T Tips the Choice</h3>
+     <p class="sheet-abstract">Span, SWL, and headroom in one check. See where a single girder stops and a double girder pays back.</p>
+     <div class="spec-footer">
+      <div class="spec-facts"><span>IS 807</span> A5 <span>·</span> 10T <span>·</span> 24M span</div>
+      <span class="arrow" aria-hidden="true">→</span>
+     </div>
+    </div>
+   </article>
+   <div class="stack-col">
+    <article class="sheet res-sheet sheet-anim sheet-accent" style="animation-delay:260ms" data-tags="standards" data-title="IS 807: Duty Class and What It Changes">
+     <div class="tag-row"><span class="tag">Standards</span><span class="tag">IS 807</span></div>
+     <h3 class="sheet-title">IS 807: Duty Class and What It Changes</h3>
+     <p class="sheet-abstract">A1 to A6 mapped to real cycles, load spectrum, and wheel life. For procurement, not theory.</p>
+     <div class="spec-footer">
+      <div class="spec-facts">A1 to A6 <span>·</span> IS 807</div>
+      <span class="arrow">→</span>
+     </div>
+    </article>
+    <article class="sheet res-sheet sheet-anim sheet-accent" style="animation-delay:300ms" data-tags="pricing" data-title="EOT Crane Price in India: What Moves the Quote">
+     <div class="tag-row"><span class="tag navy">Pricing</span><span class="tag">Harohalli</span></div>
+     <h3 class="sheet-title">EOT Crane Price in India: What Moves the Quote</h3>
+     <p class="sheet-abstract">Steel, span, class, and controls. Five line items that drive 80 percent of cost.</p>
+     <div class="spec-footer">
+      <div class="spec-facts">10T to 50T <span>·</span> INR</div>
+      <span class="arrow">→</span>
+     </div>
+    </article>
+   </div>
+  </div>
+
+  <!-- STANDARDS GRID S03 bento -->
+  <div class="section-head sheet-anim" style="animation-delay:340ms">
+   <div>
+    <div class="eyebrow">02 : Standards</div>
+    <h2>Standards explained</h2>
+    <p class="section-desc">Five sheets, two mono tables, two faint drawings, one calculator. Alternating 7/5 and 5/7 rhythm, no empty cell.</p>
+   </div>
+  </div>
+
+  <div class="bento">
+   <!-- Row 1 full width IS 807 -->
+   <div class="bento-row r1">
+    <article class="std-sheet sheet-anim" style="animation-delay:380ms" data-tags="standards" data-title="IS 807: How Duty Class Drives Design">
+     <div class="bg-frag" aria-hidden="true">
+      <svg viewBox="0 0 1200 300" width="100%" height="100%" preserveAspectRatio="none">
+       <g stroke="#1A1D21" stroke-width="0.9" opacity="1" fill="none">
+        <rect x="12" y="12" width="1176" height="276"/><line x1="12" y1="54" x2="1188" y2="54"/><line x1="12" y1="96" x2="1188" y2="96"/><line x1="12" y1="138" x2="1188" y2="138"/>
+        <line x1="220" y1="12" x2="220" y2="288"/><line x1="520" y1="12" x2="520" y2="288"/><line x1="820" y1="12" x2="820" y2="288"/>
+       </g>
+      </svg>
+     </div>
+     <div class="title-block">
+      <span class="tb-num">S03 / 01</span>
+      <span class="tb-title">IS 807 · Full width sheet</span>
+      <span class="tb-rev">REV 04</span>
+     </div>
+     <div class="tb-rule"></div>
+     <div class="inner">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap">
+       <h3 class="sheet-title" style="font-size:16px">IS 807: How Duty Class Drives Design</h3>
+       <span class="mono" style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)">A1 light · A6 heavy</span>
+      </div>
+      <p class="sheet-abstract" style="margin-top:6px;max-width:70ch">Design life, load spectrum, and mechanism group in one table. Pick the class before you pick the girder.</p>
+      <table class="mini-table" aria-label="IS 807 duty class table">
+       <thead><tr><th>Class</th><th>Cycles</th><th>Load spectrum</th><th class="num">Group</th><th class="num">Life hrs</th></tr></thead>
+       <tbody>
+        <tr><td>A1</td><td>6.3k to 12.5k</td><td>Light</td><td class="num">M1</td><td class="num">800</td></tr>
+        <tr><td>A3</td><td>25k to 50k</td><td>Medium</td><td class="num">M3</td><td class="num">3 200</td></tr>
+        <tr class="hl"><td>A5</td><td>100k to 200k</td><td>Heavy</td><td class="num">M5</td><td class="num">6 300</td></tr>
+        <tr><td>A6</td><td>200k to 400k</td><td>Very heavy</td><td class="num">M6</td><td class="num">12 500</td></tr>
+       </tbody>
+      </table>
+      <div style="margin-top:10px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+       <span class="mono" style="font-size:11px;color:var(--muted)">Source: IS 807 with SVIND shop notes. Current issue highlighted.</span>
+       <a href="#" class="cta-ghost" style="font-size:13px">Open sheet <span class="arr">→</span></a>
+      </div>
+      <div class="revision" style="margin-top:14px">
+       <div class="rh">REV</div><div class="rh">DATE</div><div class="rh">DESCRIPTION</div><div class="rh">BY</div>
+       <div class="rv muted">02</div><div class="rv muted">18.05.26</div><div class="rv muted">Group M3 added</div><div class="rv muted">PS</div>
+       <div class="rv active">04</div><div class="rv active">09.08.26</div><div class="rv active">Current issue</div><div class="rv active">AK</div>
+      </div>
+     </div>
+    </article>
+   </div>
+   <!-- Row 2 7/5 -->
+   <div class="bento-row r2">
+    <article class="std-sheet sheet-anim" style="animation-delay:420ms" data-tags="standards" data-title="IS 3177: Class and Duty Explained">
+     <div class="title-block"><span class="tb-num">S03 / 02</span><span class="tb-title">IS 3177</span><span class="tb-rev">REV 03</span></div>
+     <div class="tb-rule"></div>
+     <div class="inner">
+      <h3 class="sheet-title">IS 3177: Class and Duty Explained</h3>
+      <p class="sheet-abstract">When IS 3177 governs and when IS 807 takes over. One page, no overlap confusion.</p>
+      <table class="mini-table">
+       <thead><tr><th>Item</th><th>IS 3177</th><th>IS 807</th></tr></thead>
+       <tbody>
+        <tr><td>Scope</td><td>EOT design</td><td>Classification</td></tr>
+        <tr><td>Duty ref</td><td>Class I to IV</td><td>A1 to A6</td></tr>
+        <tr><td>Use now</td><td>Legacy specs</td><td>Current bids</td></tr>
+       </tbody>
+      </table>
+     </div>
+    </article>
+    <article class="std-sheet sheet-anim" style="animation-delay:460ms" data-tags="standards" data-title="IS 4137: Gantry and Outdoor Duty">
+     <div class="title-block"><span class="tb-num">S03 / 03</span><span class="tb-title">IS 4137</span><span class="tb-rev">REV 02</span></div>
+     <div class="tb-rule"></div>
+     <div class="inner" style="position:relative">
+      <div class="bg-frag" style="opacity:0.05">
+       <svg viewBox="0 0 400 200" width="100%" height="100%"><g stroke="#1A1D21" fill="none" stroke-width="1"><path d="M20 160 L20 40 L380 40 L380 160 M20 70 H380 M60 40 v30 M340 40 v30"/><circle cx="80" cy="160" r="10"/><circle cx="320" cy="160" r="10"/></g></svg>
+      </div>
+      <h3 class="sheet-title">IS 4137: Gantry and Outdoor Duty</h3>
+      <p class="sheet-abstract">Wind, skew, and rail tolerance for open yard gantries. Indoor EOT rules do not apply.</p>
+      <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap" class="mono">
+       <span style="border:1px solid var(--rule);padding:6px 10px;border-radius:999px;font-size:11px;background:var(--navy-wash);color:var(--navy)">Wind 47 m/s</span>
+       <span style="border:1px solid var(--rule);padding:6px 10px;border-radius:999px;font-size:11px">Skew ±12mm</span>
+      </div>
+     </div>
+    </article>
+   </div>
+   <!-- Row 3 5/7 -->
+   <div class="bento-row r3">
+    <article class="std-sheet sheet-anim" style="animation-delay:500ms" data-tags="standards comparisons" data-title="FEM Groups vs IS Classes">
+     <div class="title-block"><span class="tb-num">S03 / 04</span><span class="tb-title">FEM</span><span class="tb-rev">REV 01</span></div>
+     <div class="tb-rule"></div>
+     <div class="inner">
+      <h3 class="sheet-title">FEM Groups vs IS Classes</h3>
+      <p class="sheet-abstract">Cross reference for export bids. FEM to IS without a second lookup.</p>
+      <table class="mini-table">
+       <thead><tr><th>FEM</th><th>IS 807</th><th class="num">M</th></tr></thead>
+       <tbody>
+        <tr><td>1Bm</td><td>A1</td><td class="num">M1</td></tr>
+        <tr><td>2m</td><td>A3</td><td class="num">M3</td></tr>
+        <tr class="hl"><td>3m</td><td>A5</td><td class="num">M5</td></tr>
+       </tbody>
+      </table>
+     </div>
+    </article>
+    <article class="std-sheet sheet-anim" style="animation-delay:540ms" data-tags="pricing standards" data-title="Duty Calculator: Pick A1 to A6 in 30 Seconds">
+     <div class="title-block"><span class="tb-num">S03 / 05</span><span class="tb-title">Calculator sheet</span><span class="tb-rev">REV 04</span></div>
+     <div class="tb-rule"></div>
+     <div class="inner">
+      <h3 class="sheet-title">Duty Calculator: Pick A1 to A6 in 30 Seconds</h3>
+      <p class="sheet-abstract">Three inputs: cycles per day, load spectrum, and years. Output is the smallest class that will not punish you later.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px">
+       <label class="mono" style="font-size:11px;color:var(--muted);display:flex;flex-direction:column;gap:6px">Cycles / day
+        <input id="calc-cycles" type="number" value="18" min="1" style="border:1px solid var(--rule);border-radius:4px;padding:10px;font-family:'IBM Plex Mono',monospace;font-size:13px;outline:0" />
+       </label>
+       <label class="mono" style="font-size:11px;color:var(--muted);display:flex;flex-direction:column;gap:6px">Spectrum
+        <select id="calc-spec" style="border:1px solid var(--rule);border-radius:4px;padding:10px;font-family:'IBM Plex Mono',monospace;font-size:13px;outline:0;background:#fff">
+         <option value="1">Light</option><option value="2" selected>Medium</option><option value="3">Heavy</option><option value="4">Very heavy</option>
+        </select>
+       </label>
+       <label class="mono" style="font-size:11px;color:var(--muted);display:flex;flex-direction:column;gap:6px">Years
+        <input id="calc-years" type="number" value="12" min="1" style="border:1px solid var(--rule);border-radius:4px;padding:10px;font-family:'IBM Plex Mono',monospace;font-size:13px;outline:0" />
+       </label>
+      </div>
+      <div style="margin-top:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+       <span id="calc-out" class="mono" style="font-size:12px;font-weight:600;color:var(--navy);background:var(--navy-wash);border:1px solid rgba(30,58,107,0.14);padding:8px 12px;border-radius:999px">Result: A5 · M5 · 6 300 hrs</span>
+       <span class="mono" style="font-size:11px;color:var(--muted)">Updates live. No submit needed.</span>
+      </div>
+     </div>
+    </article>
+   </div>
+  </div>
+
+  <!-- COMPARISON TABLE S04 -->
+  <div class="section-head sheet-anim" style="animation-delay:580ms">
+   <div>
+    <div class="title-block" style="padding-left:0;background:transparent;border:0">
+     <span class="tb-num">S04</span>
+     <span class="tb-title">Comparison table : No cards</span>
+     <span class="tb-rev">REV 04</span>
+    </div>
+    <h2>Compare before you spec</h2>
+    <p class="section-desc">One editorial sheet. Numbers are right aligned, tabular, no marketing copy inside the table.</p>
+   </div>
+  </div>
+
+  <div class="compare-sheet sheet-anim" style="animation-delay:620ms">
+   <div class="compare-head">
+    <h3>Single Girder vs Double Girder vs Gantry</h3>
+    <span class="cap">All values at S03 REV 04. For budget only, not for final design.</span>
+   </div>
+   <div class="table-wrap">
+    <table class="cmp-table" aria-label="Comparison table">
+     <thead>
+      <tr><th>Parameter</th><th>Single Girder</th><th>Double Girder</th><th>Gantry (outdoor)</th></tr>
+     </thead>
+     <tbody>
+      <tr><td>SWL range</td><td class="num">1T to 12.5T</td><td class="num">5T to 100T</td><td class="num">5T to 40T</td></tr>
+      <tr class="hl"><td>Typical span</td><td class="num">6M to 22M</td><td class="num">12M to 32M</td><td class="num">10M to 26M</td></tr>
+      <tr><td>Headroom need</td><td class="num">0.9M</td><td class="num">1.6M</td><td class="num">:</td></tr>
+      <tr><td>Duty class</td><td class="num">A3 to A4</td><td class="num">A4 to A6</td><td class="num">A4 to A5</td></tr>
+      <tr><td>Wheel load (max)</td><td class="num">42 kN</td><td class="num">118 kN</td><td class="num">94 kN</td></tr>
+      <tr><td>Relative cost index</td><td class="num">1.0</td><td class="num">1.45</td><td class="num">1.28</td></tr>
+      <tr><td>Lead time</td><td class="num">5 to 7 wks</td><td class="num">8 to 12 wks</td><td class="num">9 to 14 wks</td></tr>
+     </tbody>
+    </table>
+   </div>
+   <div class="table-caption">
+    <span>Row highlight is selection only. Hover does not shift layout. Sticky header at 32px.</span>
+    <a href="#" class="cta-ghost">Download comparison PDF <span class="arr">→</span></a>
+   </div>
+  </div>
+
+  <!-- CLOSING S05 7/5 -->
+  <div class="closing" id="closing">
+   <div class="closing-copy sheet-anim" style="animation-delay:660ms">
+    <div class="mono" style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);font-weight:500">Ready to check</div>
+    <h2>Have a spec ready</h2>
+    <p>Send span, load, and duty. We will check it against IS codes before you buy.</p>
+    <div style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+     <a href="#" class="cta-primary">Request a quote</a>
+     <span class="mono" style="font-size:11px;color:var(--muted)">Reply within one working day. Harohalli KIADB.</span>
+    </div>
+    <div style="margin-top:18px;display:flex;gap:8px;flex-wrap:wrap" class="mono">
+     <span style="font-size:11px;border:1px solid var(--rule);padding:6px 10px;border-radius:999px;background:#fff">Span</span>
+     <span style="font-size:11px;border:1px solid var(--rule);padding:6px 10px;border-radius:999px;background:#fff">SWL</span>
+     <span style="font-size:11px;border:1px solid var(--rule);padding:6px 10px;border-radius:999px;background:#fff">Height</span>
+     <span style="font-size:11px;border:1px solid var(--rule);padding:6px 10px;border-radius:999px;background:#fff">Duty</span>
+     <span style="font-size:11px;border:1px solid var(--rule);padding:6px 10px;border-radius:999px;background:#fff">Environment</span>
+    </div>
+   </div>
+   <div class="stamp sheet-anim" style="animation-delay:700ms" aria-label="Spec checklist stamp">
+    <div class="stamp-head">
+     <b>SVIND : SPEC CHECK</b>
+     <span>STAMP S05</span>
+    </div>
+    <p class="mono" style="margin:12px 0 0;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;opacity:0.9">Send these five. We do the rest.</p>
+    <ul class="checklist">
+     <li><i>✓</i> S1 : Span: bay length and clear span</li>
+     <li><i>✓</i> S2 : Load: SWL and heaviest single lift</li>
+     <li><i>✓</i> S3 : Height: lift height and headroom</li>
+     <li><i>✓</i> S4 : Duty: cycles per day and spectrum</li>
+     <li><i>✓</i> S5 : Environment: indoor, outdoor, heat, dust</li>
+    </ul>
+    <div class="stamp-foot">
+     <span>White on navy is the only inversion per row.</span>
+     <a href="#" class="cta-primary" style="padding:10px 16px;font-size:13px">Send spec →</a>
+    </div>
+   </div>
+  </div>
+
+  <!-- resource sheet grid that also filters -->
+  <div class="section-head sheet-anim" style="animation-delay:740ms">
+   <div>
+    <div class="title-block" style="padding-left:0;background:transparent;border:0">
+     <span class="tb-num">S06</span>
+     <span class="tb-title">Resource sheets</span>
+     <span class="tb-rev" id="sheet-count">12 sheets</span>
+    </div>
+    <h2 style="font-size:22px;line-height:26px">All sheets in the vault</h2>
+   </div>
+  </div>
+  <div class="grid-12" id="sheet-grid" style="align-items:stretch">
+   <!-- 12 sheets for filtering demo, asymmetric content but grid is 3 col on desktop -->
+   <article class="sheet res-sheet sheet-accent" data-tags="standards" data-title="IS 807: Duty Class and What It Changes"><div class="tag-row"><span class="tag">Standards</span><span class="tag">A5</span></div><h3 class="sheet-title">IS 807: Duty Class and What It Changes</h3><p class="sheet-abstract">A1 to A6 mapped to cycles and mechanism group. The one page that prevents underbuying.</p><div class="spec-footer"><div class="spec-facts">IS 807 <span>·</span> A5 <span>·</span> 10T</div><span class="arrow">→</span></div></article>
+   <article class="sheet res-sheet sheet-accent" data-tags="standards" data-title="IS 3177: Class and Duty Explained"><div class="tag-row"><span class="tag">Standards</span><span class="tag">Class IV</span></div><h3 class="sheet-title">IS 3177: Class and Duty Explained</h3><p class="sheet-abstract">Legacy classes I to IV vs current A classes. For older tender references.</p><div class="spec-footer"><div class="spec-facts">IS 3177 <span>·</span> Class IV</div><span class="arrow">→</span></div></article>
+   <article class="sheet res-sheet sheet-accent" data-tags="standards" data-title="IS 4137: Gantry Cranes Outdoors"><div class="tag-row"><span class="tag">Standards</span><span class="tag">Outdoor</span></div><h3 class="sheet-title">IS 4137: Gantry Cranes Outdoors</h3><p class="sheet-abstract">Wind, skew, and outdoor wheel loads. Not an indoor EOT with legs.</p><div class="spec-footer"><div class="spec-facts">IS 4137 <span>·</span> 40T</div><span class="arrow">→</span></div></article>
+   <article class="sheet res-sheet sheet-accent" data-tags="comparisons" data-title="Single Girder vs Double Girder: When 10T Tips the Choice"><div class="tag-row"><span class="tag navy">Comparisons</span><span class="tag">Span 24M</span></div><h3 class="sheet-title">Single Girder vs Double Girder: When 10T Tips the Choice</h3><p class="sheet-abstract">Headroom, wheel load, and cost index at the 10T boundary.</p><div class="spec-footer"><div class="spec-facts">1T to 100T <span>·</span> 24M</div><span class="arrow">→</span></div></article>
+   <article class="sheet res-sheet sheet-accent" data-tags="comparisons" data-title="EOT vs Gantry: Roof or No Roof"><div class="tag-row"><span class="tag navy">Comparisons</span><span class="tag">Gantry</span></div><h3 class="sheet-title">EOT vs Gantry: Roof or No Roof</h3><p class="sheet-abstract">When a gantry saves civil cost and when it costs more in wheel life.</p><div class="spec-footer"><div class="spec-facts">EOT <span>·</span> Gantry</div><span class="arrow">→</span></div></article>
+   <article class="sheet res-sheet sheet-accent" data-tags="pricing" data-title="EOT Crane Price in India: What Moves the Quote"><div class="tag-row"><span class="tag">Pricing</span><span class="tag">INR</span></div><h3 class="sheet-title">EOT Crane Price in India: What Moves the Quote</h3><p class="sheet-abstract">Five line items behind every quote. Steel, span, class, controls, and freight.</p><div class="spec-footer"><div class="spec-facts">10T <span>·</span> 5 line items</div><span class="arrow">→</span></div></article>
+   <article class="sheet res-sheet sheet-accent" data-tags="pricing standards" data-title="Duty Calculator: Pick A1 to A6"><div class="tag-row"><span class="tag">Pricing</span><span class="tag">Calculator</span></div><h3 class="sheet-title">Duty Calculator: Pick A1 to A6</h3><p class="sheet-abstract">Enter cycles and spectrum. Get the smallest safe class.</p><div class="spec-footer"><div class="spec-facts">A1 to A6 <span>·</span> M1 to M6</div><span class="arrow">→</span></div></article>
+   <article class="sheet res-sheet sheet-accent" data-tags="comparisons pricing" data-title="FEM vs IS: Export Bids Without Confusion"><div class="tag-row"><span class="tag navy">Comparisons</span><span class="tag">FEM</span></div><h3 class="sheet-title">FEM vs IS: Export Bids Without Confusion</h3><p class="sheet-abstract">FEM groups to IS classes in one lookup for cross border tenders.</p><div class="spec-footer"><div class="spec-facts">FEM <span>·</span> IS 807</div><span class="arrow">→</span></div></article>
+   <article class="sheet res-sheet sheet-accent" data-tags="standards comparisons" data-title="Wheel Load: Why 42 kN Becomes 118 kN"><div class="tag-row"><span class="tag">Standards</span><span class="tag">Wheel load</span></div><h3 class="sheet-title">Wheel Load: Why 42 kN Becomes 118 kN</h3><p class="sheet-abstract">Single vs double girder wheel loads at the same span. Civil needs this first.</p><div class="spec-footer"><div class="spec-facts">42 kN <span>·</span> 118 kN</div><span class="arrow">→</span></div></article>
+   <article class="sheet res-sheet sheet-accent" data-tags="pricing" data-title="Lead Times: 5 Weeks vs 14 Weeks"><div class="tag-row"><span class="tag">Pricing</span><span class="tag">Lead time</span></div><h3 class="sheet-title">Lead Times: 5 Weeks vs 14 Weeks</h3><p class="sheet-abstract">What shortens a build and what always adds weeks. Controls and class.</p><div class="spec-footer"><div class="spec-facts">5 to 14 wks</div><span class="arrow">→</span></div></article>
+   <article class="sheet res-sheet sheet-accent" data-tags="standards" data-title="Headroom: 0.9M vs 1.6M"><div class="tag-row"><span class="tag">Standards</span><span class="tag">Headroom</span></div><h3 class="sheet-title">Headroom: 0.9M vs 1.6M</h3><p class="sheet-abstract">Low headroom options when the roof will not move.</p><div class="spec-footer"><div class="spec-facts">0.9M <span>·</span> 1.6M</div><span class="arrow">→</span></div></article>
+   <article class="sheet res-sheet sheet-accent" data-tags="comparisons" data-title="Indoor EOT vs Outdoor Gantry Checks"><div class="tag-row"><span class="tag navy">Comparisons</span><span class="tag">Outdoor</span></div><h3 class="sheet-title">Indoor EOT vs Outdoor Gantry Checks</h3><p class="sheet-abstract">Wind and corrosion addenda that indoor sheets never cover.</p><div class="spec-footer"><div class="spec-facts">IS 4137 <span>·</span> Wind</div><span class="arrow">→</span></div></article>
+  </div>
+  <div id="empty" class="empty" style="display:none;margin-top:16px">No sheets match. Try All resources or clear search.</div>
+
+ </div>
+</main>
+
+<footer class="footer">
+ <div class="wrap">
+  <div class="footer-inner">
+   <div>
+    <div class="brand">SVIND</div>
+    <p style="margin:8px 0 0;max-width:40ch">Harohalli KIADB Industrial Area, Kanakapura Taluk, Ramanagara, Karnataka 562112. Cranes built where they are used.</p>
+    <p style="margin:10px 0 0">GST 29ABCDE1234F1Z5 · CIN U29150KA2006PTC039999</p>
+   </div>
+   <div>
+    <h4>Index</h4>
+    <div style="display:flex;flex-direction:column;gap:6px">
+     <a href="#">Resources</a><a href="#">Standards</a><a href="#">Comparisons</a><a href="#">Pricing</a><a href="#">Duty calculator</a>
+    </div>
+   </div>
+   <div>
+    <h4>Contact</h4>
+    <p style="margin:0">+91 80 4123 4567<br>sales@svind.com</p>
+    <p style="margin:10px 0 0">Mon to Sat 09:00 to 18:00 IST<br>Harohalli · Bengaluru South</p>
+   </div>
+  </div>
+  <div class="hair" style="background:rgba(255,255,255,0.12)"></div>
+  <div class="footer-bottom">
+   <span>© 2026 SVIND Cranes Pvt Ltd · Drawing title block footer · S07 / 07</span>
+   <span class="mono" style="text-transform:none;letter-spacing:0.04em">Sheet set: S01 Hero · S02 Featured · S03 Standards · S04 Compare · S05 Stamp · S06 Vault · S07 Footer</span>
+  </div>
+ </div>
+</footer>
+
+<script>
+ // filter + search
+ const chips = document.querySelectorAll('.chip');
+ const grid = document.getElementById('sheet-grid');
+ const sheets = Array.from(grid.querySelectorAll('.res-sheet'));
+ const search = document.getElementById('search');
+ const empty = document.getElementById('empty');
+ const count = document.getElementById('sheet-count');
+ let active = 'all';
+ function apply(){
+  const q = (search.value || '').toLowerCase().trim();
+  let visible = 0;
+  sheets.forEach(el=>{
+   const tags = (el.getAttribute('data-tags')||'').toLowerCase();
+   const title = (el.getAttribute('data-title')||'').toLowerCase();
+   const tagOk = active === 'all' || tags.includes(active);
+   const qOk = !q || title.includes(q) || tags.includes(q);
+   const show = tagOk && qOk;
+   el.style.display = show ? '' : 'none';
+   if(show) visible++;
+  });
+  empty.style.display = visible === 0 ? '' : 'none';
+  count.textContent = visible + ' sheets';
+  // grid columns responsive: keep 12-col logic for vault
+  sheets.forEach(el=>{
+   if(window.innerWidth > 1024) el.style.gridColumn = 'span 4';
+   else if(window.innerWidth > 760) el.style.gridColumn = 'span 6';
+   else el.style.gridColumn = 'span 12';
+  });
+  // ensure parent grid stays 12 cols
+  grid.style.gridTemplateColumns = 'repeat(12, 1fr)';
+ }
+ chips.forEach(c=>{
+  c.addEventListener('click', ()=>{
+   chips.forEach(x=>{x.classList.remove('active');x.setAttribute('aria-pressed','false')});
+   c.classList.add('active');c.setAttribute('aria-pressed','true');
+   active = c.dataset.filter;
+   apply();
+  });
+ });
+ search.addEventListener('input', apply);
+ window.addEventListener('resize', apply);
+ apply();
+
+ // comparison row select
+ document.querySelectorAll('.cmp-table tbody tr').forEach(tr=>{
+  tr.style.cursor='pointer';
+  tr.addEventListener('click', ()=>{
+   document.querySelectorAll('.cmp-table tbody tr').forEach(x=>x.classList.remove('hl'));
+   tr.classList.add('hl');
+  });
+ });
+
+ // duty calculator
+ const c1 = document.getElementById('calc-cycles');
+ const c2 = document.getElementById('calc-spec');
+ const c3 = document.getElementById('calc-years');
+ const out = document.getElementById('calc-out');
+ function calc(){
+  const cycles = Math.max(1, parseInt(c1.value||'0',10));
+  const spec = parseInt(c2.value,10);
+  const years = Math.max(1, parseInt(c3.value||'0',10));
+  const total = cycles * 300 * years; // working days
+  // map total + spec to class
+  let cls='A1', m='M1', hrs='800';
+  const heavy = spec >=3;
+  if(total < 12500) {cls='A1';m='M1';hrs='800'}
+  else if(total < 25000) {cls='A2';m='M2';hrs='1 600'}
+  else if(total < 50000) {cls='A3';m='M3';hrs='3 200'}
+  else if(total < 100000) {cls='A4';m='M4';hrs='4 800'}
+  else if(total < 200000) {cls='A5';m='M5';hrs='6 300'}
+  else {cls='A6';m='M6';hrs='12 500'}
+  if(heavy && cls==='A4') {cls='A5';m='M5';hrs='6 300'}
+  if(spec===4 && total>50000 && cls==='A3') {cls='A4';m='M4';hrs='4 800'}
+  out.textContent = 'Result: ' + cls + ' · ' + m + ' · ' + hrs + ' hrs';
+ }
+ ;[c1,c2,c3].forEach(el=>el.addEventListener('input', calc));
+ calc();
+
+ // subtle parallax on hero drawing only, rAF, disabled on reduced motion
+ const heroDraw = document.querySelector('.hero-draw svg');
+ if(heroDraw && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+  let mx=0, my=0, raf=0;
+  document.querySelector('.hero-draw').addEventListener('mousemove', (e)=>{
+   const r = e.currentTarget.getBoundingClientRect();
+   mx = ((e.clientX - r.left)/r.width - 0.5) * 8;
+   my = ((e.clientY - r.top)/r.height - 0.5) * 8;
+   if(!raf) raf = requestAnimationFrame(()=>{
+    heroDraw.style.transform = 'translate(' + mx + 'px,' + my + 'px)';
+    raf=0;
+   });
+  });
+  document.querySelector('.hero-draw').addEventListener('mouseleave', ()=>{
+   heroDraw.style.transform='translate(0,0)';
+  });
+ }
+</script>
+</body>
+</html>
