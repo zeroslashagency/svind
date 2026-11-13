@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="assets/css/milestone-25.css">
   <link rel="stylesheet" href="assets/css/value-prop.css">
   <link rel="stylesheet" href="assets/css/hro.css">
+  <link rel="stylesheet" href="assets/css/hero-3d.css">
   <!-- resources-bento.css removed with section -->
   <!-- vmc.css removed -->
   <script type="importmap">
@@ -156,35 +157,98 @@
 
   <main id="main" class="page page--footer-reserve">
 
-    <!-- Hero -->
-    <section class="core-band core-band--stage core-band--lockup hro">
-      <div class="hro__plate">
-        <img class="hro__shot" src="assets/img/bands/hero-goliath-lifting-load.jpg"
-             width="1440" height="960" alt="" aria-hidden="true"
-             fetchpriority="high" decoding="async">
-        <span class="hro__veil"></span>
+    <!-- Hero 3D Interactive Craft Stage -->
+    <section class="sv-hero3d" id="hero-3d" data-backdrop="sky" data-clouds="on" data-grain="on" data-typeface="display" aria-labelledby="hero-3d-title">
+      <div class="sv-hero3d__grain" aria-hidden="true"></div>
+      <div class="sv-hero3d__canvas-mount" id="sv-hero3d-mount"></div>
+
+      <div class="sv-hero3d__clouds" aria-hidden="true">
+        <div class="sv-hero3d__cloud sv-hero3d__cloud--upper"></div>
+        <div class="sv-hero3d__cloud sv-hero3d__cloud--lower"></div>
       </div>
 
-      <div class="core-frame">
-        <p class="core-frame__label">Manufacturer</p>
-        <p class="core-frame__counter"><b>01</b><span class="core-frame__rule"></span>13</p>
-      </div>
+      <div class="sv-hero3d__chrome">
+        <div class="sv-hero3d__top">
+          <!-- Top-Left Style & Material Bento Card -->
+          <div class="sv-hero3d__card" role="group" aria-label="3D style and backdrop controls">
+            <button type="button" class="sv-hero3d__bento-btn is-active" data-hero-action="palette">
+              <span class="sv-hero3d__bento-label">Finish</span>
+              <span class="sv-hero3d__bento-chip" aria-hidden="true"></span>
+              <span class="sv-hero3d__bento-sample">Clay</span>
+            </button>
+            <button type="button" class="sv-hero3d__bento-btn" data-hero-action="backdrop">
+              <span class="sv-hero3d__bento-label">Backdrop</span>
+              <span class="sv-hero3d__bento-chip sv-hero3d__bento-chip--sky" aria-hidden="true"></span>
+              <span class="sv-hero3d__bento-sample">Sky</span>
+            </button>
+            <button type="button" class="sv-hero3d__bento-btn is-active" data-hero-action="cover" aria-pressed="true">
+              <span class="sv-hero3d__bento-label">Cover</span>
+              <span class="sv-hero3d__bento-chip sv-hero3d__bento-chip--swirl" aria-hidden="true"></span>
+              <span class="sv-hero3d__bento-sample">Pattern</span>
+            </button>
+            <button type="button" class="sv-hero3d__bento-btn" data-hero-action="typeface">
+              <span class="sv-hero3d__bento-label">Type</span>
+              <span class="sv-hero3d__bento-sample">Sans</span>
+            </button>
+            <button type="button" class="sv-hero3d__bento-btn is-active" data-hero-action="clouds" aria-pressed="true">
+              <span class="sv-hero3d__bento-label">Atmosphere</span>
+              <span class="sv-hero3d__bento-sample">Mist On</span>
+            </button>
+            <button type="button" class="sv-hero3d__bento-btn" data-hero-action="reset">
+              <span class="sv-hero3d__bento-label">Physics</span>
+              <span class="sv-hero3d__bento-sample">Reset ↺</span>
+            </button>
+          </div>
 
-      <div class="core-lockup hero-home-content-wrapper">
-        <div class="hro__bottom hero-logo-wrapper">
-          <div class="hero-logo-cta core-lockup__wordmark">
-            <span class="core-lockup__letters hero-a-wrapper" aria-hidden="true">
-              <span class="core-lockup__letter hero-logo-letter">S</span>
-              <span class="core-lockup__letter hero-logo-letter">V</span>
-              <span class="core-lockup__letter hero-logo-letter">I</span>
-              <span class="core-lockup__letter hero-logo-letter">N</span>
-            </span>
-            <div class="hero-logo-cta is-o">
-              <a href="/pages/services/request-a-quote.html" class="core-lockup__cta hero-o-cta">
-                <span class="core-lockup__cta-letter hero-logo-letter is-o" aria-hidden="true">D</span>
-                <span class="hero-o-cta-content"><span class="core-lockup__cta-label">Request a quote</span><span class="icon-embed-xsmall"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M2.15494 9.99998C2.15494 10.4602 2.52804 10.8333 2.98827 10.8333L11.8957 10.8333C12.7866 10.8333 13.2328 11.9105 12.6028 12.5404L10.4883 14.655C10.1629 14.9804 10.1629 15.5079 10.4883 15.8333C10.8137 16.1587 11.3412 16.1587 11.6666 15.8333L16.7928 10.7071C17.1834 10.3166 17.1834 9.6834 16.7928 9.29288L11.6666 4.16665C11.3412 3.84126 10.8137 3.84126 10.4883 4.16665C10.1629 4.49204 10.1629 5.0196 10.4883 5.34499L12.6028 7.45954C13.2328 8.08951 12.7866 9.16665 11.8957 9.16665L2.98827 9.16665C2.52804 9.16665 2.15494 9.53975 2.15494 9.99998Z" fill="currentColor"></path></svg></span></span>
-              </a>
-            </div>
+          <!-- Top-Center Circular Material Finish Switcher -->
+          <div class="sv-hero3d__swatches" role="group" aria-label="Material finish swatches">
+            <button type="button" class="sv-hero3d__swatch sv-hero3d__swatch--clay is-active" data-preset="clay" aria-pressed="true" aria-label="Sculpted multi-color clay finish" title="Multi-color clay"></button>
+            <button type="button" class="sv-hero3d__swatch sv-hero3d__swatch--blueprint" data-preset="blueprint" aria-pressed="false" aria-label="Technical CAD blueprint finish" title="CAD blueprint"></button>
+            <button type="button" class="sv-hero3d__swatch sv-hero3d__swatch--steel" data-preset="steel" aria-pressed="false" aria-label="Brushed industrial steel finish" title="Brushed steel"></button>
+            <button type="button" class="sv-hero3d__swatch sv-hero3d__swatch--enamel" data-preset="enamel" aria-pressed="false" aria-label="Gloss painted enamel finish" title="Gloss enamel"></button>
+            <button type="button" class="sv-hero3d__swatch sv-hero3d__swatch--terracotta" data-preset="terracotta" aria-pressed="false" aria-label="Terracotta swirl ceramic finish" title="Terracotta swirl"></button>
+          </div>
+        </div>
+
+        <div class="sv-hero3d__stage-spacer" aria-hidden="true"></div>
+
+        <!-- Corner Floating Crane Spec Badges -->
+        <div class="sv-hero3d__tiles" role="group" aria-label="Crane engineering highlights">
+          <button type="button" class="sv-hero3d__tile sv-hero3d__tile--1" data-spec="is807" aria-pressed="false">
+            <span class="sv-hero3d__tile-icon" aria-hidden="true">01</span>
+            <span class="sv-hero3d__tile-name">is807_duty.txt</span>
+          </button>
+          <button type="button" class="sv-hero3d__tile sv-hero3d__tile--2" data-spec="girder" aria-pressed="false">
+            <span class="sv-hero3d__tile-icon" aria-hidden="true">02</span>
+            <span class="sv-hero3d__tile-name">100t_girder.cad</span>
+          </button>
+          <button type="button" class="sv-hero3d__tile sv-hero3d__tile--3" data-spec="fat" aria-pressed="false">
+            <span class="sv-hero3d__tile-icon" aria-hidden="true">03</span>
+            <span class="sv-hero3d__tile-name">harohalli_fat.log</span>
+          </button>
+          <button type="button" class="sv-hero3d__tile sv-hero3d__tile--4" data-spec="amc" aria-pressed="false">
+            <span class="sv-hero3d__tile-icon" aria-hidden="true">04</span>
+            <span class="sv-hero3d__tile-name">24x7_amc.svc</span>
+          </button>
+        </div>
+
+        <div class="sv-hero3d__spec-pop" id="sv-hero3d-spec-pop" hidden>
+          <strong id="sv-hero3d-spec-title"></strong>
+          <span id="sv-hero3d-spec-body"></span>
+        </div>
+
+        <!-- Bottom Accessible Lockup & CTA -->
+        <div class="sv-hero3d__bottom">
+          <div class="sv-hero3d__lockup">
+            <p class="sv-hero3d__eyebrow">EOT &amp; Gantry Crane Manufacturer · Bengaluru</p>
+            <h1 class="sv-hero3d__h1" id="hero-3d-title">Heavy lifting built to IS 807, tested in Harohalli before dispatch.</h1>
+          </div>
+          <div class="sv-hero3d__actions">
+            <span class="sv-hero3d__hint">Drag any 3D block</span>
+            <a href="/pages/services/request-a-quote.html" class="sv-hero3d__cta">
+              <span>Request a quote</span>
+              <span aria-hidden="true">↗</span>
+            </a>
           </div>
         </div>
       </div>

@@ -3,6 +3,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { initHero3D } from './sv-hero-3d.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -1682,6 +1683,7 @@ function initSection04Modal() {
 }
 
 function boot() {
+  initHero3D();
   initMilestone25Scroll();
   initSection04Scroll();
   initSection04Modal();

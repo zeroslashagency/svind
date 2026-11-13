@@ -1,0 +1,559 @@
+/* ==========================================================================
+   3D CRAFT-STYLE HERO STAGE (section#hero-3d)
+   Replaces static photographic plate with tactile extruded 3D SVIND letters,
+   sky-mist backdrop, drifting clouds, floating material inspector & spec tiles.
+   ========================================================================== */
+.sv-hero3d {
+  --h3d-bg-a: #D7E7F1;
+  --h3d-bg-b: #ECF3F8;
+  --h3d-card-bg: rgba(255, 255, 255, 0.94);
+  --h3d-card-border: rgba(26, 29, 33, 0.1);
+  --h3d-ink: #1A1D21;
+  --h3d-muted: #525B65;
+
+  position: relative;
+  width: 100%;
+  min-height: 580px;
+  background: radial-gradient(circle at 54% 46%, var(--h3d-bg-b) 0%, var(--h3d-bg-a) 74%, #CFE1EC 100%);
+  color: var(--h3d-ink);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  scroll-margin-top: 64px;
+  transition: background 320ms ease;
+}
+
+@media (min-width: 1024px) {
+  .sv-hero3d {
+    height: calc(100svh - 64px);
+    min-height: 620px;
+  }
+}
+
+/* Studio backdrop presets switched from inspector card */
+.sv-hero3d[data-backdrop="paper"] {
+  --h3d-bg-a: #EDE5D9;
+  --h3d-bg-b: #FAF6F0;
+}
+
+.sv-hero3d[data-backdrop="mist"] {
+  --h3d-bg-a: #DFE5EC;
+  --h3d-bg-b: #F2F5F9;
+}
+
+.sv-hero3d[data-backdrop="blush"] {
+  --h3d-bg-a: #EEDBD8;
+  --h3d-bg-b: #FBF3F1;
+}
+
+/* Subtle tactile paper-grain dot matrix over studio sky */
+.sv-hero3d__grain {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.42;
+  background-image: radial-gradient(rgba(26, 29, 33, 0.14) 0.75px, transparent 0.75px);
+  background-size: 14px 14px;
+  transition: opacity 260ms ease;
+}
+
+.sv-hero3d[data-grain="off"] .sv-hero3d__grain {
+  opacity: 0;
+}
+
+/* WebGL Mount */
+.sv-hero3d__canvas-mount {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  touch-action: pan-y;
+  cursor: default;
+}
+
+.sv-hero3d__canvas-mount.is-hovering {
+  cursor: grab;
+}
+
+.sv-hero3d__canvas-mount.is-dragging {
+  cursor: grabbing;
+  touch-action: none;
+}
+
+/* Soft translucent drifting cloud layers (subtle halftone sky clouds matching reference) */
+.sv-hero3d__clouds {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  transition: opacity 320ms ease;
+}
+
+.sv-hero3d[data-clouds="off"] .sv-hero3d__clouds {
+  opacity: 0;
+}
+
+.sv-hero3d__cloud {
+  position: absolute;
+  border-radius: 999px;
+  background: radial-gradient(ellipse at 50% 45%, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.56) 44%, rgba(255, 255, 255, 0) 76%);
+  filter: blur(8px);
+  will-change: transform;
+}
+
+.sv-hero3d__cloud--upper {
+  top: 9%;
+  left: 22%;
+  width: clamp(220px, 26vw, 380px);
+  height: clamp(92px, 11vw, 154px);
+  animation: svCloudDriftA 22s ease-in-out infinite alternate;
+}
+
+.sv-hero3d__cloud--lower {
+  bottom: 18%;
+  right: 16%;
+  width: clamp(210px, 24vw, 350px);
+  height: clamp(88px, 10vw, 144px);
+  opacity: 0.84;
+  animation: svCloudDriftB 26s ease-in-out infinite alternate;
+}
+
+@keyframes svCloudDriftA {
+  0% { transform: translate3d(-12px, 0, 0); }
+  100% { transform: translate3d(20px, -8px, 0); }
+}
+
+@keyframes svCloudDriftB {
+  0% { transform: translate3d(14px, 4px, 0); }
+  100% { transform: translate3d(-18px, -6px, 0); }
+}
+
+/* Floating UI Chrome Layer (Perimeter-only so center 3D SVIND stays unobstructed) */
+.sv-hero3d__chrome {
+  position: relative;
+  z-index: 4;
+  width: 100%;
+  height: 100%;
+  padding: clamp(16px, 2.2vw, 28px) clamp(16px, 3vw, 40px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.sv-hero3d__chrome button,
+.sv-hero3d__chrome a,
+.sv-hero3d__chrome [role="button"] {
+  pointer-events: auto;
+}
+
+/* Top bar: Left Inspector Card + Center Swatch Pill + Right Spec Tile */
+.sv-hero3d__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* Top-Left Craft-style 6-tile Style & Material Card */
+.sv-hero3d__card {
+  width: 248px;
+  padding: 10px;
+  border-radius: 14px;
+  background-color: var(--h3d-card-bg);
+  border: 1px solid var(--h3d-card-border);
+  box-shadow: 0 18px 38px -12px rgba(24, 34, 48, 0.16);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  pointer-events: auto;
+}
+
+@media (max-width: 1023.98px) {
+  .sv-hero3d__card {
+    display: none;
+  }
+}
+
+.sv-hero3d__bento-btn {
+  appearance: none;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 4px;
+  min-height: 52px;
+  padding: 7px 8px;
+  border-radius: 9px;
+  border: 1px solid rgba(26, 29, 33, 0.08);
+  background-color: #F7F9FB;
+  color: var(--h3d-ink);
+  font-family: var(--font-sans, "Inter Tight", sans-serif);
+  text-align: left;
+  cursor: pointer;
+  transition: transform 140ms ease, border-color 140ms ease, background-color 140ms ease;
+}
+
+.sv-hero3d__bento-btn:hover,
+.sv-hero3d__bento-btn:focus-visible {
+  transform: translateY(-1px);
+  border-color: var(--color-navy, #1E3A6B);
+  background-color: #FFFFFF;
+}
+
+.sv-hero3d__bento-btn:focus-visible {
+  outline: 2px solid var(--color-navy, #1E3A6B);
+  outline-offset: 1px;
+}
+
+.sv-hero3d__bento-btn.is-active {
+  border-color: var(--color-navy, #1E3A6B);
+  background-color: #EEF3FA;
+}
+
+.sv-hero3d__bento-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--h3d-muted);
+}
+
+.sv-hero3d__bento-sample {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--h3d-ink);
+  line-height: 1.1;
+}
+
+.sv-hero3d__bento-chip {
+  width: 100%;
+  height: 16px;
+  border-radius: 4px;
+  background: linear-gradient(120deg, #4E9443 0%, #DF7E45 36%, #E59DC1 68%, #568FA9 100%);
+}
+
+.sv-hero3d__bento-chip--sky {
+  background: linear-gradient(135deg, #D7E7F1 0%, #ECF3F8 100%);
+  border: 1px solid rgba(26, 29, 33, 0.1);
+}
+
+.sv-hero3d__bento-chip--swirl {
+  background: radial-gradient(circle at 30% 40%, #F2B488 0%, #DF7E45 62%, #B85B2D 100%);
+}
+
+/* Top-Center Floating Circular Swatch Switcher Pill */
+.sv-hero3d__swatches {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background-color: var(--h3d-card-bg);
+  border: 1px solid var(--h3d-card-border);
+  box-shadow: 0 14px 32px -10px rgba(24, 34, 48, 0.18);
+  margin-inline: auto;
+}
+
+.sv-hero3d__swatch {
+  appearance: none;
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(26, 29, 33, 0.14);
+  cursor: pointer;
+  padding: 0;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.sv-hero3d__swatch:hover,
+.sv-hero3d__swatch:focus-visible {
+  transform: scale(1.12);
+}
+
+.sv-hero3d__swatch:focus-visible {
+  outline: 2px solid var(--color-navy, #1E3A6B);
+  outline-offset: 2px;
+}
+
+.sv-hero3d__swatch.is-active {
+  transform: scale(1.14);
+  box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px var(--color-navy, #1E3A6B);
+}
+
+.sv-hero3d__swatch--clay {
+  background: conic-gradient(#4E9443 0deg 90deg, #DF7E45 90deg 180deg, #568FA9 180deg 270deg, #F4CA63 270deg);
+}
+
+.sv-hero3d__swatch--blueprint {
+  background: linear-gradient(rgba(30, 58, 107, 0.25) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(30, 58, 107, 0.25) 1px, transparent 1px),
+              #EFF6FC;
+  background-size: 6px 6px;
+}
+
+.sv-hero3d__swatch--steel {
+  background: linear-gradient(135deg, #E2E7EE 0%, #8A96A8 48%, #2E3B4E 100%);
+}
+
+.sv-hero3d__swatch--enamel {
+  background: radial-gradient(circle at 32% 30%, #FFFFFF 0%, #F4CA63 45%, #D99B26 100%);
+}
+
+.sv-hero3d__swatch--terracotta {
+  background: radial-gradient(circle at 30% 35%, #F2B488 0%, #DF7E45 65%, #A64E23 100%);
+}
+
+/* Floating Corner File Spec Badges (matching IMG_8030_ac86d41d mini tiles) */
+.sv-hero3d__tiles {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-block: 10px;
+}
+
+@media (min-width: 1024px) {
+  .sv-hero3d__tiles {
+    position: absolute;
+    inset: 22px clamp(20px, 3vw, 42px) 104px;
+    margin-block: 0;
+    pointer-events: none;
+    display: block;
+  }
+}
+
+.sv-hero3d__tile {
+  appearance: none;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+  background: transparent;
+  border: 0;
+  color: var(--h3d-ink);
+  cursor: pointer;
+  transition: transform 180ms ease;
+}
+
+.sv-hero3d__tile:hover,
+.sv-hero3d__tile:focus-visible {
+  transform: translateY(-3px);
+}
+
+.sv-hero3d__tile:focus-visible {
+  outline: 2px solid var(--color-navy, #1E3A6B);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+@media (min-width: 1024px) {
+  .sv-hero3d__tile {
+    position: absolute;
+  }
+  .sv-hero3d__tile--1 { top: 6px; left: 268px; }
+  .sv-hero3d__tile--2 { top: 14px; right: 24px; }
+  .sv-hero3d__tile--3 { bottom: 68px; left: 32%; }
+  .sv-hero3d__tile--4 { bottom: 72px; right: 24%; }
+}
+
+.sv-hero3d__tile-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--h3d-ink);
+  box-shadow: 0 8px 20px -6px rgba(24, 34, 48, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+.sv-hero3d__tile--1 .sv-hero3d__tile-icon { background-color: #EADDE6; }
+.sv-hero3d__tile--2 .sv-hero3d__tile-icon { background-color: #F5E2B8; }
+.sv-hero3d__tile--3 .sv-hero3d__tile-icon { background-color: #ECE3DF; }
+.sv-hero3d__tile--4 .sv-hero3d__tile-icon { background-color: #DFC8B8; }
+
+.sv-hero3d__tile.is-active .sv-hero3d__tile-icon {
+  box-shadow: 0 0 0 2px var(--color-navy, #1E3A6B), 0 10px 22px -6px rgba(30, 58, 107, 0.35);
+}
+
+.sv-hero3d__tile-name {
+  font-family: var(--font-mono, "IBM Plex Mono", monospace);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--h3d-ink);
+  white-space: nowrap;
+}
+
+/* Compact inline spec note when a corner tile is clicked */
+.sv-hero3d__spec-pop {
+  position: relative;
+  align-self: center;
+  text-align: center;
+  max-width: 380px;
+  margin-bottom: 8px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background-color: var(--h3d-card-bg);
+  border: 1px solid var(--h3d-card-border);
+  box-shadow: 0 12px 28px -8px rgba(24, 34, 48, 0.18);
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--h3d-ink);
+  pointer-events: auto;
+}
+
+@media (min-width: 1024px) {
+  .sv-hero3d__spec-pop {
+    position: absolute;
+    top: 74px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 0;
+    z-index: 6;
+  }
+}
+
+.sv-hero3d__spec-pop strong {
+  display: block;
+  font-family: var(--font-mono, "IBM Plex Mono", monospace);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-navy, #1E3A6B);
+  margin-bottom: 3px;
+}
+
+/* Bottom Row: Accessible Headline + Drag Cue + Sharp SVIND Primary CTA */
+.sv-hero3d__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px 24px;
+}
+
+.sv-hero3d__lockup {
+  max-width: 48ch;
+  pointer-events: auto;
+}
+
+.sv-hero3d__eyebrow {
+  margin: 0 0 6px;
+  font-family: var(--font-mono, "IBM Plex Mono", monospace);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-navy, #1E3A6B);
+}
+
+.sv-hero3d__h1 {
+  margin: 0;
+  font-family: var(--font-display, "Inter Tight", sans-serif);
+  font-size: clamp(22px, 2.2vw, 32px);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--h3d-ink);
+  text-wrap: balance;
+}
+
+.sv-hero3d[data-typeface="mono"] .sv-hero3d__h1 {
+  font-family: var(--font-mono, "IBM Plex Mono", monospace);
+  font-size: clamp(19px, 1.85vw, 26px);
+  letter-spacing: -0.01em;
+}
+
+.sv-hero3d[data-typeface="editorial"] .sv-hero3d__h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 600;
+}
+
+.sv-hero3d__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  pointer-events: auto;
+}
+
+.sv-hero3d__hint {
+  font-family: var(--font-mono, "IBM Plex Mono", monospace);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--h3d-muted);
+}
+
+.sv-hero3d__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 26px;
+  background-color: var(--h3d-ink);
+  color: #FFFFFF;
+  border: 1px solid var(--h3d-ink);
+  border-radius: 0;
+  font-family: var(--font-mono, "IBM Plex Mono", monospace);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.sv-hero3d__cta:hover,
+.sv-hero3d__cta:focus-visible {
+  background-color: var(--color-navy, #1E3A6B);
+  border-color: var(--color-navy, #1E3A6B);
+  transform: translateY(-1px);
+}
+
+.sv-hero3d__cta:focus-visible {
+  outline: 2px solid var(--color-navy, #1E3A6B);
+  outline-offset: 3px;
+}
+
+/* Mobile spacer so 3D canvas has dedicated central vertical room */
+@media (max-width: 1023.98px) {
+  .sv-hero3d__chrome {
+    min-height: 580px;
+  }
+  .sv-hero3d__stage-spacer {
+    flex: 1 1 250px;
+    min-height: 250px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .sv-hero3d__stage-spacer {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sv-hero3d__cloud--upper,
+  .sv-hero3d__cloud--lower {
+    animation: none !important;
+  }
+  .sv-hero3d__cta,
+  .sv-hero3d__tile,
+  .sv-hero3d__bento-btn,
+  .sv-hero3d__swatch {
+    transition: none !important;
+  }
+}
