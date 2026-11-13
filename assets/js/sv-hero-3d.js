@@ -171,16 +171,16 @@ function makeSteelPlateTexture(maxAnisotropy) {
   const ctx = canvas.getContext('2d');
 
   const grad = ctx.createLinearGradient(0, 0, 512, 512);
-  grad.addColorStop(0, '#AEB9C7');
-  grad.addColorStop(0.45, '#8F9CAC');
-  grad.addColorStop(1, '#6C7A8C');
+  grad.addColorStop(0, '#B8C4D2');
+  grad.addColorStop(0.45, '#7E8C9E');
+  grad.addColorStop(1, '#526072');
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, 512, 512);
 
   // Horizontal rolled-mill brush grain
   for (let y = 0; y < 512; y += 2) {
-    const alpha = 0.05 + ((y * 19) % 13) * 0.012;
-    ctx.strokeStyle = y % 4 === 0 ? `rgba(255,255,255,${alpha})` : `rgba(20,28,38,${alpha})`;
+    const alpha = 0.08 + ((y * 19) % 13) * 0.015;
+    ctx.strokeStyle = y % 4 === 0 ? `rgba(255,255,255,${alpha})` : `rgba(14,22,32,${alpha})`;
     ctx.beginPath();
     ctx.moveTo(0, y);
     ctx.lineTo(512, y);
@@ -385,11 +385,12 @@ function makeBlueprintScriptTexture(maxAnisotropy) {
   canvas.height = 512;
   const ctx = canvas.getContext('2d');
 
-  ctx.fillStyle = '#CFE4FA';
+  // Authentic deep cyanotype CAD blueprint background
+  ctx.fillStyle = '#173A73';
   ctx.fillRect(0, 0, 512, 512);
 
-  // Fine technical drafting millimeter grid
-  ctx.strokeStyle = 'rgba(20, 60, 117, 0.22)';
+  // Fine technical drafting millimeter grid in crisp blueprint white/cyan
+  ctx.strokeStyle = 'rgba(186, 224, 255, 0.24)';
   ctx.lineWidth = 1.5;
   for (let g = 32; g < 512; g += 32) {
     ctx.beginPath();
@@ -403,7 +404,7 @@ function makeBlueprintScriptTexture(maxAnisotropy) {
   }
 
   // Major engineering section lines & crosshairs
-  ctx.strokeStyle = 'rgba(20, 60, 117, 0.42)';
+  ctx.strokeStyle = 'rgba(220, 240, 255, 0.48)';
   ctx.lineWidth = 2.5;
   for (let g = 128; g < 512; g += 128) {
     ctx.beginPath();
@@ -416,8 +417,8 @@ function makeBlueprintScriptTexture(maxAnisotropy) {
     ctx.stroke();
   }
 
-  // Subtle repeating CAD spec watermark along horizontal datum band
-  ctx.fillStyle = 'rgba(20, 60, 117, 0.56)';
+  // Crisp CAD spec callouts
+  ctx.fillStyle = 'rgba(232, 245, 255, 0.85)';
   ctx.font = '600 22px "IBM Plex Mono", monospace';
   ctx.textAlign = 'center';
   ctx.fillText('IS 807 · FEM 4M · 36m SPAN', 256, 108);
@@ -705,58 +706,58 @@ function normalizeExtrudeUVs(geometry) {
    ========================================================================== */
 const THEME_DIRECTORS = {
   'raw-steel': {
-    camX: -0.55,
-    camYOffset: 0.75,
-    camZBoost: 0.9,
-    lookX: 0,
+    camX: -1.75,
+    camYOffset: 0.55,
+    camZBoost: 0.95,
+    lookX: 0.05,
     lookYOffset: -0.18,
     fov: 34,
-    exposure: 1.08,
+    exposure: 1.12,
     fogColor: 0xCBD6E2,
     fogDensity: 0.012,
     hemiSky: 0xEFF5FB,
-    hemiGround: 0x5C6674,
-    hemiInt: 0.65,
+    hemiGround: 0x4A5564,
+    hemiInt: 0.62,
     keyColor: 0xFFF7EC,
-    keyInt: 1.72,
-    keyPos: [-4.2, 8.2, 5.8],
+    keyInt: 1.95,
+    keyPos: [-4.8, 8.2, 5.8],
     rimColor: 0xC6DDF5,
-    rimInt: 0.72,
+    rimInt: 0.88,
     rimPos: [6.0, 2.8, -4.6],
     underColor: 0x4A6382,
     underInt: 0.0,
-    shadowOpacity: 0.24,
+    shadowOpacity: 0.26,
     rig: 'girders'
   },
   'molten-heat': {
-    camX: 2.35,
-    camYOffset: -0.78,
-    camZBoost: 1.0,
-    lookX: -0.15,
+    camX: 2.95,
+    camYOffset: -0.88,
+    camZBoost: 1.05,
+    lookX: -0.18,
     lookYOffset: -0.16,
     fov: 37,
-    exposure: 1.18,
+    exposure: 1.2,
     fogColor: 0x160C08,
     fogDensity: 0.022,
     hemiSky: 0x3D2620,
     hemiGround: 0xFF5A14,
     hemiInt: 0.45,
     keyColor: 0xFFBA7A,
-    keyInt: 1.15,
+    keyInt: 1.18,
     keyPos: [3.2, 5.4, 5.2],
     rimColor: 0xFF4D0A,
-    rimInt: 1.65,
+    rimInt: 1.85,
     rimPos: [-5.5, 2.4, -4.2],
     underColor: 0xFF5A14,
-    underInt: 3.6,
+    underInt: 3.8,
     shadowOpacity: 0.34,
     rig: 'sparks'
   },
   enamel: {
-    camX: -1.85,
-    camYOffset: 1.08,
-    camZBoost: 1.0,
-    lookX: 0.08,
+    camX: -2.35,
+    camYOffset: 1.18,
+    camZBoost: 1.05,
+    lookX: 0.1,
     lookYOffset: -0.34,
     fov: 33,
     exposure: 1.08,
@@ -769,7 +770,7 @@ const THEME_DIRECTORS = {
     keyInt: 1.85,
     keyPos: [-3.2, 8.6, 6.4],
     rimColor: 0xDFECFA,
-    rimInt: 0.64,
+    rimInt: 0.72,
     rimPos: [5.2, 3.6, -3.8],
     underColor: 0xFFFFFF,
     underInt: 0.0,
@@ -777,23 +778,23 @@ const THEME_DIRECTORS = {
     rig: 'hazard'
   },
   cad: {
-    camX: 0.65,
-    camYOffset: 2.1,
-    camZBoost: 0.95,
-    lookX: 0,
+    camX: 1.15,
+    camYOffset: 2.25,
+    camZBoost: 1.0,
+    lookX: -0.05,
     lookYOffset: -0.34,
     fov: 32,
-    exposure: 1.04,
+    exposure: 1.06,
     fogColor: 0xD5E5F4,
     fogDensity: 0.008,
     hemiSky: 0xF2F8FF,
     hemiGround: 0x8CA6C2,
     hemiInt: 0.92,
     keyColor: 0xFFFFFF,
-    keyInt: 1.25,
+    keyInt: 1.35,
     keyPos: [1.5, 9.5, 6.0],
     rimColor: 0x74A7E2,
-    rimInt: 0.52,
+    rimInt: 0.65,
     rimPos: [-5.0, 4.0, -4.0],
     underColor: 0x4A7EC7,
     underInt: 0.0,
@@ -801,23 +802,23 @@ const THEME_DIRECTORS = {
     rig: 'cad'
   },
   galvanized: {
-    camX: -2.45,
-    camYOffset: 0.52,
-    camZBoost: 1.0,
-    lookX: 0.12,
+    camX: 2.75,
+    camYOffset: 0.92,
+    camZBoost: 1.05,
+    lookX: -0.12,
     lookYOffset: -0.26,
     fov: 35,
-    exposure: 1.1,
+    exposure: 1.12,
     fogColor: 0xC8DDF0,
     fogDensity: 0.011,
     hemiSky: 0xE6F3FF,
     hemiGround: 0x6B7988,
     hemiInt: 0.76,
     keyColor: 0xFFFBF2,
-    keyInt: 1.75,
+    keyInt: 1.85,
     keyPos: [-5.4, 7.2, 5.2],
     rimColor: 0xB8D8F5,
-    rimInt: 0.82,
+    rimInt: 0.92,
     rimPos: [5.5, 3.0, -4.5],
     underColor: 0x99B4CC,
     underInt: 0.0,
@@ -1356,7 +1357,7 @@ export function initHero3D() {
   // Technical CAD edge overlay lines (visible on CAD theme)
   const blueprintLines = letterStates.map((st) => {
     const edges = new THREE.EdgesGeometry(st.mainMesh.geometry, 24);
-    const lineMat = new THREE.LineBasicMaterial({ color: 0x1E4C9A, transparent: true, opacity: 0.65 });
+    const lineMat = new THREE.LineBasicMaterial({ color: 0x9EE0FF, transparent: true, opacity: 0.82 });
     disposables.push(edges, lineMat);
     const seg = new THREE.LineSegments(edges, lineMat);
     seg.visible = false;
@@ -1423,21 +1424,21 @@ export function initHero3D() {
 
       if (preset === 'raw-steel') {
         mat.map = steelTex;
-        mat.color.set(idx === 3 ? '#6E89AE' : '#D4DCE6');
+        mat.color.set(idx === 3 ? '#5E7DA6' : '#DCE4EE');
         mat.bumpMap = steelBumpTex;
-        mat.bumpScale = 0.018;
-        mat.roughness = 0.28;
-        mat.metalness = 0.88;
-        mat.clearcoat = 0.22;
-        mat.clearcoatRoughness = 0.38;
-        mat.envMapIntensity = 0.95;
-        st.backMat.color.set('#1E2631');
+        mat.bumpScale = 0.024;
+        mat.roughness = 0.22;
+        mat.metalness = 0.92;
+        mat.clearcoat = 0.28;
+        mat.clearcoatRoughness = 0.32;
+        mat.envMapIntensity = 1.15;
+        st.backMat.color.set('#19212C');
       } else if (preset === 'molten-heat') {
         mat.map = moltenAlbedoTex;
         mat.color.set('#FFFFFF');
         mat.emissive.setHex(0xFF5A14);
         mat.emissiveMap = moltenEmissiveTex;
-        mat.emissiveIntensity = 1.6;
+        mat.emissiveIntensity = 1.65;
         mat.bumpMap = galvBumpTex;
         mat.bumpScale = 0.028;
         mat.roughness = 0.62;
@@ -1457,14 +1458,14 @@ export function initHero3D() {
         st.backMat.color.set(idx === 0 || idx === 4 ? '#8A6304' : '#142644');
       } else if (preset === 'cad') {
         mat.map = blueprintTex;
-        mat.color.set('#F5FAFF');
+        mat.color.set('#FFFFFF');
         mat.bumpMap = null;
-        mat.roughness = 0.82;
-        mat.metalness = 0.04;
+        mat.roughness = 0.72;
+        mat.metalness = 0.1;
         mat.clearcoat = 0.0;
-        mat.envMapIntensity = 0.3;
+        mat.envMapIntensity = 0.38;
         bpLine.visible = true;
-        st.backMat.color.set('#1E4C9A');
+        st.backMat.color.set('#0E254D');
       } else if (preset === 'galvanized') {
         mat.map = galvTex;
         mat.color.set('#EAEFF5');

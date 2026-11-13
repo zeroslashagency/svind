@@ -42,7 +42,8 @@ app.use(
     extensions: ['html'],
     setHeaders: (res, filePath) => {
       const ext = path.extname(filePath).toLowerCase();
-      res.setHeader('Cache-Control', ext === '.html' ? 'no-cache' : 'public, max-age=3600');
+      const isDynamicAsset = ext === '.html' || ext === '.js' || ext === '.css' || ext === '.mjs';
+      res.setHeader('Cache-Control', isDynamicAsset ? 'no-cache, must-revalidate' : 'public, max-age=3600');
     }
   })
 );
