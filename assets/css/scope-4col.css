@@ -1,0 +1,308 @@
+/* ==========================================================================
+   Section 6 — 4-Column Interactive Engineering Scope Showcase
+   Full-bleed 4-column layout with crisp white resting columns, deep charcoal
+   (#161A1F) hover/focus/active inversion, cyan (#2BB8E8) top index dash,
+   and shared transparent Three.js solid-steel mechanical stage.
+   ========================================================================== */
+
+.sv-scope {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #FFFFFF;
+  border-top: 1px solid #E2E6EC;
+  border-bottom: 1px solid #E2E6EC;
+  overflow: clip;
+  scroll-margin-top: 64px;
+}
+
+/* Layer 1: Shared transparent WebGL canvas aligned across all 4 columns */
+.sv-scope__canvas-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.sv-scope__canvas-layer canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
+.sv-scope__fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  pointer-events: none;
+}
+
+.sv-scope__fallback[hidden] {
+  display: none !important;
+}
+
+.sv-scope__fallback-mark {
+  font-family: var(--font-mono, "IBM Plex Mono", monospace);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8A8F96;
+}
+
+/* Layer 0 / 2: 4-Column grid (z-index: auto on cols keeps bg at layer 0 behind canvas) */
+.sv-scope__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .sv-scope__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .sv-scope__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    height: calc(100svh - 64px);
+    min-height: 620px;
+    max-height: 920px;
+  }
+}
+
+.sv-scope__col {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+  min-height: 440px;
+  margin: 0;
+  padding: clamp(24px, 2.6vw, 36px) clamp(20px, 2.1vw, 32px) clamp(28px, 3vw, 44px);
+  background-color: #FFFFFF;
+  color: #1A1D21;
+  border-bottom: 1px solid #E2E6EC;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 240ms cubic-bezier(0.22, 1, 0.36, 1),
+              color 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sv-scope__col:last-child {
+  border-bottom: 0;
+}
+
+@media (min-width: 640px) and (max-width: 1023.98px) {
+  .sv-scope__col {
+    min-height: 480px;
+  }
+  .sv-scope__col:nth-child(odd) {
+    border-inline-end: 1px solid #E2E6EC;
+  }
+  .sv-scope__col:nth-last-child(-n+2) {
+    border-bottom: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .sv-scope__col {
+    min-height: 0;
+    height: 100%;
+    border-bottom: 0;
+  }
+  .sv-scope__col + .sv-scope__col {
+    border-inline-start: 1px solid #E2E6EC;
+  }
+}
+
+/* Active / Hover / Focus-Visible Dark Charcoal State */
+.sv-scope__col.is-active,
+.sv-scope__col:focus-visible {
+  background-color: #161A1F;
+  color: #FFFFFF;
+}
+
+@media (hover: hover) {
+  .sv-scope__col:hover {
+    background-color: #161A1F;
+    color: #FFFFFF;
+  }
+}
+
+.sv-scope__col:focus-visible {
+  box-shadow: inset 0 0 0 2px #2BB8E8;
+}
+
+/* Top Index Bar: — 01 .. — 04 (Layer 2 above WebGL canvas) */
+.sv-scope__head {
+  position: relative;
+  z-index: 2;
+  container-type: inline-size;
+  width: 100%;
+  height: 40px;
+  flex: none;
+}
+
+.sv-scope__dash {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 20px;
+  height: 2px;
+  background-color: #2BB8E8;
+  transform: translate3d(calc(50cqi - 34px), -50%, 0);
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.sv-scope__num {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  font-family: var(--font-display, "Inter Tight", sans-serif);
+  font-size: clamp(26px, 2.2vw, 34px);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+  transform: translate3d(calc(-50cqi + 50%), -50%, 0);
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+              color 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.sv-scope__col.is-active .sv-scope__dash,
+.sv-scope__col:focus-visible .sv-scope__dash {
+  transform: translate3d(0, -50%, 0);
+}
+
+.sv-scope__col.is-active .sv-scope__num,
+.sv-scope__col:focus-visible .sv-scope__num {
+  transform: translate3d(0, -50%, 0);
+}
+
+@media (hover: hover) {
+  .sv-scope__col:hover .sv-scope__dash {
+    transform: translate3d(0, -50%, 0);
+  }
+  .sv-scope__col:hover .sv-scope__num {
+    transform: translate3d(0, -50%, 0);
+  }
+}
+
+/* Central 3D Viewport Marker (empty transparent spacer measured by Three.js scissor pass) */
+.sv-scope__stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 210px;
+  width: 100%;
+  pointer-events: none;
+}
+
+/* Bottom Typography Lockup (Layer 2 above WebGL canvas) */
+.sv-scope__foot {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 14px;
+  flex: none;
+  padding-top: 12px;
+}
+
+.sv-scope__title {
+  margin: 0;
+  max-width: 14ch;
+  min-height: 2.16em;
+  font-family: var(--font-display, "Inter Tight", sans-serif);
+  font-size: clamp(22px, 1.85vw, 30px);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+  transform: translate3d(0, 62px, 0);
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+              color 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.sv-scope__desc {
+  margin: 0;
+  max-width: 32ch;
+  font-family: var(--font-sans, "Inter Tight", sans-serif);
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 1.48;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.72);
+  opacity: 0;
+  transform: translate3d(0, 14px, 0);
+  transition: opacity 220ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, opacity;
+}
+
+.sv-scope__col.is-active .sv-scope__title,
+.sv-scope__col:focus-visible .sv-scope__title {
+  transform: translate3d(0, 0, 0);
+}
+
+.sv-scope__col.is-active .sv-scope__desc,
+.sv-scope__col:focus-visible .sv-scope__desc {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+@media (hover: hover) {
+  .sv-scope__col:hover .sv-scope__title {
+    transform: translate3d(0, 0, 0);
+  }
+  .sv-scope__col:hover .sv-scope__desc {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Mobile / Narrow Stacked Touch Behavior */
+@media (max-width: 639.98px) {
+  .sv-scope__col {
+    min-height: 380px;
+  }
+
+  .sv-scope__title {
+    transform: none;
+  }
+
+  .sv-scope__desc {
+    max-height: 0;
+    overflow: hidden;
+    margin-top: -10px;
+  }
+
+  .sv-scope__col.is-active .sv-scope__desc,
+  .sv-scope__col:focus-visible .sv-scope__desc {
+    max-height: 140px;
+    margin-top: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sv-scope__col,
+  .sv-scope__dash,
+  .sv-scope__num,
+  .sv-scope__title,
+  .sv-scope__desc {
+    transition: none !important;
+  }
+}

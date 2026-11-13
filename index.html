@@ -19,7 +19,7 @@
   <link rel="stylesheet" href="assets/css/value-prop.css">
   <link rel="stylesheet" href="assets/css/hro.css">
   <link rel="stylesheet" href="assets/css/hero-3d.css?v=20261113e">
-  <link rel="stylesheet" href="assets/css/floor-crane.css?v=20261113l">
+  <link rel="stylesheet" href="assets/css/scope-4col.css?v=20261113m">
   <!-- resources-bento.css removed with section -->
   <!-- vmc.css removed -->
   <script type="importmap">
@@ -560,103 +560,71 @@
       </div>
     </section>
 
-    <!-- Proof -->
-    <section class="core-band core-stats-stage" aria-labelledby="proof-h">
-      <div class="core-frame">
-        <p class="core-frame__label">Proof</p>
-        <p class="core-frame__counter"><b>08</b><span class="core-frame__rule"></span>13</p>
+    <!-- Engineering Scope (4-Column Interactive Showcase) -->
+    <section class="sv-scope" id="engineering-scope" aria-labelledby="scope-h">
+      <h2 class="sr-only" id="scope-h">Engineering scope from design to service and spares</h2>
+
+      <div class="sv-scope__canvas-layer" id="sv-scope-canvas-layer" aria-hidden="true"></div>
+      <div class="sv-scope__fallback" id="sv-scope-fallback" hidden>
+        <span class="sv-scope__fallback-mark">SVIND Engineering Scope · Design · Fabrication · FAT · AMC</span>
       </div>
 
-      <h2 class="core-head" id="proof-h">What backs the quote</h2>
-
-      <ul class="core-stats" style="margin-block-start: var(--space-8)">
-        <li class="core-stat">
-          <p class="core-stat__lockup">
-            <span class="core-stat__value">20</span>
-            <span class="core-stat__caption">Years manufacturing</span>
-          </p>
-          <p class="core-stat__note">S.V. Material Handling System Pvt Ltd has built cranes since 2006.</p>
-        </li>
-        <li class="core-stat">
-          <p class="core-stat__lockup">
-            <span class="core-stat__value">100</span>
-            <span class="core-stat__caption">Tonne double-girder</span>
-          </p>
-          <p class="core-stat__note">Double-girder EOT capability to 100+ T, with spans engineered per bay.</p>
-        </li>
-        <li class="core-stat">
-          <p class="core-stat__lockup">
-            <span class="core-stat__value">807</span>
-            <span class="core-stat__caption">IS design code</span>
-          </p>
-          <p class="core-stat__note">Designed to IS 807, IS 3177, IS 4137 and FEM 9.511 duty classification.</p>
-        </li>
-      </ul>
-
-      <div class="sv-fc" id="floor-crane-showcase">
-        <div class="sv-fc__head">
-          <p class="sv-fc__kicker">Floor Cranes · Easy Installation · Low Maintenance · High Performance</p>
-          <p class="sv-fc__intro">
-            Custom-built mobile floor cranes engineered for rugged construction, plant maintenance, and effortless material loading or unloading from trolleys and trucks.
-          </p>
-        </div>
-
-        <div class="sv-fc__stage">
-          <div class="sv-fc__viewport">
-            <div class="sv-fc__mount" id="sv-fc-mount"></div>
-
-            <div class="sv-fc__fallback" id="sv-fc-fallback" hidden>
-              <img src="public/assets/aistudio/image_a246b7cf.png" width="1280" height="600"
-                   alt="SVIND industrial floor crane with telescoping boom, swivel hook, rear winch and screw-down jacks"
-                   loading="lazy" decoding="async">
-            </div>
-
-            <svg class="sv-fc__leader-svg" aria-hidden="true">
-              <g class="sv-fc__leader is-active" data-fc-leader="0">
-                <polyline class="sv-fc__leader-line" points=""></polyline>
-                <circle class="sv-fc__leader-dot" cx="0" cy="0" r="3.5"></circle>
-              </g>
-              <g class="sv-fc__leader" data-fc-leader="1">
-                <polyline class="sv-fc__leader-line" points=""></polyline>
-                <circle class="sv-fc__leader-dot" cx="0" cy="0" r="3.5"></circle>
-              </g>
-              <g class="sv-fc__leader" data-fc-leader="2">
-                <polyline class="sv-fc__leader-line" points=""></polyline>
-                <circle class="sv-fc__leader-dot" cx="0" cy="0" r="3.5"></circle>
-              </g>
-              <g class="sv-fc__leader" data-fc-leader="3">
-                <polyline class="sv-fc__leader-line" points=""></polyline>
-                <circle class="sv-fc__leader-dot" cx="0" cy="0" r="3.5"></circle>
-              </g>
-            </svg>
+      <div class="sv-scope__grid">
+        <article class="sv-scope__col" tabindex="0" role="button" aria-pressed="false" data-scope-col="0">
+          <div class="sv-scope__head">
+            <span class="sv-scope__dash" aria-hidden="true"></span>
+            <span class="sv-scope__num">01</span>
           </div>
-
-          <div class="sv-fc__boxes" role="group" aria-label="Floor crane engineering highlights">
-            <button type="button" class="sv-fc__box sv-fc__box--tl is-active" data-fc-box="0" aria-pressed="true">
-              <span class="sv-fc__box-meta">01 · Custom Reach</span>
-              <span class="sv-fc__box-title">Telescoping Boom &amp; Over-Hoist Switch</span>
-              <span class="sv-fc__box-copy">Hydraulic elevation and tailored reach for truck and trolley loading.</span>
-            </button>
-
-            <button type="button" class="sv-fc__box sv-fc__box--bl" data-fc-box="1" aria-pressed="false">
-              <span class="sv-fc__box-meta">02 · High Performance</span>
-              <span class="sv-fc__box-title">Forged Swivel Hook &amp; Snatch Block</span>
-              <span class="sv-fc__box-copy">Deep-throat alloy hook with safety latch for precise load positioning.</span>
-            </button>
-
-            <button type="button" class="sv-fc__box sv-fc__box--tr" data-fc-box="2" aria-pressed="false">
-              <span class="sv-fc__box-meta">03 · Low Maintenance</span>
-              <span class="sv-fc__box-title">Winch Drum &amp; 1.5T Ballast Cage</span>
-              <span class="sv-fc__box-copy">Sealed helical gearbox, grooved drum, and custom counterweight mass.</span>
-            </button>
-
-            <button type="button" class="sv-fc__box sv-fc__box--br" data-fc-box="3" aria-pressed="false">
-              <span class="sv-fc__box-meta">04 · Easy Installation</span>
-              <span class="sv-fc__box-title">Swivel Casters &amp; Screw-Down Jacks</span>
-              <span class="sv-fc__box-copy">Roll directly to the bay and wind down floor pads with zero civil work.</span>
-            </button>
+          <div class="sv-scope__stage" aria-hidden="true"></div>
+          <div class="sv-scope__foot">
+            <h3 class="sv-scope__title">Engineering &amp; Design</h3>
+            <p class="sv-scope__desc">
+              Bay surveys, span and lift calculations, and duty classification to IS 807, IS 3177, and FEM 9.511 before steel is cut.
+            </p>
           </div>
-        </div>
+        </article>
+
+        <article class="sv-scope__col" tabindex="0" role="button" aria-pressed="false" data-scope-col="1">
+          <div class="sv-scope__head">
+            <span class="sv-scope__dash" aria-hidden="true"></span>
+            <span class="sv-scope__num">02</span>
+          </div>
+          <div class="sv-scope__stage" aria-hidden="true"></div>
+          <div class="sv-scope__foot">
+            <h3 class="sv-scope__title">In-House Fabrication</h3>
+            <p class="sv-scope__desc">
+              Box girders, end carriages, and crab trolleys welded, machined, and assembled under one roof at Harohalli KIADB.
+            </p>
+          </div>
+        </article>
+
+        <article class="sv-scope__col" tabindex="0" role="button" aria-pressed="false" data-scope-col="2">
+          <div class="sv-scope__head">
+            <span class="sv-scope__dash" aria-hidden="true"></span>
+            <span class="sv-scope__num">03</span>
+          </div>
+          <div class="sv-scope__stage" aria-hidden="true"></div>
+          <div class="sv-scope__foot">
+            <h3 class="sv-scope__title">Proof &amp; FAT Testing</h3>
+            <p class="sv-scope__desc">
+              125% static and 110% dynamic factory load testing, weld inspection, and deflection verification prior to dispatch.
+            </p>
+          </div>
+        </article>
+
+        <article class="sv-scope__col" tabindex="0" role="button" aria-pressed="false" data-scope-col="3">
+          <div class="sv-scope__head">
+            <span class="sv-scope__dash" aria-hidden="true"></span>
+            <span class="sv-scope__num">04</span>
+          </div>
+          <div class="sv-scope__stage" aria-hidden="true"></div>
+          <div class="sv-scope__foot">
+            <h3 class="sv-scope__title">Service, AMC &amp; Spares</h3>
+            <p class="sv-scope__desc">
+              Site erection, commissioning, preventive AMC contracts, and exact-fit OEM drums, gearboxes, wheels, and brakes.
+            </p>
+          </div>
+        </article>
       </div>
     </section>
 

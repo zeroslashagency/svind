@@ -4,7 +4,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { initHero3D } from './sv-hero-3d.js?v=20261113h';
-import { initFloorCraneShowcase } from './sv-floor-crane-3d.js?v=20261113l';
+import { initScopeShowcase } from './sv-scope-3d.js?v=20261113m';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -1690,9 +1690,9 @@ function boot() {
     console.warn('SVIND Hero 3D fallback active:', err);
   }
   try {
-    initFloorCraneShowcase();
+    initScopeShowcase();
   } catch (err) {
-    console.warn('SVIND Floor Crane 3D fallback active:', err);
+    console.warn('SVIND Scope 3D fallback active:', err);
   }
   initMilestone25Scroll();
   initSection04Scroll();
