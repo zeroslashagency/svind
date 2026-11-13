@@ -2,93 +2,58 @@
    Aligned with SVIND core tokens: cool gray step-2 canvas (#E7E7E7),
    crisp #FFFFFF cells separated by 4px gutters, single #1E3A6B navy anchor,
    zero radii, zero shadows, Inter Tight + IBM Plex Mono tabular numerals. */
-.sv-value {
-  background-color: var(--color-canvas-2, #E7E7E7);
-  padding: clamp(52px, 6vw, 92px) clamp(16px, 2.5vw, 48px);
-}
-
-.sv-value__inner {
-  width: 100%;
-  margin: 0 auto;
-}
-
-/* Top label / counter frame matching core-frame grammar */
-.sv-value__frame {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-4, 16px);
-  margin-block-end: clamp(26px, 3vw, 42px);
-}
-
-.sv-value__eyebrow {
-  margin: 0;
-  font-family: var(--font-sans, "Inter Tight", sans-serif);
-  font-size: 12px;
-  font-weight: var(--weight-micro-caps, 600);
-  letter-spacing: var(--tracking-micro-caps, 0.09em);
-  text-transform: uppercase;
-  color: var(--color-navy, #1E3A6B);
-}
-
-.sv-value__counter {
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: var(--space-3, 12px);
-  font-family: var(--font-sans, "Inter Tight", sans-serif);
-  font-size: 12px;
-  font-weight: var(--weight-micro-caps, 600);
-  letter-spacing: 0.04em;
-  color: var(--color-ink-muted, #8A8F96);
-  font-variant-numeric: tabular-nums;
-}
-
-.sv-value__counter b {
-  font-weight: var(--weight-micro-caps, 600);
-  color: var(--color-ink, #1A1D21);
-}
-
-.sv-value__rule {
-  display: block;
-  width: 28px;
-  height: 1px;
-  background-color: var(--color-rule, #B2B5C6);
-}
-
 /* ==========================================================================
-   STEPPED CHAMFERED 4-COLUMN ARCHITECTURAL BOARD
-   Inspired by crisp hanging Swiss-barometer blocks with 45° bottom-left
-   chamfers, staggered vertical drops, and clean lower editorial chambers.
+   SECTION 04 — DIRECT ZERO-GAP 4-COLUMN FULL-SCREEN ARCHITECTURAL LAYOUT
+   Zero outer wrappers, zero side/top/bottom gaps, single-screen desktop fit
+   below the fixed 64px header, 45° bottom-left chamfers, hover-expand.
    ========================================================================== */
-.sv-rank__board {
+.sv-value {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  width: 100%;
+  margin: 0;
+  padding: 0;
   background-color: #F6F7F9;
-  border: 1px solid #D5DAE3;
+  border-top: 1px solid #D5DAE3;
+  border-bottom: 1px solid #D5DAE3;
+  border-inline: 0;
   border-radius: 0;
+  scroll-margin-top: 64px;
+  overflow: clip;
 }
 
 @media (min-width: 640px) {
-  .sv-rank__board {
+  .sv-value {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (min-width: 1024px) {
-  .sv-rank__board {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    min-height: clamp(660px, 53vw, 820px);
+  .sv-value {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    width: 100%;
+    height: calc(100svh - 64px);
+    min-height: 600px;
   }
 }
 
 .sv-rank__col {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   min-width: 0;
+  margin: 0;
+  padding: 0;
   background-color: #F6F7F9;
   border-block-end: 1px solid #D5DAE3;
+  overflow: hidden;
+  will-change: transform;
+  transition: flex-grow 320ms var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)),
+              background-color 220ms var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
 }
 
 .sv-rank__col:last-child {
@@ -106,10 +71,44 @@
 
 @media (min-width: 1024px) {
   .sv-rank__col {
+    flex: 1 1 0%;
     border-block-end: 0;
   }
   .sv-rank__col + .sv-rank__col {
     border-inline-start: 1px solid #D5DAE3;
+  }
+}
+
+@media (hover: hover) and (min-width: 1024px) {
+  .sv-value:hover .sv-rank__col:not(:hover),
+  .sv-value:focus-within .sv-rank__col:not(:focus-within) {
+    flex-grow: 0.85;
+  }
+  .sv-rank__col:hover,
+  .sv-rank__col:focus-within {
+    flex-grow: 1.45;
+    background-color: var(--color-surface, #FFFFFF);
+  }
+  .sv-rank__col:hover .sv-rank__num-row,
+  .sv-rank__col:focus-within .sv-rank__num-row {
+    transform: translateY(-6px);
+  }
+  .sv-rank__col:hover .sv-rank__meta,
+  .sv-rank__col:focus-within .sv-rank__meta {
+    transform: translateY(-3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sv-rank__col,
+  .sv-rank__num-row,
+  .sv-rank__meta {
+    transition: none !important;
+    transform: none !important;
+  }
+  .sv-value:hover .sv-rank__col,
+  .sv-value:focus-within .sv-rank__col {
+    flex-grow: 1 !important;
   }
 }
 
@@ -119,10 +118,11 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: clamp(28px, 2.8vw, 42px) clamp(20px, 2vw, 32px) clamp(28px, 2.6vw, 38px) clamp(28px, 2.6vw, 40px);
-  min-height: 245px;
+  padding: clamp(24px, 2.5vw, 40px) clamp(20px, 2.2vw, 36px) clamp(24px, 2.4vw, 36px) clamp(28px, 2.6vw, 42px);
+  min-height: 240px;
   clip-path: polygon(0 0, 100% 0, 100% 100%, 26px 100%, 0 calc(100% - 26px));
-  transition: transform 240ms var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
+  will-change: transform;
+  transition: filter 220ms var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
 }
 
 .sv-rank__block--01 {
@@ -154,23 +154,25 @@
 
 @media (min-width: 1024px) {
   .sv-rank__block {
+    min-height: 0;
     clip-path: polygon(0 0, 100% 0, 100% 100%, 36px 100%, 0 calc(100% - 36px));
   }
-  .sv-rank__block--01 { min-height: clamp(275px, 22vw, 340px); }
-  .sv-rank__block--02 { min-height: clamp(365px, 29vw, 445px); }
-  .sv-rank__block--03 { min-height: clamp(450px, 36vw, 550px); }
-  .sv-rank__block--04 { min-height: clamp(530px, 42vw, 650px); }
+  .sv-rank__block--01 { height: 34%; min-height: 210px; }
+  .sv-rank__block--02 { height: 44%; min-height: 265px; }
+  .sv-rank__block--03 { height: 54%; min-height: 320px; }
+  .sv-rank__block--04 { height: 62%; min-height: 365px; }
 }
 
 .sv-rank__num-row {
   display: flex;
   align-items: flex-start;
   gap: 8px;
+  transition: transform 280ms var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
 }
 
 .sv-rank__num {
   font-family: var(--font-display, "Inter Tight", sans-serif);
-  font-size: clamp(78px, 8vw, 134px);
+  font-size: clamp(78px, 8vw, 136px);
   font-weight: 500;
   line-height: 0.82;
   letter-spacing: -0.045em;
@@ -178,7 +180,7 @@
 }
 
 .sv-rank__num--compact {
-  font-size: clamp(56px, 5.1vw, 88px);
+  font-size: clamp(56px, 5.1vw, 90px);
   letter-spacing: -0.045em;
 }
 
@@ -200,6 +202,7 @@
   font-family: var(--font-sans, "Inter Tight", sans-serif);
   font-size: clamp(12px, 0.95vw, 14px);
   line-height: 1.4;
+  transition: transform 280ms var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
 }
 
 .sv-rank__meta-id {
@@ -225,7 +228,7 @@
   justify-content: flex-end;
   align-items: flex-start;
   gap: 16px;
-  padding: clamp(24px, 2.5vw, 36px) clamp(20px, 2vw, 32px);
+  padding: clamp(24px, 2.5vw, 38px) clamp(20px, 2.2vw, 36px);
 }
 
 .sv-rank__foot--headline {

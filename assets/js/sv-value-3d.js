@@ -19,78 +19,100 @@ function initSection04Scroll() {
   const section = document.querySelector('#capability-scale');
   if (!section) return;
 
-  const frameRule = section.querySelector('.sv-value__rule');
-  const frameEls = [
-    section.querySelector('.sv-value__eyebrow'),
-    section.querySelector('.sv-value__counter')
-  ].filter(Boolean);
+  const cols = Array.from(section.querySelectorAll('.sv-rank__col'));
   const blocks = Array.from(section.querySelectorAll('.sv-rank__block'));
+  const numRows = Array.from(section.querySelectorAll('.sv-rank__num-row'));
+  const metas = Array.from(section.querySelectorAll('.sv-rank__meta'));
   const foots = Array.from(section.querySelectorAll('.sv-rank__foot'));
   const counters = Array.from(section.querySelectorAll('.sv-mind__value[data-count-to]'));
 
   const mm = gsap.matchMedia();
 
-  mm.add('(prefers-reduced-motion: no-preference)', () => {
-    const tl = gsap.timeline({
+  // Desktop (>= 1024px): lively top-to-down scrubbed card drops + continuous scroll depth
+  mm.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
+    const scrubTl = gsap.timeline({
       scrollTrigger: {
         trigger: section,
-        start: 'top 80%',
-        once: true
+        start: 'top 95%',
+        end: 'top 22%',
+        scrub: 0.6
       }
     });
 
-    if (frameRule) {
-      tl.from(frameRule, {
-        scaleX: 0,
-        transformOrigin: 'left center',
-        duration: 0.45,
-        ease: 'power2.out',
-        clearProps: 'transform'
-      }, 0);
-    }
+    // Hanging chamfered gates drop briskly top-to-down inside their clipped columns
+    blocks.forEach((block, i) => {
+      scrubTl.from(block, {
+        yPercent: -(42 + i * 14),
+        ease: 'none'
+      }, i * 0.055);
+    });
 
-    if (frameEls.length) {
-      tl.from(frameEls, {
-        y: 12,
-        opacity: 0,
-        duration: 0.45,
-        stagger: 0.06,
-        ease: 'power3.out',
-        clearProps: 'transform,opacity'
-      }, 0.02);
-    }
+    // Display numerals and spec metadata ride down with extra top-down momentum
+    numRows.forEach((row, i) => {
+      scrubTl.from(row, {
+        y: -(48 + i * 12),
+        opacity: 0.25,
+        ease: 'none'
+      }, 0.04 + i * 0.055);
+    });
 
-    if (blocks.length) {
-      tl.from(blocks, {
-        scaleY: 0.15,
-        opacity: 0,
-        transformOrigin: 'top center',
-        duration: 0.72,
-        stagger: 0.09,
-        ease: 'power3.out',
-        clearProps: 'transform,opacity'
-      }, 0.08);
-    }
+    metas.forEach((meta, i) => {
+      scrubTl.from(meta, {
+        y: -(28 + i * 8),
+        opacity: 0.2,
+        ease: 'none'
+      }, 0.07 + i * 0.055);
+    });
 
-    if (foots.length) {
-      tl.from(foots, {
-        y: 18,
-        opacity: 0,
-        duration: 0.55,
-        stagger: 0.08,
-        ease: 'power3.out',
-        clearProps: 'transform,opacity'
-      }, 0.25);
-    }
+    // Lower chambers slide down cleanly from behind the blocks
+    foots.forEach((foot, i) => {
+      scrubTl.from(foot, {
+        y: -(44 + i * 10),
+        opacity: 0.2,
+        ease: 'none'
+      }, 0.1 + i * 0.055);
+    });
 
+    // Continuous alive scroll-linked parallax drift as user scrolls past Section 04
+    const parallaxTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 0.75
+      }
+    });
+    numRows.forEach((row, i) => {
+      parallaxTl.fromTo(row,
+        { y: -(16 + i * 4) },
+        { y: 20 + i * 4, ease: 'none' },
+        0
+      );
+    });
+    metas.forEach((meta, i) => {
+      parallaxTl.fromTo(meta,
+        { y: -(10 + i * 3) },
+        { y: 12 + i * 3, ease: 'none' },
+        0
+      );
+    });
+
+    // One-shot crisp numeric count-up when entering primary reading zone
+    const countTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top 78%',
+        once: true
+      }
+    });
     counters.forEach((el, idx) => {
       const target = Number(el.getAttribute('data-count-to'));
       const suffix = el.getAttribute('data-count-suffix') || '';
       if (!Number.isFinite(target)) return;
       const proxy = { val: 0 };
-      tl.to(proxy, {
+      countTl.to(proxy, {
         val: target,
-        duration: 1.0,
+        duration: 0.95,
         ease: 'power2.out',
         onUpdate: () => {
           el.textContent = `${Math.round(proxy.val)}${suffix}`;
@@ -98,11 +120,66 @@ function initSection04Scroll() {
         onComplete: () => {
           el.textContent = `${target}${suffix}`;
         }
-      }, 0.22 + idx * 0.09);
+      }, idx * 0.08);
     });
 
     return () => {
-      tl.kill();
+      scrubTl.kill();
+      parallaxTl.kill();
+      countTl.kill();
+    };
+  });
+
+  // Tablet & mobile (< 1024px): staggered top-to-down card drop inside clipped rows
+  mm.add('(max-width: 1023.98px) and (prefers-reduced-motion: no-preference)', () => {
+    const mobileTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top 86%',
+        once: true
+      }
+    });
+
+    blocks.forEach((block, i) => {
+      mobileTl.from(block, {
+        yPercent: -35,
+        opacity: 0,
+        duration: 0.62,
+        ease: 'power3.out',
+        clearProps: 'transform,opacity'
+      }, i * 0.09);
+    });
+
+    foots.forEach((foot, i) => {
+      mobileTl.from(foot, {
+        y: -22,
+        opacity: 0,
+        duration: 0.5,
+        ease: 'power3.out',
+        clearProps: 'transform,opacity'
+      }, 0.12 + i * 0.09);
+    });
+
+    counters.forEach((el, idx) => {
+      const target = Number(el.getAttribute('data-count-to'));
+      const suffix = el.getAttribute('data-count-suffix') || '';
+      if (!Number.isFinite(target)) return;
+      const proxy = { val: 0 };
+      mobileTl.to(proxy, {
+        val: target,
+        duration: 0.9,
+        ease: 'power2.out',
+        onUpdate: () => {
+          el.textContent = `${Math.round(proxy.val)}${suffix}`;
+        },
+        onComplete: () => {
+          el.textContent = `${target}${suffix}`;
+        }
+      }, 0.14 + idx * 0.08);
+    });
+
+    return () => {
+      mobileTl.kill();
     };
   });
 }
