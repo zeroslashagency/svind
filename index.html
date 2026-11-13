@@ -19,6 +19,16 @@
   <link rel="stylesheet" href="assets/css/hro.css">
   <!-- resources-bento.css removed with section -->
   <!-- vmc.css removed -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "/vendor/three/build/three.module.js",
+      "three/addons/": "/vendor/three/examples/jsm/",
+      "gsap": "/vendor/gsap/index.js",
+      "gsap/ScrollTrigger": "/vendor/gsap/ScrollTrigger.js"
+    }
+  }
+  </script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -246,34 +256,119 @@
     <!-- Expertise -->
     <div id="services" class="expertise-section"><div class="padding-global padding-section-large"><div class="container-large"><div class="expertise-component"><div class="heading-wrapper is-center"><div class="heading-title-wrapper is-center"><div class="max-width-xlarge"><h2 class="heading-style-h2">Services built to strengthen your bay and <span class="text-color-wine">attract the right loads</span></h2></div></div><div class="max-width-medium"><p class="text-size-small">Our work rests on three levers: design, fabrication and service. Together they keep your bay at full capacity and your crane where it belongs.</p></div></div><div class="expertise-list"><div id="communication-digitale" class="expertise-item"><span class="expertise-kicker">Engineering &amp; design</span><div class="expertise-content-wrapper"><div class="heading-style-h3 expert">Design makes the difference</div><p class="text-size-small expert">We survey the bay, fix span, capacity and duty class to IS 807, then issue GA drawings and girder calculations for your approval - engineered to your cycle, not pulled off a shelf.</p><div class="button-group expert"><a href="/pages/services/request-a-quote.html" class="button"><div class="button-text">Request a quote</div></a></div></div><div class="expertise-image-wrapper parallax"><img src="assets/img/cards/fabrication-bay-eot.jpg" loading="lazy" sizes="100vw" alt="Fabrication bay with EOT crane" class="expertise-image"><div class="expertise-cover-image"></div></div></div><div id="production-contenu" class="expertise-item"><span class="expertise-kicker">Fabrication &amp; test</span><div class="expertise-content-wrapper"><div class="heading-style-h3 expert">Fabrication proves it</div><p class="text-size-small expert">Girders, crab units and end carriages built in-house at Harohalli KIADB and proof-load tested before dispatch - because we make the components, spares match the crane you own.</p><div class="button-group expert"><a href="/about.html" class="button"><div class="button-text">Request a quote</div></a></div></div><div class="expertise-image-wrapper"><img src="assets/img/cards/ladle-carrier-frame.jpg" loading="lazy" sizes="100vw" alt="Ladle carrier frame" class="expertise-image"><div class="expertise-cover-image"></div></div></div><div id="branding" class="expertise-item"><span class="expertise-kicker">Service &amp; AMC</span><div class="expertise-content-wrapper"><div class="heading-style-h3 expert">Service keeps the load</div><p class="text-size-small expert">Erection, commissioning and witnessed load testing on site, then AMC, inspection and spares from the same team that built it - the people who design the crane are the ones who service it.</p><div class="button-group expert"><a href="/pages/services/request-a-quote.html" class="button"><div class="button-text">Request a quote</div></a></div></div><div class="expertise-image-wrapper"><img src="assets/img/cards/gearbox-primed.jpg" loading="lazy" alt="Gearbox primed" class="expertise-image"><div class="expertise-cover-image"></div></div></div></div></div></div></div></div>
 
-    <!-- Value Prop — High-Level Overview (replaces trust strip) -->
-    <section class="sv-value" aria-labelledby="value-h">
+    <!-- Value Prop — High-Level Overview -->
+    <section class="sv-value" id="capability-scale" aria-labelledby="value-h">
       <div class="sv-value__inner">
-        <!-- Simple — title + 4 red nodes -->
-        <div class="sv-mind">
-          <h2 class="sv-mind__lead" id="value-h">Tailored solutions for your<br>business requirements</h2>
-          <div class="sv-mind__grid" role="list" aria-label="Key metrics">
-            <div class="sv-mind__item" role="listitem">
-              <span class="sv-mind__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="10" height="10" rx="2"/><path d="M6 8h4M8 6v4"/></svg></span>
-              <div class="sv-mind__value">25+</div>
-              <div class="sv-mind__label">Years engineering</div>
+        <div class="sv-value__frame">
+          <p class="sv-value__eyebrow">Capability &amp; scale</p>
+          <p class="sv-value__counter" aria-hidden="true"><b>04</b><span class="sv-value__rule"></span>13</p>
+        </div>
+
+        <div class="sv-rank__board" role="region" aria-label="Key engineering metrics">
+          <!-- Column 01 -->
+          <article class="sv-rank__col sv-rank__col--01">
+            <div class="sv-rank__block sv-rank__block--01">
+              <div class="sv-rank__num-row">
+                <span class="sv-rank__num sv-mind__value" data-count-to="25">25</span>
+                <span class="sv-rank__unit">(yrs)</span>
+              </div>
+              <div class="sv-rank__meta">
+                <span class="sv-rank__meta-id">spec 01/</span>
+                <div class="sv-rank__meta-detail">
+                  <span>/years engineering</span>
+                  <span>IS 807, IS 3177 &amp; IS 4137</span>
+                </div>
+              </div>
             </div>
-            <div class="sv-mind__item" role="listitem">
-              <span class="sv-mind__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3l1.2 3H12l-2.5 1.8L10.2 11 8 9.2 5.8 11l.7-3.2L4 6h2.8z"/></svg></span>
-              <div class="sv-mind__value">500+</div>
-              <div class="sv-mind__label">Installations</div>
+
+            <div class="sv-rank__foot sv-rank__foot--headline">
+              <h2 class="sv-value__title" id="value-h">Tailored solutions for your bay requirements</h2>
+              <button type="button" class="sv-mind__inspect" data-sv-crane-open="01">
+                <span>Inspect EOT rig in 3D</span>
+                <span class="sv-mind__inspect-glyph" aria-hidden="true">↗</span>
+              </button>
             </div>
-            <div class="sv-mind__item" role="listitem">
-              <span class="sv-mind__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="4.5"/><circle cx="8" cy="8" r="1.8"/></svg></span>
-              <div class="sv-mind__value">50+</div>
-              <div class="sv-mind__label">Industries served</div>
+          </article>
+
+          <!-- Column 02 -->
+          <article class="sv-rank__col sv-rank__col--02">
+            <div class="sv-rank__block sv-rank__block--02">
+              <div class="sv-rank__num-row">
+                <span class="sv-rank__num sv-mind__value" data-count-to="500">500</span>
+                <span class="sv-rank__unit">(+)</span>
+              </div>
+              <div class="sv-rank__meta">
+                <span class="sv-rank__meta-id">spec 02/</span>
+                <div class="sv-rank__meta-detail">
+                  <span>/installations</span>
+                  <span>erected &amp; load tested across India</span>
+                </div>
+              </div>
             </div>
-            <div class="sv-mind__item" role="listitem">
-              <span class="sv-mind__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="10" height="7" rx="1.2"/><path d="M3 7h10M6 10.5h4"/></svg></span>
-              <div class="sv-mind__value">24/7</div>
-              <div class="sv-mind__label">Support</div>
+
+            <div class="sv-rank__foot">
+              <p class="sv-value__copy">
+                Classified to IS 807 against your actual load spectrum and duty cycle at Harohalli KIADB.
+              </p>
+              <button type="button" class="sv-mind__inspect" data-sv-crane-open="02">
+                <span>Inspect bay test in 3D</span>
+                <span class="sv-mind__inspect-glyph" aria-hidden="true">↗</span>
+              </button>
             </div>
-          </div>
+          </article>
+
+          <!-- Column 03 -->
+          <article class="sv-rank__col sv-rank__col--03">
+            <div class="sv-rank__block sv-rank__block--03">
+              <div class="sv-rank__num-row">
+                <span class="sv-rank__num sv-mind__value" data-count-to="50">50</span>
+                <span class="sv-rank__unit">(+)</span>
+              </div>
+              <div class="sv-rank__meta">
+                <span class="sv-rank__meta-id">spec 03/</span>
+                <div class="sv-rank__meta-detail">
+                  <span>/industries served</span>
+                  <span>foundries, steel mills, power &amp; auto</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="sv-rank__foot">
+              <p class="sv-rank__note">In-house fabrication, witnessed FAT &amp; bay survey.</p>
+              <button type="button" class="sv-mind__inspect" data-sv-crane-open="03">
+                <span>Inspect goliath in 3D</span>
+                <span class="sv-mind__inspect-glyph" aria-hidden="true">↗</span>
+              </button>
+            </div>
+          </article>
+
+          <!-- Column 04 -->
+          <article class="sv-rank__col sv-rank__col--04">
+            <div class="sv-rank__block sv-rank__block--04">
+              <div class="sv-rank__num-row">
+                <span class="sv-rank__num sv-rank__num--compact">24/7</span>
+                <span class="sv-rank__unit">(hrs)</span>
+              </div>
+              <div class="sv-rank__meta">
+                <span class="sv-rank__meta-id">spec 04/</span>
+                <div class="sv-rank__meta-detail">
+                  <span>/service support</span>
+                  <span>direct Harohalli AMC &amp; spares</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="sv-rank__foot sv-rank__foot--cta">
+              <a class="sv-rank__survey-link" href="/pages/services/request-a-quote">
+                <span>Request a bay survey</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+              <button type="button" class="sv-mind__inspect" data-sv-crane-open="04">
+                <span>3D OEM spares</span>
+                <span class="sv-mind__inspect-glyph" aria-hidden="true">↗</span>
+              </button>
+            </div>
+          </article>
         </div>
       </div>
     </section>
@@ -1020,6 +1115,89 @@
     <a class="mobile-bar__item mobile-bar__item--accent" href="/pages/services/request-a-quote">Request a quote</a>
   </nav>
 
+  <!-- Expandable 3D Crane Inspection Modal (Scoped to Section 04) -->
+  <div id="sv-crane-modal" class="sv-modal" role="dialog" aria-modal="true" aria-labelledby="sv-modal-title" hidden>
+    <div class="sv-modal__panel">
+      <div class="sv-modal__bar">
+        <div class="sv-modal__meta">
+          <p class="sv-modal__kicker">SVIND 3D Engineering Bay · Section 04</p>
+          <h3 class="sv-modal__title" id="sv-modal-title">Double-Girder EOT Crane</h3>
+        </div>
+        <div class="sv-modal__bar-right">
+          <p class="sv-modal__specs" id="sv-modal-specs">IS 807 · M5–M8 · CAP UP TO 100+ T · SPAN 24 M</p>
+          <button type="button" class="sv-modal__close" id="sv-modal-close" aria-label="Close 3D crane inspection">
+            <span>Close</span>
+            <span class="sv-modal__esc" aria-hidden="true">ESC</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="sv-modal__stage" id="sv-modal-stage">
+        <div class="sv-modal__canvas-host" id="sv-modal-canvas"></div>
+        <div class="sv-modal__fallback" id="sv-modal-fallback" hidden>
+          <img src="assets/img/bands/band-fabrication-bay-eot.jpg" alt="SVIND double-girder EOT crane bay at Harohalli works" loading="lazy" decoding="async">
+          <p class="sv-modal__fallback-note">Static engineering bay plate active (WebGL unavailable in this browser context).</p>
+        </div>
+
+        <p class="sv-modal__hint" aria-hidden="true">Drag to orbit · Scroll to zoom</p>
+
+        <!-- Single collapsible bottom control dock -->
+        <div class="sv-dock" id="sv-modal-dock" data-collapsed="false">
+          <div class="sv-dock__head">
+            <span class="sv-dock__label">Bay Controls</span>
+            <button type="button" class="sv-dock__collapse" id="sv-dock-toggle" aria-expanded="true" aria-controls="sv-dock-body">
+              Hide controls
+            </button>
+          </div>
+
+          <div class="sv-dock__body" id="sv-dock-body">
+            <div class="sv-dock__group" role="group" aria-label="Crane configuration">
+              <span class="sv-dock__group-label">Rig</span>
+              <div class="sv-dock__btns">
+                <button type="button" class="sv-dock__btn is-active" data-crane-type="double-girder">Double Girder</button>
+                <button type="button" class="sv-dock__btn" data-crane-type="single-girder">Single Girder</button>
+                <button type="button" class="sv-dock__btn" data-crane-type="goliath">Goliath</button>
+              </div>
+            </div>
+
+            <div class="sv-dock__group" role="group" aria-label="Camera viewpoint">
+              <span class="sv-dock__group-label">View</span>
+              <div class="sv-dock__btns">
+                <button type="button" class="sv-dock__btn is-active" data-camera-view="iso">Bay Iso</button>
+                <button type="button" class="sv-dock__btn" data-camera-view="crab">Crab &amp; Hoist</button>
+                <button type="button" class="sv-dock__btn" data-camera-view="carriage">End Carriage</button>
+              </div>
+            </div>
+
+            <div class="sv-dock__group" role="group" aria-label="Inspection modes">
+              <span class="sv-dock__group-label">Inspect</span>
+              <div class="sv-dock__btns">
+                <button type="button" class="sv-dock__btn" id="sv-btn-explode" aria-pressed="false">Explode</button>
+                <button type="button" class="sv-dock__btn" id="sv-btn-kinematics" aria-pressed="false">Run Motion</button>
+              </div>
+            </div>
+
+            <div class="sv-dock__sliders" aria-label="Manual axis kinematics">
+              <label class="sv-dock__slider-item">
+                <span>Bridge</span>
+                <input type="range" id="sv-axis-bridge" min="-1" max="1" step="0.01" value="0">
+              </label>
+              <label class="sv-dock__slider-item">
+                <span>Crab</span>
+                <input type="range" id="sv-axis-crab" min="-1" max="1" step="0.01" value="0">
+              </label>
+              <label class="sv-dock__slider-item">
+                <span>Hoist</span>
+                <input type="range" id="sv-axis-hoist" min="0" max="1" step="0.01" value="0.35">
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="assets/js/site.js" defer></script>
+  <script type="module" src="assets/js/sv-value-3d.js"></script>
 </body>
 </html>

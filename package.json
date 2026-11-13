@@ -6,10 +6,14 @@
   "main": "server.js",
   "scripts": {
     "dev": "node server.js",
+    "build": "node --check server.js && node --check assets/js/sv-value-3d.js",
+    "lint": "node --check server.js && node --check assets/js/site.js && node --check assets/js/sv-value-3d.js",
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "gsap": "^3.15.1",
+    "three": "^0.187.0"
   },
   "engines": {
     "node": ">=18"
