@@ -564,14 +564,17 @@
   outline-offset: 3px;
 }
 
-/* Mobile spacer so 3D canvas has dedicated central vertical room */
+/* Mobile spacer so 3D canvas has central vertical room while headline stays above mobile bar */
 @media (max-width: 1023.98px) {
+  .sv-hero3d {
+    min-height: clamp(540px, calc(100svh - 124px), 760px);
+  }
   .sv-hero3d__chrome {
-    min-height: clamp(600px, calc(100svh - 64px), 920px);
+    min-height: clamp(540px, calc(100svh - 124px), 760px);
   }
   .sv-hero3d__stage-spacer {
-    flex: 1 1 280px;
-    min-height: 280px;
+    flex: 1 1 210px;
+    min-height: 210px;
   }
 }
 

@@ -442,32 +442,6 @@ function normalizeExtrudeUVs(geometry) {
 }
 
 /* ==========================================================================
-   SPEC METADATA FOR FLOATING CORNER TILES
-   ========================================================================== */
-const TILE_SPECS = {
-  is807: {
-    title: 'IS 807 & IS 3177 Duty Class',
-    text: 'Engineered from Class II (M5) workshop cranes to Class IV (M8) continuous steel-mill duty.',
-    letterIndex: 0
-  },
-  girder: {
-    title: '100+ T Double-Girder Box',
-    text: 'In-house submerged-arc welded box girders up to 36 m span at Harohalli KIADB.',
-    letterIndex: 1
-  },
-  fat: {
-    title: 'Witnessed Factory Load Test',
-    text: '125% proof-load, deflection & brake verification completed before bay dispatch.',
-    letterIndex: 3
-  },
-  amc: {
-    title: '24/7 OEM Service & Spares',
-    text: 'Direct Bengaluru field engineers with serialized hoists, brakes and gearbox assemblies.',
-    letterIndex: 4
-  }
-};
-
-/* ==========================================================================
    MAIN HERO CONTROLLER
    ========================================================================== */
 export function initHero3D() {
@@ -475,7 +449,7 @@ export function initHero3D() {
   const mount = document.querySelector('#sv-hero3d-mount');
   if (!section || !mount) return;
 
-  // Bind UI controls first so swatch presets, inspector card & spec tiles work in both WebGL and SVG fallback
+  // Bind UI controls first so swatch presets & inspector card work in both WebGL and SVG fallback
   let onPresetChanged = null;
   let onCoverChanged = null;
   let onWaveRequested = null;
@@ -484,10 +458,6 @@ export function initHero3D() {
   let coverEnabled = true;
 
   const swatchBtns = Array.from(section.querySelectorAll('.sv-hero3d__swatch[data-preset]'));
-  const specTiles = Array.from(section.querySelectorAll('.sv-hero3d__tile[data-spec]'));
-  const specPop = section.querySelector('#sv-hero3d-spec-pop');
-  const specTitleEl = section.querySelector('#sv-hero3d-spec-title');
-  const specBodyEl = section.querySelector('#sv-hero3d-spec-body');
 
   function selectPreset(preset) {
     activePreset = preset;
@@ -503,86 +473,6 @@ export function initHero3D() {
     btn.addEventListener('click', () => {
       selectPreset(btn.dataset.preset || 'clay');
       onWaveRequested?.(-1);
-    });
-  });
-
-  const presetsOrder = ['clay', 'blueprint', 'steel', 'enamel', 'terracotta'];
-  const backdropsOrder = ['sky', 'paper', 'mist', 'blush'];
-  const typefacesOrder = ['display', 'mono', 'editorial'];
-
-  const paletteBtn = section.querySelector('[data-hero-action="palette"]');
-  const backdropBtn = section.querySelector('[data-hero-action="backdrop"]');
-  const coverBtn = section.querySelector('[data-hero-action="cover"]');
-  const typeBtn = section.querySelector('[data-hero-action="typeface"]');
-  const cloudsBtn = section.querySelector('[data-hero-action="clouds"]');
-  const resetBtn = section.querySelector('[data-hero-action="reset"]');
-
-  paletteBtn?.addEventListener('click', () => {
-    const next = presetsOrder[(presetsOrder.indexOf(activePreset) + 1) % presetsOrder.length];
-    selectPreset(next);
-    const valEl = paletteBtn.querySelector('.sv-hero3d__bento-sample');
-    if (valEl) valEl.textContent = next.charAt(0).toUpperCase() + next.slice(1);
-    onWaveRequested?.(-1);
-  });
-
-  backdropBtn?.addEventListener('click', () => {
-    const curr = section.dataset.backdrop || 'sky';
-    const next = backdropsOrder[(backdropsOrder.indexOf(curr) + 1) % backdropsOrder.length];
-    section.dataset.backdrop = next;
-    const valEl = backdropBtn.querySelector('.sv-hero3d__bento-sample');
-    if (valEl) valEl.textContent = next.charAt(0).toUpperCase() + next.slice(1);
-  });
-
-  coverBtn?.addEventListener('click', () => {
-    coverEnabled = !coverEnabled;
-    coverBtn.classList.toggle('is-active', coverEnabled);
-    coverBtn.setAttribute('aria-pressed', coverEnabled ? 'true' : 'false');
-    const valEl = coverBtn.querySelector('.sv-hero3d__bento-sample');
-    if (valEl) valEl.textContent = coverEnabled ? 'Pattern' : 'Solid';
-    onCoverChanged?.(activePreset);
-  });
-
-  typeBtn?.addEventListener('click', () => {
-    const curr = section.dataset.typeface || 'display';
-    const next = typefacesOrder[(typefacesOrder.indexOf(curr) + 1) % typefacesOrder.length];
-    section.dataset.typeface = next;
-    const valEl = typeBtn.querySelector('.sv-hero3d__bento-sample');
-    if (valEl) valEl.textContent = next === 'mono' ? 'Mono' : next === 'editorial' ? 'Serif' : 'Sans';
-  });
-
-  cloudsBtn?.addEventListener('click', () => {
-    const isOff = section.dataset.clouds === 'off';
-    section.dataset.clouds = isOff ? 'on' : 'off';
-    cloudsBtn.classList.toggle('is-active', isOff);
-    cloudsBtn.setAttribute('aria-pressed', isOff ? 'true' : 'false');
-    const valEl = cloudsBtn.querySelector('.sv-hero3d__bento-sample');
-    if (valEl) valEl.textContent = isOff ? 'Mist On' : 'Mist Off';
-  });
-
-  resetBtn?.addEventListener('click', () => {
-    onResetRequested?.();
-  });
-
-  specTiles.forEach((tile) => {
-    tile.addEventListener('click', () => {
-      const key = tile.dataset.spec;
-      const spec = TILE_SPECS[key];
-      if (!spec) return;
-      const wasActive = tile.classList.contains('is-active');
-      specTiles.forEach((t) => {
-        t.classList.remove('is-active');
-        t.setAttribute('aria-pressed', 'false');
-      });
-      if (wasActive) {
-        if (specPop) specPop.hidden = true;
-        return;
-      }
-      tile.classList.add('is-active');
-      tile.setAttribute('aria-pressed', 'true');
-      if (specTitleEl) specTitleEl.textContent = spec.title;
-      if (specBodyEl) specBodyEl.textContent = spec.text;
-      if (specPop) specPop.hidden = false;
-      onWaveRequested?.(spec.letterIndex);
     });
   });
 
