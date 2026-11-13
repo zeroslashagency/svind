@@ -7,3 +7,9 @@ node_modules/
 # Editor/OS
 .vscode/
 *.log
+
+# Environment & Local
+.env*
+!.env.example
+.antigravity/
+

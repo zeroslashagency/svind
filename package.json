@@ -1,0 +1,17 @@
+{
+  "name": "svind",
+  "version": "1.0.0",
+  "description": "SVIND - EOT Crane Manufacturer in Bengaluru",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
