@@ -172,39 +172,6 @@
   will-change: transform, opacity;
 }
 
-/* Subtle architectural corner label inside top of frame */
-.sv-m25__badge {
-  position: relative;
-  z-index: 3;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px 14px;
-  padding: clamp(18px, 2.4vw, 28px) clamp(20px, 3.2vw, 48px) 0;
-  font-family: var(--font-mono, "IBM Plex Mono", monospace);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-navy, #1E3A6B);
-}
-
-@media (min-width: 1024px) {
-  .sv-m25__badge {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    padding: clamp(22px, 2.6vw, 34px) clamp(32px, 4.5vw, 76px) 0;
-  }
-}
-
-.sv-m25__badge-sub {
-  color: #5A6067;
-  font-variant-numeric: tabular-nums;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .sv-m25__cta {
     transition: none !important;
