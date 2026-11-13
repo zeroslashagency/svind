@@ -1,0 +1,267 @@
+/* ==========================================================================
+   Section 5 — Crane Bays & Handling Systems (2x2 Architectural Grid)
+   Crisp #FFFFFF outer band canvas, bold editorial headline with rotated right
+   SVIND navy facility signature, and 2x2 flat rectangular sky-blue bay cards.
+   ========================================================================== */
+
+.sv-bays {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: clamp(64px, 6.8vw, 100px) var(--band-inset, clamp(20px, 6.5vw, 200px))
+    clamp(68px, 7.4vw, 110px);
+  background-color: #FFFFFF;
+  color: #0B0E14;
+  scroll-margin-top: 76px;
+}
+
+/* Header Row: Large left display headline + vertical rotated right signature */
+.sv-bays__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: clamp(16px, 3vw, 48px);
+}
+
+.sv-bays__heading {
+  margin: 0;
+  max-width: 11.5ch;
+  font-family: var(--font-display, "Inter Tight", sans-serif);
+  font-size: clamp(36px, 4.4vw, 60px);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  color: #0B0E14;
+  text-wrap: balance;
+}
+
+.sv-bays__sig {
+  margin: 4px 0 0;
+  flex: none;
+  display: inline-flex;
+  flex-direction: column;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: var(--font-sans, "Inter Tight", sans-serif);
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0.015em;
+  color: #1E3A6B;
+  user-select: none;
+}
+
+@media (max-width: 519.98px) {
+  .sv-bays__header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .sv-bays__sig {
+    margin: 0;
+    writing-mode: horizontal-tb;
+    transform: none;
+    flex-direction: row;
+    gap: 5px;
+  }
+}
+
+/* 2 x 2 Flat Architectural Card Grid */
+.sv-bays__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(18px, 2vw, 28px);
+  margin-block-start: clamp(32px, 3.8vw, 52px);
+}
+
+@media (min-width: 768px) {
+  .sv-bays__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Individual Bay Card (<button> opening the 3D bay CAD inspector)
+   isolation: isolate ensures child mix-blend-mode: multiply composites against
+   this card's pale sky-blue gradient instead of leaking to the white section. */
+.sv-bays__card {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: clamp(370px, 35vw, 480px);
+  padding: clamp(24px, 2.8vw, 38px) clamp(24px, 2.8vw, 38px) 0;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: linear-gradient(180deg, #A9D7F3 0%, #C7E7FA 52%, #DCF0FB 100%);
+  color: #0B0E14;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  overflow: hidden;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sv-bays__card:focus-visible {
+  outline: 2px solid #1E3A6B;
+  outline-offset: 3px;
+}
+
+.sv-bays__copy {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  pointer-events: none;
+}
+
+.sv-bays__title-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+}
+
+.sv-bays__title {
+  font-family: var(--font-display, "Inter Tight", sans-serif);
+  font-size: clamp(24px, 2.25vw, 32px);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  color: #0B0E14;
+}
+
+.sv-bays__arrow {
+  flex: none;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1;
+  color: #1E3A6B;
+  opacity: 0;
+  transform: translate3d(-4px, 4px, 0);
+  transition: opacity 180ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sv-bays__desc {
+  margin-block-start: 10px;
+  max-width: 40ch;
+  font-family: var(--font-sans, "Inter Tight", sans-serif);
+  font-size: clamp(14px, 1.05vw, 15.5px);
+  font-weight: 400;
+  line-height: 1.46;
+  color: #253342;
+}
+
+@media (hover: hover) {
+  .sv-bays__card:hover .sv-bays__arrow {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.sv-bays__card:focus-visible .sv-bays__arrow {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Bottom Bay Photography anchored cleanly into lower ~60% of the card */
+.sv-bays__media {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 60%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sv-bays__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 55%;
+  filter: contrast(1.08) saturate(1.08);
+  transform: scale(1.01);
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+@media (hover: hover) {
+  .sv-bays__card:hover .sv-bays__img {
+    transform: scale(1.035);
+  }
+}
+
+/* Tight top fade for indoor bay photography so girders & crabs stay razor-sharp */
+.sv-bays__media--indoor {
+  height: 60%;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.72) 11%,
+    #000 22%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.72) 11%,
+    #000 22%
+  );
+}
+
+.sv-bays__img--single {
+  object-position: center 22%;
+}
+
+.sv-bays__img--double {
+  object-position: center 68%;
+}
+
+.sv-bays__img--mill {
+  object-position: center 48%;
+}
+
+/* Outdoor Goliath photo: multiply set directly on .sv-bays__media--sky so it
+   blends directly into .sv-bays__card's pale blue sky backdrop (no white box). */
+.sv-bays__media--sky {
+  height: 64%;
+  mix-blend-mode: multiply;
+}
+
+.sv-bays__img--goliath {
+  object-position: center 48%;
+  filter: brightness(1.05) contrast(1.08) saturate(1.1);
+}
+
+@media (max-width: 767.98px) {
+  .sv-bays__card {
+    min-height: 360px;
+  }
+
+  .sv-bays__media--indoor {
+    height: 58%;
+  }
+
+  .sv-bays__media--sky {
+    height: 60%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sv-bays__card,
+  .sv-bays__arrow,
+  .sv-bays__img {
+    transition: none !important;
+  }
+
+  .sv-bays__card:hover .sv-bays__img {
+    transform: scale(1.01);
+  }
+}

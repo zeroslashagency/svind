@@ -438,6 +438,7 @@ const RIG_SPECS = {
 };
 
 const CARD_PRESETS = {
+  'bay-single': { craneType: 'single-girder', cameraView: 'iso', exploded: false, kinematics: true },
   '01': { craneType: 'double-girder', cameraView: 'iso', exploded: false, kinematics: false },
   '02': { craneType: 'double-girder', cameraView: 'crab', exploded: false, kinematics: true },
   '03': { craneType: 'goliath', cameraView: 'iso', exploded: false, kinematics: false },

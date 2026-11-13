@@ -1,0 +1,373 @@
+/* ==========================================================================
+   SVIND - rfq-plate.css
+   Photorealistic brushed stainless steel nameplate for #rfq-plate.
+   Uses a procedural high-DPI vertical brushed-grain canvas texture (--steel-grain)
+   layered with overhead studio specular lighting, warm floor reflection,
+   machined grooves, and an SVG debossed-metal filter on the SVIND mark.
+   ========================================================================== */
+
+.sv-plate {
+  --sheen-x: 36%;
+  --sheen-y: 14%;
+  --steel-grain: none;
+  --etch-ink: #12151A;
+  --etch-ink-soft: #1F242B;
+  --etch-label: #252A32;
+  --etch-hi: rgba(255, 255, 255, 0.68);
+  --groove-dark: rgba(12, 15, 20, 0.34);
+  --groove-light: rgba(255, 255, 255, 0.54);
+
+  position: relative;
+  overflow: hidden;
+  padding: clamp(56px, 6.5vw, 92px) var(--band-inset);
+  color: var(--etch-ink);
+
+  /* Realistic brushed stainless studio reflection:
+     bright overhead specular band -> cool mid steel -> warm dark lower bounce */
+  background-color: #A6ACB4;
+  background-image:
+    radial-gradient(
+      ellipse 52% 64% at var(--sheen-x) var(--sheen-y),
+      rgba(255, 255, 255, 0.58) 0%,
+      rgba(244, 247, 250, 0.22) 38%,
+      rgba(255, 255, 255, 0) 72%
+    ),
+    radial-gradient(
+      ellipse 42% 48% at 78% 12%,
+      rgba(255, 255, 255, 0.38) 0%,
+      rgba(255, 255, 255, 0) 68%
+    ),
+    radial-gradient(
+      ellipse 68% 46% at 56% 98%,
+      rgba(78, 70, 64, 0.42) 0%,
+      rgba(96, 88, 82, 0.18) 48%,
+      rgba(96, 88, 82, 0) 82%
+    ),
+    linear-gradient(
+      174deg,
+      #DCDFE4 0%,
+      #C4C9D0 24%,
+      #A8AEB6 52%,
+      #8E949C 78%,
+      #7F7A74 100%
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.86),
+    inset 0 -1px 0 rgba(12, 14, 18, 0.45);
+}
+
+/* Layer 1: True randomized vertical brushed steel scratches generated on <canvas> */
+.sv-plate::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: var(--steel-grain);
+  background-size: 900px 450px;
+  background-repeat: repeat;
+  mix-blend-mode: overlay;
+  opacity: 0.62;
+}
+
+/* Layer 2: Subtle metallic satin mottling & soft studio light falloff */
+.sv-plate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(
+      ellipse 36% 70% at 22% 52%,
+      rgba(20, 24, 30, 0.14) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 44% 56% at 86% 78%,
+      rgba(240, 242, 245, 0.16) 0%,
+      transparent 68%
+    ),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9 0.035' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.18'/%3E%3C/svg%3E");
+  background-size: 100% 100%, 100% 100%, 220px 220px;
+  mix-blend-mode: soft-light;
+}
+
+/* Machined perimeter plate frame */
+.sv-plate__frame {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  border: 1px solid var(--groove-dark);
+  box-shadow:
+    0 1px 0 var(--groove-light),
+    inset 0 1px 0 var(--groove-light);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0) 45%,
+    rgba(14, 18, 24, 0.08) 100%
+  );
+}
+
+@media (min-width: 960px) {
+  .sv-plate__frame {
+    grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr);
+  }
+}
+
+/* Left zone: debossed SVIND mark + corporate subtitle + RFQ headline */
+.sv-plate__brand-zone {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: clamp(28px, 3.2vw, 44px);
+  padding: clamp(28px, 4vw, 52px);
+  border-block-end: 1px solid var(--groove-dark);
+  box-shadow: 0 1px 0 var(--groove-light);
+}
+
+@media (min-width: 960px) {
+  .sv-plate__brand-zone {
+    border-block-end: 0;
+    border-inline-end: 1px solid var(--groove-dark);
+    box-shadow: 1px 0 0 var(--groove-light);
+  }
+}
+
+.sv-plate__mark-lockup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* Screen-reader / clean accessible wordmark text without duplicating visual SVG */
+.sv-plate__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sv-plate__mark-svg {
+  display: block;
+  width: min(100%, 340px);
+  height: auto;
+  overflow: visible;
+}
+
+.sv-plate__mark-text {
+  font-family: var(--font-display);
+  font-size: 96px;
+  font-weight: 800;
+  letter-spacing: -4px;
+  fill: #32373F;
+}
+
+.sv-plate__legal {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-micro-caps);
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--etch-label);
+  text-shadow: 0 1px 0 var(--etch-hi);
+}
+
+.sv-plate__copy {
+  display: flex;
+  flex-direction: column;
+}
+
+.sv-plate__head {
+  margin: 0;
+  max-width: 20ch;
+  font-family: var(--font-display);
+  font-size: clamp(24px, 2.35vw, 34px);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+  color: var(--etch-ink);
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.72),
+    0 -1px 0 rgba(10, 12, 16, 0.24);
+}
+
+/* Right zone: stamped 2x2 credentials table + CTA */
+.sv-plate__spec-zone {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(12, 15, 20, 0.08) 100%
+  );
+}
+
+.sv-plate__specs {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0;
+}
+
+@media (min-width: 540px) {
+  .sv-plate__specs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.sv-plate__cell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: clamp(20px, 2.3vw, 28px) clamp(18px, 2vw, 24px);
+  border-block-end: 1px solid var(--groove-dark);
+  box-shadow: inset 0 -1px 0 var(--groove-light);
+}
+
+@media (min-width: 540px) {
+  .sv-plate__cell:nth-child(odd) {
+    border-inline-end: 1px solid var(--groove-dark);
+    box-shadow:
+      inset -1px 0 0 var(--groove-light),
+      inset 0 -1px 0 var(--groove-light);
+  }
+}
+
+.sv-plate__label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-micro-caps);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--etch-label);
+  text-shadow: 0 1px 0 var(--etch-hi);
+}
+
+.sv-plate__value {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: clamp(13px, 1.02vw, 15px);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: 0.015em;
+  font-variant-numeric: tabular-nums slashed-zero;
+  font-feature-settings: "zero" 1, "tnum" 1;
+  color: #101318;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.72),
+    0 -1px 0 rgba(10, 12, 16, 0.22);
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 540px) {
+  .sv-plate__value {
+    white-space: nowrap;
+  }
+}
+
+/* Bottom bar of right zone */
+.sv-plate__action-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: clamp(20px, 2.4vw, 28px) clamp(18px, 2vw, 24px);
+  margin-block-start: auto;
+}
+
+.sv-plate__action-note {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-micro-caps);
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--etch-label);
+  text-shadow: 0 1px 0 var(--etch-hi);
+}
+
+.sv-plate__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  min-height: 46px;
+  padding: 13px 26px;
+  border: 1px solid #0B0D10;
+  border-radius: 0;
+  background-color: #15191E;
+  color: #FFFFFF;
+  font-family: var(--font-sans);
+  font-size: var(--text-micro-caps);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.56),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+.sv-plate__cta:hover {
+  background-color: var(--color-navy);
+  border-color: var(--color-navy-deep);
+  color: #FFFFFF;
+}
+
+.sv-plate__cta:active {
+  transform: translateY(1px);
+}
+
+.sv-plate__cta:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-navy);
+  outline-offset: 3px;
+}
+
+.sv-plate__cta-glyph {
+  display: inline-block;
+  font-size: 1.05em;
+  line-height: 1;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.sv-plate__cta:hover .sv-plate__cta-glyph {
+  transform: translate(2px, -2px);
+}
+
+@media (max-width: 539.98px) {
+  .sv-plate__cta {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sv-plate {
+    --sheen-x: 36%;
+    --sheen-y: 14%;
+  }
+
+  .sv-plate__cta,
+  .sv-plate__cta-glyph {
+    transition: none;
+  }
+
+  .sv-plate__cta:hover .sv-plate__cta-glyph {
+    transform: none;
+  }
+}

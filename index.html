@@ -20,6 +20,8 @@
   <link rel="stylesheet" href="assets/css/hro.css">
   <link rel="stylesheet" href="assets/css/hero-3d.css?v=20261113e">
   <link rel="stylesheet" href="assets/css/scope-4col.css?v=20261113m">
+  <link rel="stylesheet" href="assets/css/bay-grid.css?v=20261113o">
+  <link rel="stylesheet" href="assets/css/rfq-plate.css?v=20261113n">
   <!-- resources-bento.css removed with section -->
   <!-- vmc.css removed -->
   <script type="importmap">
@@ -489,52 +491,6 @@
 
 
 
-    <!-- How we deliver -->
-    <section class="core-band core-band--surface" aria-labelledby="deliver-h">
-      <div class="core-frame">
-        <p class="core-frame__label">How we deliver</p>
-        <p class="core-frame__counter"><b>05</b><span class="core-frame__rule"></span>13</p>
-      </div>
-
-      <h2 class="core-head" id="deliver-h" style="padding-inline: 0">How we deliver a crane</h2>
-      <ol class="core-panels" style="margin-block-start: var(--space-7)">
-        <li class="core-panel">
-          <p class="core-panel__head">
-            <span class="core-panel__marker" aria-hidden="true"></span>
-            <span class="core-panel__num">01</span>
-          </p>
-          <h3 class="core-panel__title">Survey and design</h3>
-          <p class="core-panel__text">
-            We measure the bay, fix span, lift height and duty class, then issue GA
-            drawings and girder calculations for your approval.
-          </p>
-        </li>
-        <li class="core-panel">
-          <p class="core-panel__head">
-            <span class="core-panel__marker" aria-hidden="true"></span>
-            <span class="core-panel__num">02</span>
-          </p>
-          <h3 class="core-panel__title">Fabricate and test</h3>
-          <p class="core-panel__text">
-            Girders, crab units and end carriages are built in-house at Harohalli and
-            proof-load tested before dispatch.
-          </p>
-        </li>
-        <li class="core-panel core-panel--navy">
-          <p class="core-panel__head">
-            <span class="core-panel__marker" aria-hidden="true"></span>
-            <span class="core-panel__num">03</span>
-          </p>
-          <h3 class="core-panel__title">Install and maintain</h3>
-          <p class="core-panel__text">
-            Erection, commissioning and load testing on site, then AMC, inspection and
-            spares from the same team that built it.
-          </p>
-          <a class="core-panel__link" href="/services.html">Service &amp; AMC</span>
-        </li>
-      </ol>
-    </section>
-
     <!-- In service -->
     <section class="core-band core-band--2" aria-labelledby="service-h">
       <div class="core-split core-split--flip" style="margin-block-start: var(--space-7)">
@@ -557,6 +513,95 @@
             Goliath crane under load · customer site
           </figcaption>
         </figure>
+      </div>
+    </section>
+
+    <!-- Crane Bays & Handling Systems (2x2 Architectural Grid) -->
+    <section class="sv-bays" id="bay-systems" aria-labelledby="bays-h">
+      <div class="sv-bays__header">
+        <h2 class="sv-bays__heading" id="bays-h">Crane bays and systems</h2>
+        <p class="sv-bays__sig" aria-hidden="true">
+          <span>S.V. Material</span>
+          <span>Handling</span>
+        </p>
+      </div>
+
+      <div class="sv-bays__grid">
+        <button type="button" class="sv-bays__card" data-sv-crane-open="bay-single">
+          <span class="sv-bays__copy">
+            <span class="sv-bays__title-row">
+              <span class="sv-bays__title">Single-Girder Bays</span>
+              <span class="sv-bays__arrow" aria-hidden="true">&#8599;</span>
+            </span>
+            <span class="sv-bays__desc">
+              Compact-headroom EOT cranes up to 15 T for light fabrication and machining shops.
+            </span>
+          </span>
+          <span class="sv-bays__media sv-bays__media--indoor" aria-hidden="true">
+            <img class="sv-bays__img sv-bays__img--single"
+                 src="assets/img/cards/eot-single-girder-bay.jpg"
+                 width="960" height="720"
+                 alt=""
+                 loading="lazy" decoding="async">
+          </span>
+        </button>
+
+        <button type="button" class="sv-bays__card" data-sv-crane-open="01">
+          <span class="sv-bays__copy">
+            <span class="sv-bays__title-row">
+              <span class="sv-bays__title">Double-Girder Bays</span>
+              <span class="sv-bays__arrow" aria-hidden="true">&#8599;</span>
+            </span>
+            <span class="sv-bays__desc">
+              Heavy box-girder spans up to 100+ T built to IS 807 &amp; IS 3177 for continuous duty across mill bays.
+            </span>
+          </span>
+          <span class="sv-bays__media sv-bays__media--indoor" aria-hidden="true">
+            <img class="sv-bays__img sv-bays__img--double"
+                 src="assets/img/cards/ladle-carrier-frame.jpg"
+                 width="960" height="720"
+                 alt=""
+                 loading="lazy" decoding="async">
+          </span>
+        </button>
+
+        <button type="button" class="sv-bays__card" data-sv-crane-open="02">
+          <span class="sv-bays__copy">
+            <span class="sv-bays__title-row">
+              <span class="sv-bays__title">Fabrication &amp; Mill Bays</span>
+              <span class="sv-bays__arrow" aria-hidden="true">&#8599;</span>
+            </span>
+            <span class="sv-bays__desc">
+              Custom spans, twin-crab synchronized hoists, and multi-bay runways for structural and foundry works.
+            </span>
+          </span>
+          <span class="sv-bays__media sv-bays__media--indoor" aria-hidden="true">
+            <img class="sv-bays__img sv-bays__img--mill"
+                 src="assets/img/cards/structural-steel-bay.jpg"
+                 width="960" height="720"
+                 alt=""
+                 loading="lazy" decoding="async">
+          </span>
+        </button>
+
+        <button type="button" class="sv-bays__card" data-sv-crane-open="03">
+          <span class="sv-bays__copy">
+            <span class="sv-bays__title-row">
+              <span class="sv-bays__title">Goliath &amp; Yard Bays</span>
+              <span class="sv-bays__arrow" aria-hidden="true">&#8599;</span>
+            </span>
+            <span class="sv-bays__desc">
+              Ground-rail portal and semi-goliath bays built for casting, precast, and open steel yards.
+            </span>
+          </span>
+          <span class="sv-bays__media sv-bays__media--sky" aria-hidden="true">
+            <img class="sv-bays__img sv-bays__img--goliath"
+                 src="assets/img/bands/band-goliath-lifting-load.jpg"
+                 width="1400" height="700"
+                 alt=""
+                 loading="lazy" decoding="async">
+          </span>
+        </button>
       </div>
     </section>
 
@@ -628,74 +673,6 @@
       </div>
     </section>
 
-    <!-- From the works -->
-    <section class="core-band" aria-labelledby="works-h">
-      <h2 class="core-head" id="works-h">Harohalli, this year</h2>
-
-      <ul class="core-cards" style="margin-block-start: var(--space-8)">
-        <li class="core-card">
-          <a class="core-card__link" href="/about.html">
-            <span class="core-card__shot">
-              <img src="assets/img/cards/structural-steel-bay.jpg" width="960" height="720"
-                   alt="Structural steel assembly in progress beneath an overhead EOT crane"
-                   loading="lazy" decoding="async">
-            </span>
-            <span class="core-card__body">
-              <span class="core-card__meta">
-                <span class="core-card__date">Harohalli works</span>
-                <span class="core-card__tag">Fabrication</span>
-              </span>
-              <span class="core-card__title">Structural fabrication under our own overhead cranes</span>
-              <span class="core-card__foot">
-                <span class="core-card__glyph" aria-hidden="true"></span>
-                In-house
-              </span>
-            </span>
-          </a>
-        </li>
-        <li class="core-card">
-          <a class="core-card__link" href="/about.html">
-            <span class="core-card__shot">
-              <img src="assets/img/cards/gearbox-primed.jpg" width="960" height="720"
-                   alt="Primed crane travel gearbox assembled and ready for fitment"
-                   loading="lazy" decoding="async">
-            </span>
-            <span class="core-card__body">
-              <span class="core-card__meta">
-                <span class="core-card__date">Harohalli works</span>
-                <span class="core-card__tag">Components</span>
-              </span>
-              <span class="core-card__title">Gearboxes and drive assemblies built for the duty class</span>
-              <span class="core-card__foot">
-                <span class="core-card__glyph" aria-hidden="true"></span>
-                Spares match
-              </span>
-            </span>
-          </a>
-        </li>
-        <li class="core-card">
-          <a class="core-card__link" href="/about.html">
-            <span class="core-card__shot">
-              <img src="assets/img/cards/crated-dispatch.jpg" width="960" height="720"
-                   alt="Crated lattice sections packed for dispatch from the works"
-                   loading="lazy" decoding="async">
-            </span>
-            <span class="core-card__body">
-              <span class="core-card__meta">
-                <span class="core-card__date">Harohalli works</span>
-                <span class="core-card__tag">Dispatch</span>
-              </span>
-              <span class="core-card__title">Crated and dispatched after proof-load testing</span>
-              <span class="core-card__foot">
-                <span class="core-card__glyph" aria-hidden="true"></span>
-                Tested first
-              </span>
-            </span>
-          </a>
-        </li>
-      </ul>
-    </section>
-
     <!-- Local -->
     <section class="core-band core-band--canvas" aria-labelledby="local-h" style="background-image: url('assets/img/bands/band-fabrication-bay-eot.jpg'); background-size: cover; background-position: center; position: relative;">
       
@@ -725,36 +702,86 @@
 
 
     <!-- RFQ -->
-    <section class="core-band core-band--2" aria-labelledby="rfq-h">
-      <div class="core-split">
-        <div>
-          <h2 class="core-head" id="rfq-h">Send us the bay, we will send the crane</h2>
-          <p class="core-lead">
-            Span, capacity, lift height, duty class and power supply are enough to start.
-            If you do not have them, we will come and measure.
-          </p>
-          <div class="core-actions">
-            <a class="core-btn" href="/pages/services/request-a-quote">Request a quote</a>
+    <section class="sv-plate" id="rfq-plate" aria-labelledby="rfq-h">
+      <div class="sv-plate__frame">
+        <div class="sv-plate__brand-zone">
+          <div class="sv-plate__mark-lockup">
+            <p class="sv-plate__sr-only">SVIND</p>
+            <svg class="sv-plate__mark-svg" viewBox="0 0 360 88" role="presentation" aria-hidden="true">
+              <defs>
+                <filter id="sv-stamp-deboss" filterUnits="objectBoundingBox" x="-6%" y="-16%" width="112%" height="136%">
+                  <!-- Invert glyph alpha to cast an inner shadow downward from the top edge -->
+                  <feColorMatrix in="SourceAlpha" type="matrix"
+                    values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1 1"
+                    result="invAlpha"/>
+                  <feOffset in="invAlpha" dx="0.8" dy="3.2" result="invShifted"/>
+                  <feGaussianBlur in="invShifted" stdDeviation="2.1" result="invBlur"/>
+                  <feComposite in="invBlur" in2="SourceAlpha" operator="in" result="innerTopMask"/>
+                  <feFlood flood-color="#050709" flood-opacity="0.92" result="shadowTint"/>
+                  <feComposite in="shadowTint" in2="innerTopMask" operator="in" result="innerTopShadow"/>
+
+                  <!-- Semi-transparent recessed steel cavity so brushed scratches continue inside letters -->
+                  <feFlood flood-color="#1E232A" flood-opacity="0.48" result="cavityTint"/>
+                  <feComposite in="cavityTint" in2="SourceAlpha" operator="in" result="cavityFill"/>
+
+                  <!-- Crisp dark stamped edge along top rim -->
+                  <feOffset in="SourceAlpha" dx="0" dy="-1.1" result="outerUp"/>
+                  <feComposite in="outerUp" in2="SourceAlpha" operator="out" result="topLipRaw"/>
+                  <feFlood flood-color="#090C10" flood-opacity="0.62" result="topLipTint"/>
+                  <feComposite in="topLipTint" in2="topLipRaw" operator="in" result="topLip"/>
+
+                  <!-- Bright glowing silver-white bevel rim along bottom edge (matches IMG_8315) -->
+                  <feOffset in="SourceAlpha" dx="0.4" dy="1.8" result="outerDown"/>
+                  <feComposite in="outerDown" in2="SourceAlpha" operator="out" result="bottomLipRaw"/>
+                  <feGaussianBlur in="bottomLipRaw" stdDeviation="0.45" result="bottomLipBlur"/>
+                  <feFlood flood-color="#FFFFFF" flood-opacity="0.96" result="bottomLipTint"/>
+                  <feComposite in="bottomLipTint" in2="bottomLipBlur" operator="in" result="bottomLip"/>
+
+                  <feMerge>
+                    <feMergeNode in="topLip"/>
+                    <feMergeNode in="bottomLip"/>
+                    <feMergeNode in="cavityFill"/>
+                    <feMergeNode in="innerTopShadow"/>
+                  </feMerge>
+                </filter>
+              </defs>
+              <text class="sv-plate__mark-text" x="2" y="76" filter="url(#sv-stamp-deboss)">SVIND</text>
+            </svg>
+            <p class="sv-plate__legal">S.V. Material Handling System Pvt Ltd</p>
+          </div>
+          <div class="sv-plate__copy">
+            <h2 class="sv-plate__head" id="rfq-h">Send us the bay, we will send the crane</h2>
           </div>
         </div>
-        <dl class="core-specs">
-          <div>
-            <dt class="core-specs__label">Manufacturing since</dt>
-            <dd class="core-specs__value">2006</dd>
+
+        <div class="sv-plate__spec-zone">
+          <dl class="sv-plate__specs">
+            <div class="sv-plate__cell">
+              <dt class="sv-plate__label">Manufacturing since</dt>
+              <dd class="sv-plate__value">2006</dd>
+            </div>
+            <div class="sv-plate__cell">
+              <dt class="sv-plate__label">GST</dt>
+              <dd class="sv-plate__value">29AAKCS6443A1ZB</dd>
+            </div>
+            <div class="sv-plate__cell">
+              <dt class="sv-plate__label">Managing Director</dt>
+              <dd class="sv-plate__value">Shri D. Umapathi</dd>
+            </div>
+            <div class="sv-plate__cell">
+              <dt class="sv-plate__label">CIN</dt>
+              <dd class="sv-plate__value">U29100KA2006PTC040123</dd>
+            </div>
+          </dl>
+
+          <div class="sv-plate__action-bar">
+            <p class="sv-plate__action-note">IS 807 · IS 3177 · IS 4137</p>
+            <a class="sv-plate__cta" href="/pages/services/request-a-quote">
+              <span>Request a quote</span>
+              <span class="sv-plate__cta-glyph" aria-hidden="true">↗</span>
+            </a>
           </div>
-          <div>
-            <dt class="core-specs__label">GST</dt>
-            <dd class="core-specs__value">29AAKCS6443A1ZB</dd>
-          </div>
-          <div>
-            <dt class="core-specs__label">Managing Director</dt>
-            <dd class="core-specs__value">Shri D. Umapathi</dd>
-          </div>
-          <div>
-            <dt class="core-specs__label">CIN</dt>
-            <dd class="core-specs__value">U29100KA2006PTC040123</dd>
-          </div>
-        </dl>
+        </div>
       </div>
     </section>
 

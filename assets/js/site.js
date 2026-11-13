@@ -1542,6 +1542,125 @@
   }
 
   /* ------------------------------------------------------------------------
+     RFQ NAMEPLATE TEXTURE & CURSOR SHEEN (.sv-plate)
+     Generates an authentic vertical brushed stainless steel scratch grain on
+     an offscreen canvas (eliminating synthetic repeating CSS stripe lines) and
+     shifts --sheen-x / --sheen-y smoothly across the plate on pointer hover.
+     ------------------------------------------------------------------------ */
+
+  function buildBrushedSteelGrain(plate) {
+    try {
+      var w = 900;
+      var h = 450;
+      var canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      var ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      // Neutral 50% gray base for overlay blend mode
+      ctx.fillStyle = 'rgb(128, 128, 128)';
+      ctx.fillRect(0, 0, w, h);
+
+      // Deterministic PRNG so the brushed grain looks crisp & consistent
+      var seed = 20060809;
+      function rand() {
+        seed = (seed * 1664525 + 1013904223) >>> 0;
+        return seed / 4294967296;
+      }
+
+      // Soft vertical studio tonal bands
+      for (var b = 0; b < 90; b += 1) {
+        var bx = rand() * w;
+        var bw = 4 + rand() * 28;
+        var bright = rand() > 0.5;
+        ctx.fillStyle = bright
+          ? 'rgba(220, 224, 230, ' + (0.02 + rand() * 0.05).toFixed(3) + ')'
+          : 'rgba(42, 46, 52, ' + (0.02 + rand() * 0.05).toFixed(3) + ')';
+        ctx.fillRect(bx, 0, bw, h);
+      }
+
+      // 22,000 ultra-fine randomized vertical brushed stainless steel scratches
+      for (var i = 0; i < 22000; i += 1) {
+        var x = rand() * w;
+        var y = rand() * h;
+        var len = 24 + rand() * 240;
+        var lw = 0.28 + rand() * 0.62;
+        var isLight = rand() > 0.48;
+        var alpha = isLight ? (0.025 + rand() * 0.12) : (0.025 + rand() * 0.11);
+        ctx.fillStyle = isLight
+          ? 'rgba(255, 255, 255, ' + alpha.toFixed(3) + ')'
+          : 'rgba(18, 22, 28, ' + alpha.toFixed(3) + ')';
+
+        ctx.fillRect(x, y, lw, Math.min(len, h - y));
+        if (y + len > h) {
+          // Wrap vertically for seamless vertical tile
+          ctx.fillRect(x, 0, lw, (y + len) - h);
+        }
+      }
+
+      // Micro-grain specular speckles
+      for (var s = 0; s < 3200; s += 1) {
+        var sx = rand() * w;
+        var sy = rand() * h;
+        ctx.fillStyle = rand() > 0.5
+          ? 'rgba(255, 255, 255, 0.09)'
+          : 'rgba(20, 24, 28, 0.08)';
+        ctx.fillRect(sx, sy, 1, 1);
+      }
+
+      plate.style.setProperty('--steel-grain', 'url("' + canvas.toDataURL('image/png') + '")');
+    } catch (e) {
+      /* Canvas blocked or unavailable: base metallic studio gradients remain intact */
+    }
+  }
+
+  function initPlateSheen() {
+    var plate = document.querySelector('.sv-plate');
+    if (!plate) return;
+
+    buildBrushedSteelGrain(plate);
+
+    if (window.matchMedia && !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+    var rafId = 0;
+    var nextX = 36;
+    var nextY = 14;
+
+    function flush() {
+      rafId = 0;
+      if (reduceMotion()) return;
+      plate.style.setProperty('--sheen-x', nextX.toFixed(1) + '%');
+      plate.style.setProperty('--sheen-y', nextY.toFixed(1) + '%');
+    }
+
+    plate.addEventListener('pointermove', function (event) {
+      if (reduceMotion()) return;
+      var rect = plate.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      nextX = Math.max(8, Math.min(92, ((event.clientX - rect.left) / rect.width) * 100));
+      nextY = Math.max(8, Math.min(92, ((event.clientY - rect.top) / rect.height) * 100));
+      if (!rafId) rafId = window.requestAnimationFrame(flush);
+    }, { passive: true });
+
+    plate.addEventListener('pointerleave', function () {
+      if (rafId) {
+        window.cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+      plate.style.removeProperty('--sheen-x');
+      plate.style.removeProperty('--sheen-y');
+    });
+
+    onMotionChange(function (reduced) {
+      if (reduced) {
+        plate.style.removeProperty('--sheen-x');
+        plate.style.removeProperty('--sheen-y');
+      }
+    });
+  }
+
+  /* ------------------------------------------------------------------------
      BOOT
      ------------------------------------------------------------------------ */
 
@@ -1566,6 +1685,7 @@
     initCounters();
     initFilters();
     initFormSteps();
+    initPlateSheen();
   }
 
   if (document.readyState === 'loading') {
