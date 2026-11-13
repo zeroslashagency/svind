@@ -4,24 +4,26 @@
    sky-mist backdrop, drifting clouds, floating material inspector & spec tiles.
    ========================================================================== */
 .sv-hero3d {
-  --h3d-bg-a: #D7E7F1;
-  --h3d-bg-b: #ECF3F8;
+  --h3d-bg-a: #CFD9E4;
+  --h3d-bg-b: #ECF1F6;
+  --h3d-bg-c: #C2CFDC;
   --h3d-card-bg: rgba(255, 255, 255, 0.94);
-  --h3d-card-border: rgba(26, 29, 33, 0.1);
+  --h3d-card-border: rgba(26, 29, 33, 0.12);
   --h3d-ink: #1A1D21;
-  --h3d-muted: #525B65;
+  --h3d-muted: #4C5560;
+  --h3d-eyebrow: var(--color-navy, #1E3A6B);
 
   position: relative;
   width: 100%;
   min-height: clamp(600px, calc(100svh - 64px), 920px);
-  background: radial-gradient(circle at 54% 46%, var(--h3d-bg-b) 0%, var(--h3d-bg-a) 74%, #CFE1EC 100%);
+  background: radial-gradient(circle at 52% 44%, var(--h3d-bg-b) 0%, var(--h3d-bg-a) 68%, var(--h3d-bg-c) 100%);
   color: var(--h3d-ink);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   scroll-margin-top: 64px;
-  transition: background 320ms ease;
+  transition: background 380ms ease, color 260ms ease;
 }
 
 @media (min-width: 1024px) {
@@ -31,23 +33,44 @@
   }
 }
 
-/* Studio backdrop presets switched from inspector card */
-.sv-hero3d[data-backdrop="paper"] {
-  --h3d-bg-a: #EDE5D9;
-  --h3d-bg-b: #FAF6F0;
+/* 5 SVIND Industrial Cinematography Backdrops */
+.sv-hero3d[data-theme="raw-steel"] {
+  --h3d-bg-a: #CBD6E2;
+  --h3d-bg-b: #EAF0F6;
+  --h3d-bg-c: #BAC7D6;
 }
 
-.sv-hero3d[data-backdrop="mist"] {
-  --h3d-bg-a: #DFE5EC;
-  --h3d-bg-b: #F2F5F9;
+.sv-hero3d[data-theme="molten-heat"] {
+  --h3d-bg-a: #15171E;
+  --h3d-bg-b: #2A1610;
+  --h3d-bg-c: #0A0C11;
+  --h3d-card-bg: rgba(22, 24, 31, 0.92);
+  --h3d-card-border: rgba(255, 148, 77, 0.28);
+  --h3d-ink: #F5F2EC;
+  --h3d-muted: #D2C7BC;
+  --h3d-eyebrow: #FF944D;
 }
 
-.sv-hero3d[data-backdrop="blush"] {
-  --h3d-bg-a: #EEDBD8;
-  --h3d-bg-b: #FBF3F1;
+.sv-hero3d[data-theme="enamel"] {
+  --h3d-bg-a: #DCE4ED;
+  --h3d-bg-b: #F7F9FC;
+  --h3d-bg-c: #CBD6E4;
 }
 
-/* Subtle tactile paper-grain dot matrix over studio sky */
+.sv-hero3d[data-theme="cad"] {
+  --h3d-bg-a: #D5E5F4;
+  --h3d-bg-b: #EDF5FC;
+  --h3d-bg-c: #C4D9EE;
+  --h3d-eyebrow: #143C75;
+}
+
+.sv-hero3d[data-theme="galvanized"] {
+  --h3d-bg-a: #C8DDF0;
+  --h3d-bg-b: #EBF4FB;
+  --h3d-bg-c: #B7D0E7;
+}
+
+/* Subtle architectural surface texture (CAD drafting grid on CAD mode, dot grain on bay modes) */
 .sv-hero3d__grain {
   position: absolute;
   inset: 0;
@@ -56,9 +79,25 @@
   opacity: 0.42;
   background-image: radial-gradient(rgba(26, 29, 33, 0.14) 0.75px, transparent 0.75px);
   background-size: 14px 14px;
-  transition: opacity 260ms ease;
+  transition: opacity 280ms ease;
 }
 
+.sv-hero3d[data-theme="cad"] .sv-hero3d__grain {
+  opacity: 0.55;
+  background-image:
+    linear-gradient(rgba(20, 60, 117, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20, 60, 117, 0.08) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.sv-hero3d[data-theme="molten-heat"] .sv-hero3d__grain {
+  opacity: 0.36;
+  background-image: radial-gradient(rgba(255, 148, 77, 0.18) 0.75px, transparent 0.75px);
+  background-size: 18px 18px;
+}
+
+.sv-hero3d[data-theme="molten-heat"] .sv-hero3d__clouds,
+.sv-hero3d[data-theme="cad"] .sv-hero3d__clouds,
 .sv-hero3d[data-grain="off"] .sv-hero3d__grain {
   opacity: 0;
 }
@@ -281,27 +320,48 @@
   background: radial-gradient(circle at 30% 40%, #F2B488 0%, #DF7E45 62%, #B85B2D 100%);
 }
 
-/* Top-Center Floating Circular Swatch Switcher Pill */
+/* Top-Center Circular Material Finish Switcher + Quiet Mode Readout */
+.sv-hero3d__switcher-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-inline: auto;
+}
+
 .sv-hero3d__swatches {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 7px 10px;
+  gap: 10px;
+  padding: 7px 11px;
   border-radius: 999px;
   background-color: var(--h3d-card-bg);
   border: 1px solid var(--h3d-card-border);
-  box-shadow: 0 14px 32px -10px rgba(24, 34, 48, 0.18);
-  margin-inline: auto;
+  box-shadow: 0 14px 32px -10px rgba(24, 34, 48, 0.22);
+  transition: background-color 260ms ease, border-color 260ms ease;
+}
+
+.sv-hero3d__mode-label {
+  margin: 0;
+  font-family: var(--font-mono, "IBM Plex Mono", monospace);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--h3d-muted);
+  text-align: center;
+  white-space: nowrap;
+  transition: color 260ms ease;
 }
 
 .sv-hero3d__swatch {
   appearance: none;
   position: relative;
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   border-radius: 999px;
   border: 2px solid rgba(255, 255, 255, 0.9);
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(26, 29, 33, 0.14);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(26, 29, 33, 0.16);
   cursor: pointer;
   padding: 0;
   transition: transform 150ms ease, box-shadow 150ms ease;
@@ -313,36 +373,36 @@
 }
 
 .sv-hero3d__swatch:focus-visible {
-  outline: 2px solid var(--color-navy, #1E3A6B);
+  outline: 2px solid var(--h3d-eyebrow);
   outline-offset: 2px;
 }
 
 .sv-hero3d__swatch.is-active {
   transform: scale(1.14);
-  box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px var(--color-navy, #1E3A6B);
+  box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px var(--h3d-eyebrow);
 }
 
-.sv-hero3d__swatch--clay {
-  background: conic-gradient(#4E9443 0deg 90deg, #DF7E45 90deg 180deg, #568FA9 180deg 270deg, #F4CA63 270deg);
+.sv-hero3d__swatch--steel {
+  background: linear-gradient(135deg, #E2E7EE 0%, #8A96A8 50%, #394454 100%);
 }
 
-.sv-hero3d__swatch--blueprint {
-  background: linear-gradient(rgba(30, 58, 107, 0.25) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(30, 58, 107, 0.25) 1px, transparent 1px),
+.sv-hero3d__swatch--molten {
+  background: radial-gradient(circle at 38% 38%, #FFB454 0%, #FF5A1F 42%, #242228 84%);
+}
+
+.sv-hero3d__swatch--enamel {
+  background: linear-gradient(135deg, #F2B705 0%, #F2B705 52%, #1E3A6B 52%, #1E3A6B 100%);
+}
+
+.sv-hero3d__swatch--cad {
+  background: linear-gradient(rgba(30, 58, 107, 0.32) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(30, 58, 107, 0.32) 1px, transparent 1px),
               #EFF6FC;
   background-size: 6px 6px;
 }
 
-.sv-hero3d__swatch--steel {
-  background: linear-gradient(135deg, #E2E7EE 0%, #8A96A8 48%, #2E3B4E 100%);
-}
-
-.sv-hero3d__swatch--enamel {
-  background: radial-gradient(circle at 32% 30%, #FFFFFF 0%, #F4CA63 45%, #D99B26 100%);
-}
-
-.sv-hero3d__swatch--terracotta {
-  background: radial-gradient(circle at 30% 35%, #F2B488 0%, #DF7E45 65%, #A64E23 100%);
+.sv-hero3d__swatch--galvanized {
+  background: conic-gradient(from 45deg, #CBD5E0, #909EAE, #E3EAF2, #7E8C9C, #CBD5E0);
 }
 
 /* Floating Corner File Spec Badges (matching IMG_8030_ac86d41d mini tiles) */
@@ -492,7 +552,8 @@
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--color-navy, #1E3A6B);
+  color: var(--h3d-eyebrow);
+  transition: color 260ms ease;
 }
 
 .sv-hero3d__h1 {
