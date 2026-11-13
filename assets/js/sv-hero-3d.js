@@ -5,23 +5,23 @@ const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
 
 const THEME_META = {
   'raw-steel': {
-    label: 'Raw Steel \u00b7 Overhead Girder Bay',
+    label: 'Raw Steel \u00b7 Double-Girder EOT Bay',
     surface: 'light'
   },
   'molten-heat': {
-    label: 'Molten Heat \u00b7 Foundry Ladle Duty',
+    label: 'Molten Heat \u00b7 Foundry Ladle Bay',
     surface: 'dark'
   },
   enamel: {
-    label: 'Enamel \u00b7 Proof-Test Bay',
+    label: 'Enamel \u00b7 125% Proof-Load Test Bed',
     surface: 'light'
   },
   cad: {
-    label: 'CAD \u00b7 IS 807 Blueprint',
+    label: 'CAD \u00b7 IS 807 Structural Assembly',
     surface: 'light'
   },
   galvanized: {
-    label: 'Galvanized \u00b7 Goliath Runway Yard',
+    label: 'Galvanized \u00b7 Goliath Portal Quay',
     surface: 'light'
   }
 };
@@ -34,6 +34,7 @@ const isSoftwareGl = (() => {
     const ext = gl.getExtension('WEBGL_debug_renderer_info');
     const param = ext ? ext.UNMASKED_RENDERER_WEBGL : gl.RENDERER;
     const gpu = String(gl.getParameter(param) || '');
+    gl.getExtension('WEBGL_lose_context')?.loseContext();
     return /SwiftShader|llvmpipe|softpipe|Software|Basic Render/i.test(gpu);
   } catch {
     return true;
@@ -71,17 +72,17 @@ function mountSvgFallbackWordmark(mount, section, modeLabelEl) {
         <defs>
           <linearGradient id="svf-steel" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stop-color="#CFD8E3"/>
-            <stop offset="52%" stop-color="#8A97A8"/>
-            <stop offset="100%" stop-color="#4A5668"/>
+            <stop offset="52%" stop-color="#7B8898"/>
+            <stop offset="100%" stop-color="#3E4958"/>
           </linearGradient>
           <pattern id="svf-molten" patternUnits="userSpaceOnUse" width="180" height="220">
-            <rect width="180" height="220" fill="#232026"/>
+            <rect width="180" height="220" fill="#1C191E"/>
             <path d="M-20,60 C45,18 115,105 200,52" fill="none" stroke="#FF6A1A" stroke-width="10"/>
             <path d="M-15,165 C60,120 130,205 200,155" fill="none" stroke="#FFB84D" stroke-width="6"/>
           </pattern>
           <pattern id="svf-blueprint" patternUnits="userSpaceOnUse" width="32" height="32">
-            <rect width="32" height="32" fill="#D4E8FA"/>
-            <path d="M32 0H0v32" fill="none" stroke="#1E4C9A" stroke-opacity="0.28" stroke-width="1"/>
+            <rect width="32" height="32" fill="#173A73"/>
+            <path d="M32 0H0v32" fill="none" stroke="#9EE0FF" stroke-opacity="0.32" stroke-width="1"/>
           </pattern>
           <linearGradient id="svf-galv" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stop-color="#DCE4EC"/>
@@ -90,23 +91,23 @@ function mountSvgFallbackWordmark(mount, section, modeLabelEl) {
           </linearGradient>
         </defs>
         <g class="sv-hero3d__fallback-letter" data-idx="0" transform="translate(26,34)">
-          <path d="M168,46 C140,18 62,16 32,46 C8,70 10,114 48,136 L122,164 C150,176 154,206 130,224 C100,246 42,240 16,214 L0,256 C36,288 124,292 164,258 C200,226 196,158 148,134 L74,104 C50,94 50,68 74,56 C100,44 134,54 152,72 Z" transform="translate(10,16)" fill="#222B38"/>
+          <path d="M168,46 C140,18 62,16 32,46 C8,70 10,114 48,136 L122,164 C150,176 154,206 130,224 C100,246 42,240 16,214 L0,256 C36,288 124,292 164,258 C200,226 196,158 148,134 L74,104 C50,94 50,68 74,56 C100,44 134,54 152,72 Z" transform="translate(10,16)" fill="#18202A"/>
           <path d="M168,46 C140,18 62,16 32,46 C8,70 10,114 48,136 L122,164 C150,176 154,206 130,224 C100,246 42,240 16,214 L0,256 C36,288 124,292 164,258 C200,226 196,158 148,134 L74,104 C50,94 50,68 74,56 C100,44 134,54 152,72 Z" fill="url(#svf-steel)" stroke="rgba(255,255,255,0.34)" stroke-width="4"/>
         </g>
         <g class="sv-hero3d__fallback-letter" data-idx="1" transform="translate(232,32)">
-          <polygon points="10,14 78,14 108,148 138,14 206,14 148,266 68,266" transform="translate(10,16)" fill="#222B38" stroke="#222B38" stroke-width="26" stroke-linejoin="round"/>
+          <polygon points="10,14 78,14 108,148 138,14 206,14 148,266 68,266" transform="translate(10,16)" fill="#18202A" stroke="#18202A" stroke-width="26" stroke-linejoin="round"/>
           <polygon points="10,14 78,14 108,148 138,14 206,14 148,266 68,266" fill="url(#svf-steel)" stroke="url(#svf-steel)" stroke-width="26" stroke-linejoin="round"/>
         </g>
         <g class="sv-hero3d__fallback-letter" data-idx="2" transform="translate(468,32)">
-          <path d="M12,98 A74,74 0 0 1 160,98 L160,268 L12,268 Z" transform="translate(10,16)" fill="#222B38" stroke="#222B38" stroke-width="18" stroke-linejoin="round"/>
+          <path d="M12,98 A74,74 0 0 1 160,98 L160,268 L12,268 Z" transform="translate(10,16)" fill="#18202A" stroke="#18202A" stroke-width="18" stroke-linejoin="round"/>
           <path d="M12,98 A74,74 0 0 1 160,98 L160,268 L12,268 Z" fill="url(#svf-steel)" stroke="rgba(255,255,255,0.28)" stroke-width="6" stroke-linejoin="round"/>
         </g>
         <g class="sv-hero3d__fallback-letter" data-idx="3" transform="translate(664,32)">
-          <polygon points="10,266 10,14 76,14 138,136 138,14 202,14 202,266 138,266 74,142 74,266" transform="translate(10,16)" fill="#182C4A" stroke="#182C4A" stroke-width="24" stroke-linejoin="round"/>
+          <polygon points="10,266 10,14 76,14 138,136 138,14 202,14 202,266 138,266 74,142 74,266" transform="translate(10,16)" fill="#122138" stroke="#122138" stroke-width="24" stroke-linejoin="round"/>
           <polygon points="10,266 10,14 76,14 138,136 138,14 202,14 202,266 138,266 74,142 74,266" fill="url(#svf-steel)" stroke="rgba(255,255,255,0.24)" stroke-width="20" stroke-linejoin="round"/>
         </g>
         <g class="sv-hero3d__fallback-letter" data-idx="4" transform="translate(894,32)">
-          <path d="M14,14 L104,14 C178,14 206,68 206,140 C206,212 178,266 104,266 L14,266 Z M76,84 L76,196 L102,196 C132,196 142,174 142,140 C142,106 132,84 102,84 Z" fill-rule="evenodd" transform="translate(10,16)" fill="#222B38" stroke="#222B38" stroke-width="20" stroke-linejoin="round"/>
+          <path d="M14,14 L104,14 C178,14 206,68 206,140 C206,212 178,266 104,266 L14,266 Z M76,84 L76,196 L102,196 C132,196 142,174 142,140 C142,106 132,84 102,84 Z" fill-rule="evenodd" transform="translate(10,16)" fill="#18202A" stroke="#18202A" stroke-width="20" stroke-linejoin="round"/>
           <path d="M14,14 L104,14 C178,14 206,68 206,140 C206,212 178,266 104,266 L14,266 Z M76,84 L76,196 L102,196 C132,196 142,174 142,140 C142,106 132,84 102,84 Z" fill-rule="evenodd" fill="url(#svf-steel)" stroke="rgba(255,255,255,0.28)" stroke-width="14" stroke-linejoin="round"/>
         </g>
       </svg>
@@ -114,7 +115,7 @@ function mountSvgFallbackWordmark(mount, section, modeLabelEl) {
   `;
 
   const letters = Array.from(mount.querySelectorAll('.sv-hero3d__fallback-letter'));
-  const enamelPalette = ['#F2B705', '#1E3A6B', '#DF6426', '#2B3544', '#F2B705'];
+  const enamelPalette = ['#D99B08', '#162C52', '#C84B1F', '#162C52', '#D99B08'];
 
   const wave = (focusIdx = -1) => {
     letters.forEach((el, idx) => {
@@ -141,19 +142,19 @@ function mountSvgFallbackWordmark(mount, section, modeLabelEl) {
       } else if (preset === 'enamel') {
         front.setAttribute('fill', enamelPalette[idx]);
         front.setAttribute('stroke', 'rgba(255,255,255,0.45)');
-        if (back) back.setAttribute('fill', '#142644');
+        if (back) back.setAttribute('fill', '#101F3A');
       } else if (preset === 'cad') {
         front.setAttribute('fill', 'url(#svf-blueprint)');
-        front.setAttribute('stroke', '#1E4C9A');
-        if (back) back.setAttribute('fill', '#1E4C9A');
+        front.setAttribute('stroke', '#9EE0FF');
+        if (back) back.setAttribute('fill', '#0D234A');
       } else if (preset === 'galvanized') {
         front.setAttribute('fill', 'url(#svf-galv)');
         front.setAttribute('stroke', 'rgba(255,255,255,0.4)');
-        if (back) back.setAttribute('fill', '#526071');
+        if (back) back.setAttribute('fill', '#44505E');
       } else {
-        front.setAttribute('fill', idx === 3 ? '#39557E' : 'url(#svf-steel)');
+        front.setAttribute('fill', idx === 3 ? '#2B4263' : 'url(#svf-steel)');
         front.setAttribute('stroke', 'rgba(255,255,255,0.32)');
-        if (back) back.setAttribute('fill', '#222B38');
+        if (back) back.setAttribute('fill', '#18202A');
       }
     });
   };
@@ -162,7 +163,49 @@ function mountSvgFallbackWordmark(mount, section, modeLabelEl) {
 }
 
 /* ==========================================================================
-   PROCEDURAL INDUSTRIAL TEXTURE GENERATORS (Zero external assets)
+   INDUSTRIAL HIGH-BAY STUDIO ENVIRONMENT REFLECTIONS
+   ========================================================================== */
+function createIndustrialEnvTarget(renderer) {
+  try {
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    const envScene = new THREE.Scene();
+    const room = new RoomEnvironment();
+    envScene.add(room);
+
+    // High-contrast overhead high-bay LED strip emitters so brushed metals gleam realistically
+    const stripGeo = new THREE.PlaneGeometry(18, 1.4);
+    const stripMat = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, side: THREE.DoubleSide });
+    const warmMat = new THREE.MeshBasicMaterial({ color: 0xFFE3C2, side: THREE.DoubleSide });
+
+    const stripA = new THREE.Mesh(stripGeo, stripMat);
+    stripA.position.set(0, 7.5, 4.5);
+    stripA.rotation.x = Math.PI * 0.42;
+    envScene.add(stripA);
+
+    const stripB = new THREE.Mesh(stripGeo, warmMat);
+    stripB.position.set(-7.5, 5.0, -3.5);
+    stripB.rotation.y = Math.PI * 0.35;
+    envScene.add(stripB);
+
+    const stripC = new THREE.Mesh(stripGeo, stripMat);
+    stripC.position.set(7.5, 4.5, -2.5);
+    stripC.rotation.y = -Math.PI * 0.35;
+    envScene.add(stripC);
+
+    const target = pmrem.fromScene(envScene, 0.035);
+    stripGeo.dispose();
+    stripMat.dispose();
+    warmMat.dispose();
+    room.dispose();
+    pmrem.dispose();
+    return target;
+  } catch {
+    return null;
+  }
+}
+
+/* ==========================================================================
+   PROCEDURAL INDUSTRIAL TEXTURE & PBR MAP GENERATORS
    ========================================================================== */
 function makeSteelPlateTexture(maxAnisotropy) {
   const canvas = document.createElement('canvas');
@@ -170,37 +213,51 @@ function makeSteelPlateTexture(maxAnisotropy) {
   canvas.height = 512;
   const ctx = canvas.getContext('2d');
 
+  // Rich hot-rolled mill steel finish with directional sheen & oxide mottling
   const grad = ctx.createLinearGradient(0, 0, 512, 512);
-  grad.addColorStop(0, '#B8C4D2');
-  grad.addColorStop(0.45, '#7E8C9E');
-  grad.addColorStop(1, '#526072');
+  grad.addColorStop(0, '#AEBAC8');
+  grad.addColorStop(0.35, '#7A8798');
+  grad.addColorStop(0.7, '#909EAE');
+  grad.addColorStop(1, '#505D6E');
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, 512, 512);
 
-  // Horizontal rolled-mill brush grain
+  // Subtle brushed metal micro-streaks
   for (let y = 0; y < 512; y += 2) {
-    const alpha = 0.08 + ((y * 19) % 13) * 0.015;
-    ctx.strokeStyle = y % 4 === 0 ? `rgba(255,255,255,${alpha})` : `rgba(14,22,32,${alpha})`;
+    const alpha = 0.06 + ((y * 19) % 13) * 0.014;
+    ctx.strokeStyle = y % 4 === 0 ? `rgba(255,255,255,${alpha})` : `rgba(12,18,26,${alpha})`;
     ctx.beginPath();
     ctx.moveTo(0, y);
     ctx.lineTo(512, y);
     ctx.stroke();
   }
 
-  // Subtle welded plate seam lines & corner rivets
-  ctx.strokeStyle = 'rgba(26, 35, 48, 0.28)';
-  ctx.lineWidth = 2;
-  ctx.strokeRect(24, 24, 464, 464);
+  // Welded structural gusset plate seams & chamfered bolts
+  ctx.strokeStyle = 'rgba(18, 26, 36, 0.42)';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(20, 20, 472, 472);
   ctx.beginPath();
-  ctx.moveTo(24, 256);
-  ctx.lineTo(488, 256);
+  ctx.moveTo(20, 256);
+  ctx.lineTo(492, 256);
   ctx.stroke();
 
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.34)';
-  [46, 256, 466].forEach((x) => {
-    [46, 236, 276, 466].forEach((y) => {
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.16)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(20, 259);
+  ctx.lineTo(492, 259);
+  ctx.stroke();
+
+  // Machined hex-bolt heads with recessed shadow halo
+  [48, 256, 464].forEach((x) => {
+    [48, 232, 280, 464].forEach((y) => {
+      ctx.fillStyle = 'rgba(12, 18, 26, 0.55)';
       ctx.beginPath();
-      ctx.arc(x, y, 3.2, 0, Math.PI * 2);
+      ctx.arc(x + 1.5, y + 1.5, 4.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = 'rgba(235, 242, 250, 0.72)';
+      ctx.beginPath();
+      ctx.arc(x, y, 3.6, 0, Math.PI * 2);
       ctx.fill();
     });
   });
@@ -211,17 +268,25 @@ function makeSteelPlateTexture(maxAnisotropy) {
   return tex;
 }
 
-function makeSteelBumpTexture() {
+function makeSteelRoughnessAndBump() {
   const canvas = document.createElement('canvas');
   canvas.width = 256;
   canvas.height = 256;
   const ctx = canvas.getContext('2d');
-  ctx.fillStyle = '#808080';
+  ctx.fillStyle = '#707070';
   ctx.fillRect(0, 0, 256, 256);
   for (let y = 0; y < 256; y += 2) {
-    const shade = 114 + ((y * 23) % 28);
+    const shade = 78 + ((y * 29) % 72);
     ctx.fillStyle = `rgb(${shade},${shade},${shade})`;
     ctx.fillRect(0, y, 256, 1);
+  }
+  // Subtle mottled mill-scale variation
+  for (let i = 0; i < 420; i += 1) {
+    const x = (i * 89) % 256;
+    const y = (i * 173) % 256;
+    const v = 50 + (i % 90);
+    ctx.fillStyle = `rgba(${v},${v},${v},0.35)`;
+    ctx.fillRect(x, y, 8, 5);
   }
   const tex = new THREE.CanvasTexture(canvas);
   tex.wrapS = THREE.RepeatWrapping;
@@ -230,95 +295,177 @@ function makeSteelBumpTexture() {
   return tex;
 }
 
-function makeMoltenAlbedoTexture(maxAnisotropy) {
-  const canvas = document.createElement('canvas');
-  canvas.width = 512;
-  canvas.height = 512;
-  const ctx = canvas.getContext('2d');
+function makeConcreteFloorTextures(maxAnisotropy) {
+  const albedoCanvas = document.createElement('canvas');
+  albedoCanvas.width = 512;
+  albedoCanvas.height = 512;
+  const actx = albedoCanvas.getContext('2d');
 
-  ctx.fillStyle = '#1E1B1F';
-  ctx.fillRect(0, 0, 512, 512);
+  // Neutral near-white troweled concrete base so floorMat.color tints accurately on light & dark bays
+  actx.fillStyle = '#E6E9ED';
+  actx.fillRect(0, 0, 512, 512);
 
-  // Dark forged iron slag grain
-  for (let i = 0; i < 1600; i += 1) {
-    const x = (i * 173) % 512;
-    const y = (i * 311) % 512;
-    const v = 22 + (i % 24);
-    ctx.fillStyle = `rgb(${v + 4},${v},${v})`;
-    ctx.fillRect(x, y, 4, 3);
+  for (let i = 0; i < 2600; i += 1) {
+    const x = (i * 139) % 512;
+    const y = (i * 257) % 512;
+    const w = 5 + (i % 16);
+    const v = 212 + (i % 34);
+    actx.fillStyle = `rgba(${v},${v + 2},${v + 4},0.22)`;
+    actx.fillRect(x, y, w, w * 0.55);
+  }
+  actx.strokeStyle = 'rgba(20, 26, 34, 0.16)';
+  actx.lineWidth = 2;
+  for (let g = 0; g < 512; g += 128) {
+    actx.beginPath();
+    actx.moveTo(g, 0);
+    actx.lineTo(g, 512);
+    actx.stroke();
+    actx.beginPath();
+    actx.moveTo(0, g);
+    actx.lineTo(512, g);
+    actx.stroke();
   }
 
-  // Glowing thermal fissure veins matching forge ladle crust
-  const drawCrack = (pts, width, color) => {
+  const albedoTex = new THREE.CanvasTexture(albedoCanvas);
+  albedoTex.colorSpace = THREE.SRGBColorSpace;
+  albedoTex.wrapS = THREE.RepeatWrapping;
+  albedoTex.wrapT = THREE.RepeatWrapping;
+  albedoTex.repeat.set(7, 5);
+  albedoTex.anisotropy = maxAnisotropy;
+
+  // Tight radial vignette alpha map so floor fades invisibly with zero rectangular borders on desktop or mobile
+  const alphaCanvas = document.createElement('canvas');
+  alphaCanvas.width = 256;
+  alphaCanvas.height = 256;
+  const lctx = alphaCanvas.getContext('2d');
+  lctx.fillStyle = '#000000';
+  lctx.fillRect(0, 0, 256, 256);
+  const grad = lctx.createRadialGradient(128, 128, 18, 128, 128, 118);
+  grad.addColorStop(0, '#FFFFFF');
+  grad.addColorStop(0.42, '#C8C8C8');
+  grad.addColorStop(0.72, '#404040');
+  grad.addColorStop(0.92, '#080808');
+  grad.addColorStop(1, '#000000');
+  lctx.fillStyle = grad;
+  lctx.fillRect(0, 0, 256, 256);
+  const alphaTex = new THREE.CanvasTexture(alphaCanvas);
+
+  return { albedoTex, alphaTex };
+}
+
+function makeMoltenAlbedoAndEmissive(maxAnisotropy) {
+  const aCanvas = document.createElement('canvas');
+  aCanvas.width = 512;
+  aCanvas.height = 512;
+  const actx = aCanvas.getContext('2d');
+
+  const eCanvas = document.createElement('canvas');
+  eCanvas.width = 512;
+  eCanvas.height = 512;
+  const ectx = eCanvas.getContext('2d');
+
+  // Dark pitted forge cast-iron crust
+  actx.fillStyle = '#151114';
+  actx.fillRect(0, 0, 512, 512);
+  ectx.fillStyle = '#020000';
+  ectx.fillRect(0, 0, 512, 512);
+
+  for (let i = 0; i < 3200; i += 1) {
+    const x = (i * 173) % 512;
+    const y = (i * 311) % 512;
+    const v = 14 + (i % 24);
+    actx.fillStyle = `rgb(${v + 5},${v + 1},${v})`;
+    actx.fillRect(x, y, 3 + (i % 3), 2 + (i % 3));
+  }
+
+  // Natural irregular heat-check fractures (low-frequency curve walk — never sawtooth zig-zag)
+  const traceOrganicFissure = (ctx, x0, y0, x1, y1, seed, width, color) => {
+    const steps = 12;
     ctx.strokeStyle = color;
     ctx.lineWidth = width;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     ctx.beginPath();
-    ctx.moveTo(pts[0][0], pts[0][1]);
-    for (let i = 1; i < pts.length; i += 1) {
-      ctx.lineTo(pts[i][0], pts[i][1]);
+    ctx.moveTo(x0, y0);
+    let drift = 0;
+    for (let s = 1; s < steps; s += 1) {
+      const t = s / steps;
+      const nx = -(y1 - y0);
+      const ny = x1 - x0;
+      const nlen = Math.hypot(nx, ny) || 1;
+      drift += Math.sin(seed * 11.7 + s * 1.35) * 12 + Math.cos(seed * 4.3 + s * 0.85) * 7;
+      const env = Math.sin(t * Math.PI);
+      const offset = drift * env;
+      ctx.lineTo(
+        x0 + (x1 - x0) * t + (nx / nlen) * offset,
+        y0 + (y1 - y0) * t + (ny / nlen) * offset
+      );
     }
+    ctx.lineTo(x1, y1);
     ctx.stroke();
   };
 
   const cracks = [
-    [[20, 140], [115, 165], [190, 120], [285, 178], [380, 132], [495, 175]],
-    [[45, 360], [140, 320], [225, 382], [320, 336], [425, 378], [495, 340]],
-    [[185, 25], [210, 125], [175, 240], [235, 355], [205, 485]],
-    [[350, 40], [315, 145], [365, 260], [322, 375], [358, 490]]
+    [16, 128, 496, 162, 1.1, 1],
+    [12, 344, 502, 318, 2.4, 1],
+    [144, 14, 198, 498, 3.7, 0.9],
+    [348, 12, 306, 504, 4.9, 0.9],
+    [98, 134, 212, 48, 5.5, 0.65],
+    [252, 336, 372, 464, 6.2, 0.65],
+    [186, 224, 324, 268, 7.8, 0.7]
   ];
 
-  cracks.forEach((c) => {
-    drawCrack(c, 16, 'rgba(180, 42, 8, 0.55)');
-    drawCrack(c, 8, '#FF5C12');
-    drawCrack(c, 3, '#FFD166');
+  cracks.forEach(([x0, y0, x1, y1, seed, scale]) => {
+    traceOrganicFissure(actx, x0, y0, x1, y1, seed, 16 * scale, 'rgba(6, 2, 2, 0.85)');
+    traceOrganicFissure(actx, x0, y0, x1, y1, seed, 7.5 * scale, '#A82605');
+    traceOrganicFissure(actx, x0, y0, x1, y1, seed, 3.4 * scale, '#FF5C12');
+    traceOrganicFissure(actx, x0, y0, x1, y1, seed, 1.4 * scale, '#FFE68A');
+
+    traceOrganicFissure(ectx, x0, y0, x1, y1, seed, 20 * scale, 'rgba(255, 58, 8, 0.34)');
+    traceOrganicFissure(ectx, x0, y0, x1, y1, seed, 6.5 * scale, '#FF5A10');
+    traceOrganicFissure(ectx, x0, y0, x1, y1, seed, 2.0 * scale, '#FFF3B0');
   });
 
-  const tex = new THREE.CanvasTexture(canvas);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = maxAnisotropy;
-  return tex;
+  const albedoTex = new THREE.CanvasTexture(aCanvas);
+  albedoTex.colorSpace = THREE.SRGBColorSpace;
+  albedoTex.anisotropy = maxAnisotropy;
+
+  const emissiveTex = new THREE.CanvasTexture(eCanvas);
+  emissiveTex.colorSpace = THREE.SRGBColorSpace;
+  emissiveTex.anisotropy = maxAnisotropy;
+
+  return { albedoTex, emissiveTex };
 }
 
-function makeMoltenEmissiveTexture(maxAnisotropy) {
+function makeSoftEmberGlowTexture() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 64;
+  canvas.height = 64;
+  const ctx = canvas.getContext('2d');
+  const grad = ctx.createRadialGradient(32, 32, 1, 32, 32, 30);
+  grad.addColorStop(0, 'rgba(255, 250, 220, 1)');
+  grad.addColorStop(0.24, 'rgba(255, 138, 38, 0.85)');
+  grad.addColorStop(0.62, 'rgba(255, 62, 10, 0.25)');
+  grad.addColorStop(1, 'rgba(255, 40, 0, 0)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 64, 64);
+  return new THREE.CanvasTexture(canvas);
+}
+
+function makeBackdropHaloTexture(innerRgba, midRgba) {
   const canvas = document.createElement('canvas');
   canvas.width = 512;
   canvas.height = 512;
   const ctx = canvas.getContext('2d');
-
-  ctx.fillStyle = '#070302';
+  const grad = ctx.createRadialGradient(256, 256, 12, 256, 256, 240);
+  grad.addColorStop(0, innerRgba);
+  grad.addColorStop(0.38, midRgba);
+  grad.addColorStop(0.75, 'rgba(120, 24, 4, 0.08)');
+  grad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = grad;
   ctx.fillRect(0, 0, 512, 512);
-
-  const drawGlow = (pts, width, color) => {
-    ctx.strokeStyle = color;
-    ctx.lineWidth = width;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.beginPath();
-    ctx.moveTo(pts[0][0], pts[0][1]);
-    for (let i = 1; i < pts.length; i += 1) {
-      ctx.lineTo(pts[i][0], pts[i][1]);
-    }
-    ctx.stroke();
-  };
-
-  const cracks = [
-    [[20, 140], [115, 165], [190, 120], [285, 178], [380, 132], [495, 175]],
-    [[45, 360], [140, 320], [225, 382], [320, 336], [425, 378], [495, 340]],
-    [[185, 25], [210, 125], [175, 240], [235, 355], [205, 485]],
-    [[350, 40], [315, 145], [365, 260], [322, 375], [358, 490]]
-  ];
-
-  cracks.forEach((c) => {
-    drawGlow(c, 18, 'rgba(255, 72, 14, 0.42)');
-    drawGlow(c, 8, '#FF6A14');
-    drawGlow(c, 3, '#FFE08A');
-  });
-
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = maxAnisotropy;
   return tex;
 }
 
@@ -328,22 +475,30 @@ function makeEnamelStencilTexture(maxAnisotropy) {
   canvas.height = 512;
   const ctx = canvas.getContext('2d');
 
-  ctx.fillStyle = '#1E3A6B';
+  // Rich industrial signal vermilion housing with riveted IS 807 specification badge centered cleanly on 'I'
+  ctx.fillStyle = '#B83B18';
   ctx.fillRect(0, 0, 512, 512);
 
-  // Clean OEM safety yellow diagonal corner band & IS 807 spec marks
-  ctx.fillStyle = '#F2B705';
-  ctx.fillRect(0, 390, 512, 42);
+  // Spec plaque panel centered inside solid 'I' arch bounds
+  ctx.fillStyle = '#132648';
+  ctx.fillRect(36, 152, 440, 214);
+  ctx.strokeStyle = '#C98C07';
+  ctx.lineWidth = 5;
+  ctx.strokeRect(38, 154, 436, 210);
 
-  ctx.fillStyle = 'rgba(255,255,255,0.88)';
-  ctx.font = '700 44px "IBM Plex Mono", monospace';
+  ctx.fillStyle = '#C98C07';
+  ctx.fillRect(38, 306, 436, 56);
+
+  ctx.fillStyle = '#FFFFFF';
+  ctx.font = '700 48px "IBM Plex Mono", monospace';
   ctx.textAlign = 'center';
-  ctx.fillText('IS 807', 256, 210);
-  ctx.font = '600 30px "IBM Plex Mono", monospace';
-  ctx.fillText('CLASS M8', 256, 265);
-  ctx.fillStyle = '#141B24';
+  ctx.fillText('IS 807', 256, 224);
+  ctx.font = '600 26px "IBM Plex Mono", monospace';
+  ctx.fillStyle = '#D8E5F5';
+  ctx.fillText('FEM 4M · 100 T', 256, 272);
+  ctx.fillStyle = '#111620';
   ctx.font = '700 24px "IBM Plex Mono", monospace';
-  ctx.fillText('PROOF TESTED', 256, 419);
+  ctx.fillText('125% PROOF LOAD', 256, 342);
 
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
@@ -357,9 +512,9 @@ function makeHazardStripeTexture(maxAnisotropy) {
   canvas.height = 128;
   const ctx = canvas.getContext('2d');
 
-  ctx.fillStyle = '#F2B705';
+  ctx.fillStyle = '#C98C07';
   ctx.fillRect(0, 0, 512, 128);
-  ctx.fillStyle = '#1D222B';
+  ctx.fillStyle = '#151920';
   for (let x = -128; x < 640; x += 64) {
     ctx.beginPath();
     ctx.moveTo(x, 128);
@@ -374,7 +529,7 @@ function makeHazardStripeTexture(maxAnisotropy) {
   tex.colorSpace = THREE.SRGBColorSpace;
   tex.wrapS = THREE.RepeatWrapping;
   tex.wrapT = THREE.ClampToEdgeWrapping;
-  tex.repeat.set(4, 1);
+  tex.repeat.set(5, 1);
   tex.anisotropy = maxAnisotropy;
   return tex;
 }
@@ -385,44 +540,59 @@ function makeBlueprintScriptTexture(maxAnisotropy) {
   canvas.height = 512;
   const ctx = canvas.getContext('2d');
 
-  // Authentic deep cyanotype CAD blueprint background
-  ctx.fillStyle = '#173A73';
+  ctx.fillStyle = '#133266';
   ctx.fillRect(0, 0, 512, 512);
 
-  // Fine technical drafting millimeter grid in crisp blueprint white/cyan
-  ctx.strokeStyle = 'rgba(186, 224, 255, 0.24)';
+  // Fine technical millimeter grid + crisp major section lines + registration crosshairs (zero clipped text)
+  ctx.strokeStyle = 'rgba(158, 214, 255, 0.18)';
+  ctx.lineWidth = 1;
+  for (let g = 16; g < 512; g += 16) {
+    ctx.beginPath();
+    ctx.moveTo(g, 0);
+    ctx.lineTo(g, 512);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(0, g);
+    ctx.lineTo(512, g);
+    ctx.stroke();
+  }
+
+  ctx.strokeStyle = 'rgba(198, 232, 255, 0.36)';
+  ctx.lineWidth = 2;
+  for (let g = 64; g < 512; g += 64) {
+    ctx.beginPath();
+    ctx.moveTo(g, 0);
+    ctx.lineTo(g, 512);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(0, g);
+    ctx.lineTo(512, g);
+    ctx.stroke();
+  }
+
+  // Subtle diagonal structural section hatch
+  ctx.strokeStyle = 'rgba(140, 205, 255, 0.09)';
   ctx.lineWidth = 1.5;
-  for (let g = 32; g < 512; g += 32) {
+  for (let d = -512; d < 512; d += 24) {
     ctx.beginPath();
-    ctx.moveTo(g, 0);
-    ctx.lineTo(g, 512);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(0, g);
-    ctx.lineTo(512, g);
+    ctx.moveTo(d, 0);
+    ctx.lineTo(d + 512, 512);
     ctx.stroke();
   }
 
-  // Major engineering section lines & crosshairs
-  ctx.strokeStyle = 'rgba(220, 240, 255, 0.48)';
-  ctx.lineWidth = 2.5;
-  for (let g = 128; g < 512; g += 128) {
-    ctx.beginPath();
-    ctx.moveTo(g, 0);
-    ctx.lineTo(g, 512);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(0, g);
-    ctx.lineTo(512, g);
-    ctx.stroke();
+  // Precision CAD center crosshair marks
+  ctx.strokeStyle = 'rgba(232, 246, 255, 0.55)';
+  ctx.lineWidth = 2;
+  for (let x = 128; x < 512; x += 128) {
+    for (let y = 128; y < 512; y += 128) {
+      ctx.beginPath();
+      ctx.moveTo(x - 8, y);
+      ctx.lineTo(x + 8, y);
+      ctx.moveTo(x, y - 8);
+      ctx.lineTo(x, y + 8);
+      ctx.stroke();
+    }
   }
-
-  // Crisp CAD spec callouts
-  ctx.fillStyle = 'rgba(232, 245, 255, 0.85)';
-  ctx.font = '600 22px "IBM Plex Mono", monospace';
-  ctx.textAlign = 'center';
-  ctx.fillText('IS 807 · FEM 4M · 36m SPAN', 256, 108);
-  ctx.fillText('125% PROOF LOAD · EOT BAY', 256, 404);
 
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
@@ -436,30 +606,33 @@ function makeGalvanizedTexture(maxAnisotropy) {
   canvas.height = 512;
   const ctx = canvas.getContext('2d');
 
-  ctx.fillStyle = '#B8C4D1';
+  ctx.fillStyle = '#B2BECB';
   ctx.fillRect(0, 0, 512, 512);
 
-  // Hot-dip crystalline zinc spangle facets
-  const shades = ['#D7E0E8', '#9BA8B8', '#E5ECF3', '#8796A8', '#C6D1DD', '#AEBCCA'];
-  for (let i = 0; i < 220; i += 1) {
-    const cx = ((i * 197) % 512);
-    const cy = ((i * 293) % 512);
-    const r = 18 + (i % 34);
-    const sides = 5 + (i % 3);
+  // Authentic sharp crystalline zinc spangle facets (IS 2629 hot-dip galvanizing)
+  const shades = ['#DCE4ED', '#8F9EAD', '#EDF3F8', '#7D8D9E', '#C3CFD9', '#A0AEBE'];
+  for (let i = 0; i < 480; i += 1) {
+    const cx = ((i * 197 + (i % 7) * 31) % 512);
+    const cy = ((i * 293 + (i % 11) * 23) % 512);
+    const len = 10 + (i % 24);
+    const a = (i * 1.37) % (Math.PI * 2);
+    const spread = 0.35 + (i % 5) * 0.14;
     ctx.fillStyle = shades[i % shades.length];
-    ctx.globalAlpha = 0.62;
+    ctx.globalAlpha = 0.72;
     ctx.beginPath();
-    for (let s = 0; s < sides; s += 1) {
-      const a = (s / sides) * Math.PI * 2 + (i * 0.4);
-      const px = cx + Math.cos(a) * r;
-      const py = cy + Math.sin(a) * r * (0.75 + (i % 4) * 0.12);
-      if (s === 0) ctx.moveTo(px, py);
-      else ctx.lineTo(px, py);
-    }
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + Math.cos(a) * len, cy + Math.sin(a) * len);
+    ctx.lineTo(cx + Math.cos(a + spread) * (len * 0.85), cy + Math.sin(a + spread) * (len * 0.85));
     ctx.closePath();
     ctx.fill();
   }
   ctx.globalAlpha = 1;
+
+  // Fine brushed zinc sheen
+  for (let y = 0; y < 512; y += 3) {
+    ctx.fillStyle = y % 6 === 0 ? 'rgba(255,255,255,0.06)' : 'rgba(18,24,32,0.05)';
+    ctx.fillRect(0, y, 512, 1);
+  }
 
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
@@ -475,18 +648,17 @@ function makeGalvanizedBumpTexture() {
   ctx.fillStyle = '#808080';
   ctx.fillRect(0, 0, 256, 256);
 
-  for (let i = 0; i < 140; i += 1) {
+  for (let i = 0; i < 280; i += 1) {
     const cx = (i * 97) % 256;
     const cy = (i * 151) % 256;
-    const r = 12 + (i % 20);
-    const shade = 98 + (i % 56);
+    const len = 8 + (i % 16);
+    const a = (i * 1.41) % (Math.PI * 2);
+    const shade = 75 + (i % 105);
     ctx.fillStyle = `rgb(${shade},${shade},${shade})`;
     ctx.beginPath();
-    ctx.moveTo(cx + r, cy);
-    for (let s = 1; s < 5; s += 1) {
-      const a = (s / 5) * Math.PI * 2 + i;
-      ctx.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r);
-    }
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + Math.cos(a) * len, cy + Math.sin(a) * len);
+    ctx.lineTo(cx + Math.cos(a + 0.52) * len, cy + Math.sin(a + 0.52) * len);
     ctx.closePath();
     ctx.fill();
   }
@@ -503,16 +675,16 @@ function makeContactShadowTexture() {
   canvas.height = 128;
   const ctx = canvas.getContext('2d');
   const grad = ctx.createRadialGradient(128, 64, 12, 128, 64, 118);
-  grad.addColorStop(0, 'rgba(14, 20, 30, 0.38)');
-  grad.addColorStop(0.55, 'rgba(14, 20, 30, 0.14)');
-  grad.addColorStop(1, 'rgba(14, 20, 30, 0)');
+  grad.addColorStop(0, 'rgba(10, 14, 22, 0.48)');
+  grad.addColorStop(0.55, 'rgba(10, 14, 22, 0.16)');
+  grad.addColorStop(1, 'rgba(10, 14, 22, 0)');
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, 256, 128);
   return new THREE.CanvasTexture(canvas);
 }
 
 /* ==========================================================================
-   SCULPTED CHUNKY LETTER SILHOUETTES ("S V I N D")
+   MACHINED HEAVY INDUSTRIAL LETTER SILHOUETTES ("S V I N D")
    ========================================================================== */
 function buildRoundedContourFromSpine(spinePoints, halfWidth, segmentsPerSide = 44) {
   const curve = new THREE.CatmullRomCurve3(
@@ -572,7 +744,7 @@ function buildRoundedContourFromSpine(spinePoints, halfWidth, segmentsPerSide = 
   return shape;
 }
 
-function buildRoundedPolygonShape(pts, cornerRadius = 0.12) {
+function buildRoundedPolygonShape(pts, cornerRadius = 0.1) {
   const shape = new THREE.Shape();
   const count = pts.length;
   for (let i = 0; i < count; i += 1) {
@@ -587,7 +759,7 @@ function buildRoundedPolygonShape(pts, cornerRadius = 0.12) {
     const v2y = next[1] - curr[1];
     const l2 = Math.hypot(v2x, v2y) || 1;
 
-    const r = Math.min(cornerRadius, l1 * 0.42, l2 * 0.42);
+    const r = Math.min(cornerRadius, l1 * 0.4, l2 * 0.4);
     const p1x = curr[0] + (v1x / l1) * r;
     const p1y = curr[1] + (v1y / l1) * r;
     const p2x = curr[0] + (v2x / l2) * r;
@@ -614,7 +786,7 @@ function createLetterShape(char) {
         [0.44, -0.82],
         [-0.14, -0.92],
         [-0.56, -0.68]
-      ], 0.31, 56);
+      ], 0.30, 56);
 
     case 'V':
       return buildRoundedPolygonShape([
@@ -625,11 +797,11 @@ function createLetterShape(char) {
         [0.84, 1.14],
         [0.30, -1.12],
         [-0.30, -1.12]
-      ], 0.22);
+      ], 0.16);
 
     case 'I': {
       const shape = new THREE.Shape();
-      const w = 0.56;
+      const w = 0.54;
       const hBottom = -1.10;
       const hArch = 0.48;
       shape.moveTo(-w, hBottom);
@@ -653,7 +825,7 @@ function createLetterShape(char) {
         [0.26, -1.14],
         [-0.26, 0.02],
         [-0.26, -1.14]
-      ], 0.18);
+      ], 0.13);
 
     case 'D':
     default: {
@@ -702,393 +874,618 @@ function normalizeExtrudeUVs(geometry) {
 }
 
 /* ==========================================================================
-   5 INDUSTRIAL CINEMATOGRAPHY DIRECTORS
+   5 INDUSTRIAL ENVIRONMENT DIRECTORS (Locked camera; complete world shift)
    ========================================================================== */
+const LOCKED_CAMERA = {
+  camX: -0.35,
+  camYOffset: 0.46,
+  camZBoost: 1.18,
+  lookX: 0,
+  lookYOffset: -0.22,
+  fov: 34
+};
+
 const THEME_DIRECTORS = {
   'raw-steel': {
-    camX: -1.75,
-    camYOffset: 0.55,
-    camZBoost: 0.95,
-    lookX: 0.05,
-    lookYOffset: -0.18,
-    fov: 34,
+    ...LOCKED_CAMERA,
     exposure: 1.12,
-    fogColor: 0xCBD6E2,
-    fogDensity: 0.012,
-    hemiSky: 0xEFF5FB,
-    hemiGround: 0x4A5564,
-    hemiInt: 0.62,
+    fogColor: 0xC6D1DE,
+    fogDensity: 0.015,
+    hemiSky: 0xEEF4FB,
+    hemiGround: 0x3D4754,
+    hemiInt: 0.58,
     keyColor: 0xFFF7EC,
-    keyInt: 1.95,
-    keyPos: [-4.8, 8.2, 5.8],
-    rimColor: 0xC6DDF5,
-    rimInt: 0.88,
-    rimPos: [6.0, 2.8, -4.6],
+    keyInt: 2.15,
+    keyPos: [-5.2, 8.6, 5.8],
+    rimColor: 0xB8D8F8,
+    rimInt: 1.1,
+    rimPos: [6.4, 3.0, -4.6],
     underColor: 0x4A6382,
     underInt: 0.0,
-    shadowOpacity: 0.26,
+    floorColor: 0xA8B5C4,
+    floorRoughness: 0.62,
+    floorMetalness: 0.16,
+    floorOpacity: 0.68,
+    floorEnvInt: 0.18,
+    shadowOpacity: 0.30,
     rig: 'girders'
   },
   'molten-heat': {
-    camX: 2.95,
-    camYOffset: -0.88,
-    camZBoost: 1.05,
-    lookX: -0.18,
-    lookYOffset: -0.16,
-    fov: 37,
-    exposure: 1.2,
-    fogColor: 0x160C08,
-    fogDensity: 0.022,
-    hemiSky: 0x3D2620,
+    ...LOCKED_CAMERA,
+    exposure: 1.24,
+    fogColor: 0x130806,
+    fogDensity: 0.026,
+    hemiSky: 0x361E18,
     hemiGround: 0xFF5A14,
-    hemiInt: 0.45,
-    keyColor: 0xFFBA7A,
-    keyInt: 1.18,
+    hemiInt: 0.40,
+    keyColor: 0xFFA458,
+    keyInt: 1.05,
     keyPos: [3.2, 5.4, 5.2],
-    rimColor: 0xFF4D0A,
-    rimInt: 1.85,
-    rimPos: [-5.5, 2.4, -4.2],
+    rimColor: 0xFF4508,
+    rimInt: 2.2,
+    rimPos: [-5.8, 2.4, -4.2],
     underColor: 0xFF5A14,
-    underInt: 3.8,
-    shadowOpacity: 0.34,
+    underInt: 4.8,
+    floorColor: 0x160E0D,
+    floorRoughness: 0.88,
+    floorMetalness: 0.08,
+    floorOpacity: 0.92,
+    floorEnvInt: 0.04,
+    shadowOpacity: 0.36,
     rig: 'sparks'
   },
   enamel: {
-    camX: -2.35,
-    camYOffset: 1.18,
-    camZBoost: 1.05,
-    lookX: 0.1,
-    lookYOffset: -0.34,
-    fov: 33,
-    exposure: 1.08,
-    fogColor: 0xDCE4ED,
-    fogDensity: 0.01,
+    ...LOCKED_CAMERA,
+    exposure: 1.06,
+    fogColor: 0xDAE3ED,
+    fogDensity: 0.012,
     hemiSky: 0xFFFFFF,
-    hemiGround: 0x7A8798,
-    hemiInt: 0.78,
+    hemiGround: 0x627080,
+    hemiInt: 0.72,
     keyColor: 0xFFFDF8,
-    keyInt: 1.85,
-    keyPos: [-3.2, 8.6, 6.4],
+    keyInt: 1.95,
+    keyPos: [-3.5, 8.8, 6.4],
     rimColor: 0xDFECFA,
-    rimInt: 0.72,
-    rimPos: [5.2, 3.6, -3.8],
+    rimInt: 0.84,
+    rimPos: [5.4, 3.6, -3.8],
     underColor: 0xFFFFFF,
     underInt: 0.0,
-    shadowOpacity: 0.22,
+    floorColor: 0xB8C3D0,
+    floorRoughness: 0.56,
+    floorMetalness: 0.12,
+    floorOpacity: 0.72,
+    floorEnvInt: 0.16,
+    shadowOpacity: 0.28,
     rig: 'hazard'
   },
   cad: {
-    camX: 1.15,
-    camYOffset: 2.25,
-    camZBoost: 1.0,
-    lookX: -0.05,
-    lookYOffset: -0.34,
-    fov: 32,
+    ...LOCKED_CAMERA,
     exposure: 1.06,
-    fogColor: 0xD5E5F4,
-    fogDensity: 0.008,
+    fogColor: 0xD3E4F4,
+    fogDensity: 0.01,
     hemiSky: 0xF2F8FF,
-    hemiGround: 0x8CA6C2,
-    hemiInt: 0.92,
+    hemiGround: 0x7A98BC,
+    hemiInt: 0.88,
     keyColor: 0xFFFFFF,
-    keyInt: 1.35,
+    keyInt: 1.4,
     keyPos: [1.5, 9.5, 6.0],
     rimColor: 0x74A7E2,
-    rimInt: 0.65,
+    rimInt: 0.75,
     rimPos: [-5.0, 4.0, -4.0],
     underColor: 0x4A7EC7,
     underInt: 0.0,
-    shadowOpacity: 0.14,
+    floorColor: 0xD0E1F2,
+    floorRoughness: 0.92,
+    floorMetalness: 0.02,
+    floorOpacity: 0.26,
+    floorEnvInt: 0.03,
+    shadowOpacity: 0.16,
     rig: 'cad'
   },
   galvanized: {
-    camX: 2.75,
-    camYOffset: 0.92,
-    camZBoost: 1.05,
-    lookX: -0.12,
-    lookYOffset: -0.26,
-    fov: 35,
+    ...LOCKED_CAMERA,
     exposure: 1.12,
-    fogColor: 0xC8DDF0,
-    fogDensity: 0.011,
-    hemiSky: 0xE6F3FF,
-    hemiGround: 0x6B7988,
-    hemiInt: 0.76,
+    fogColor: 0xC6DCF0,
+    fogDensity: 0.013,
+    hemiSky: 0xEAF5FF,
+    hemiGround: 0x5A6878,
+    hemiInt: 0.72,
     keyColor: 0xFFFBF2,
-    keyInt: 1.85,
-    keyPos: [-5.4, 7.2, 5.2],
+    keyInt: 2.0,
+    keyPos: [-5.6, 7.6, 5.2],
     rimColor: 0xB8D8F5,
-    rimInt: 0.92,
-    rimPos: [5.5, 3.0, -4.5],
+    rimInt: 1.0,
+    rimPos: [5.8, 3.2, -4.5],
     underColor: 0x99B4CC,
     underInt: 0.0,
-    shadowOpacity: 0.25,
+    floorColor: 0xB0BECB,
+    floorRoughness: 0.70,
+    floorMetalness: 0.12,
+    floorOpacity: 0.76,
+    floorEnvInt: 0.12,
+    shadowOpacity: 0.30,
     rig: 'rails'
   }
 };
 
 /* ==========================================================================
-   MODULAR STRUCTURAL CRANE & WORKSHOP PROP RIGS
+   DETAILED HEAVY CRANE & INDUSTRIAL WORKSHOP RIGS (5 Distinct Environments)
    ========================================================================== */
-function buildWorkshopRigs(scene, disposables, hazardTex, maxAniso) {
+function buildWorkshopRigs(scene, disposables, hazardTex, emberTex, haloTex) {
   const rigs = {};
 
-  // 1. RAW STEEL: Overhead Twin Box/I-Beam Bridge Girders + Traversing Crab Trolley + Hoist Hook
-  const girderRoot = new THREE.Group();
-  const beamMat = new THREE.MeshStandardMaterial({
-    color: 0x354354,
+  const structuralSteelMat = new THREE.MeshStandardMaterial({
+    color: 0x2F3B4A,
+    roughness: 0.34,
+    metalness: 0.86
+  });
+  const darkCastMat = new THREE.MeshStandardMaterial({
+    color: 0x1A2029,
+    roughness: 0.56,
+    metalness: 0.62
+  });
+  const safetyOchreMat = new THREE.MeshStandardMaterial({
+    color: 0xC98C07,
+    roughness: 0.24,
+    metalness: 0.24
+  });
+  const wireRopeMat = new THREE.MeshStandardMaterial({
+    color: 0xC5CFD9,
+    roughness: 0.22,
+    metalness: 0.94
+  });
+  const hazardStripeMat = new THREE.MeshStandardMaterial({
+    map: hazardTex,
     roughness: 0.36,
-    metalness: 0.84
+    metalness: 0.14
   });
-  const endCarriageMat = new THREE.MeshStandardMaterial({
-    color: 0xF2B705,
-    roughness: 0.32,
-    metalness: 0.25
-  });
-  const cableMat = new THREE.MeshStandardMaterial({
-    color: 0xAEB8C4,
-    roughness: 0.28,
-    metalness: 0.9
-  });
-  disposables.push(beamMat, endCarriageMat, cableMat);
+  disposables.push(structuralSteelMat, darkCastMat, safetyOchreMat, wireRopeMat, hazardStripeMat);
 
-  const webGeo = new THREE.BoxGeometry(11.6, 0.24, 0.10);
-  const flangeGeo = new THREE.BoxGeometry(11.6, 0.06, 0.28);
-  const endPlateGeo = new THREE.BoxGeometry(0.32, 0.42, 1.38);
-  disposables.push(webGeo, flangeGeo, endPlateGeo);
+  /* ------------------------------------------------------------------------
+     1. RAW STEEL: Double-Girder EOT Bay + Multi-Fall Hoist & Festoon Cable
+     ------------------------------------------------------------------------ */
+  const girderRoot = new THREE.Group();
 
+  const webGeo = new THREE.BoxGeometry(11.4, 0.30, 0.12);
+  const flangeGeo = new THREE.BoxGeometry(11.4, 0.055, 0.30);
+  const ribGeo = new THREE.BoxGeometry(0.05, 0.28, 0.26);
+  const bogieGeo = new THREE.BoxGeometry(0.46, 0.44, 1.46);
+  const wheelGeo = new THREE.CylinderGeometry(0.13, 0.13, 0.14, 16);
+  const colWebGeo = new THREE.BoxGeometry(0.14, 4.0, 0.34);
+  const colFlangeGeo = new THREE.BoxGeometry(0.32, 4.0, 0.07);
+  const corbelGeo = new THREE.BoxGeometry(0.55, 0.26, 1.05);
+  disposables.push(webGeo, flangeGeo, ribGeo, bogieGeo, wheelGeo, colWebGeo, colFlangeGeo, corbelGeo);
+
+  // Twin fabricated box bridge girders positioned cleanly below top swatch bar
   [-0.44, 0.44].forEach((zOff) => {
-    const web = new THREE.Mesh(webGeo, beamMat);
-    web.position.set(0, 2.48, zOff);
+    const web = new THREE.Mesh(webGeo, structuralSteelMat);
+    web.position.set(0, 2.22, zOff);
     girderRoot.add(web);
 
-    const topF = new THREE.Mesh(flangeGeo, beamMat);
-    topF.position.set(0, 2.61, zOff);
+    const topF = new THREE.Mesh(flangeGeo, structuralSteelMat);
+    topF.position.set(0, 2.38, zOff);
     girderRoot.add(topF);
 
-    const botF = new THREE.Mesh(flangeGeo, beamMat);
-    botF.position.set(0, 2.35, zOff);
+    const botF = new THREE.Mesh(flangeGeo, structuralSteelMat);
+    botF.position.set(0, 2.06, zOff);
     girderRoot.add(botF);
   });
 
-  [-5.65, 5.65].forEach((xEnd) => {
-    const truck = new THREE.Mesh(endPlateGeo, endCarriageMat);
-    truck.position.set(xEnd, 2.48, 0);
-    girderRoot.add(truck);
+  // Instanced structural vertical web stiffener ribs across both bridge girders
+  const ribInst = new THREE.InstancedMesh(ribGeo, structuralSteelMat, 20);
+  const tmpM = new THREE.Matrix4();
+  for (let i = 0; i < 10; i += 1) {
+    const rx = -4.5 + i * 1.0;
+    tmpM.makeTranslation(rx, 2.22, -0.44);
+    ribInst.setMatrixAt(i * 2, tmpM);
+    tmpM.makeTranslation(rx, 2.22, 0.44);
+    ribInst.setMatrixAt(i * 2 + 1, tmpM);
+  }
+  ribInst.instanceMatrix.needsUpdate = true;
+  ribInst.computeBoundingSphere();
+  girderRoot.add(ribInst);
+
+  // Looped festoon power cable hanging cleanly along front girder underside
+  const festoonPts = [];
+  for (let k = 0; k <= 32; k += 1) {
+    const t = k / 32;
+    const fx = -4.6 + t * 9.2;
+    const dip = Math.abs(Math.sin(t * Math.PI * 5)) * 0.16;
+    festoonPts.push(new THREE.Vector3(fx, 2.02 - dip, 0.56));
+  }
+  const festoonGeo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(festoonPts), 48, 0.020, 6, false);
+  disposables.push(festoonGeo);
+  girderRoot.add(new THREE.Mesh(festoonGeo, darkCastMat));
+
+  // End-carriages + flanged steel bridge wheels + H-section bay stanchions
+  [-5.35, 5.35].forEach((xEnd) => {
+    const bogie = new THREE.Mesh(bogieGeo, safetyOchreMat);
+    bogie.position.set(xEnd, 2.22, 0);
+    girderRoot.add(bogie);
+
+    [-0.52, 0.52].forEach((wz) => {
+      const wheel = new THREE.Mesh(wheelGeo, darkCastMat);
+      wheel.rotation.z = Math.PI * 0.5;
+      wheel.position.set(xEnd, 2.00, wz);
+      girderRoot.add(wheel);
+    });
+
+    const cWeb = new THREE.Mesh(colWebGeo, structuralSteelMat);
+    cWeb.position.set(xEnd, 0.36, -0.58);
+    girderRoot.add(cWeb);
+
+    [-0.16, 0.16].forEach((fz) => {
+      const cFlange = new THREE.Mesh(colFlangeGeo, structuralSteelMat);
+      cFlange.position.set(xEnd, 0.36, -0.58 + fz);
+      girderRoot.add(cFlange);
+    });
+
+    const corbel = new THREE.Mesh(corbelGeo, darkCastMat);
+    corbel.position.set(xEnd, 1.92, -0.2);
+    girderRoot.add(corbel);
   });
 
-  // Traversing Hoist Crab Trolley + Wire Rope + Hook Block
+  // Heavy 4-Fall Wire Rope Hoist Crab Trolley + Electric Gearbox + Sheave Block & Forged DIN Hook
   const crabGroup = new THREE.Group();
-  crabGroup.position.set(0.2, 0, 0);
-  const crabFrameGeo = new THREE.BoxGeometry(1.18, 0.28, 0.96);
-  const drumGeo = new THREE.CylinderGeometry(0.16, 0.16, 0.62, 16);
-  const ropeGeo = new THREE.CylinderGeometry(0.022, 0.022, 0.78, 8);
-  const blockGeo = new THREE.BoxGeometry(0.34, 0.28, 0.22);
-  const hookGeo = new THREE.TorusGeometry(0.11, 0.036, 10, 18, Math.PI * 1.42);
-  disposables.push(crabFrameGeo, drumGeo, ropeGeo, blockGeo, hookGeo);
+  crabGroup.position.set(0.25, 0, 0);
+  const crabDeckGeo = new THREE.BoxGeometry(1.26, 0.15, 0.98);
+  const hoistDrumGeo = new THREE.CylinderGeometry(0.16, 0.16, 0.64, 18);
+  const motorGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.38, 14);
+  const ropeGeo = new THREE.CylinderGeometry(0.016, 0.016, 0.44, 8);
+  const sheaveBodyGeo = new THREE.BoxGeometry(0.34, 0.26, 0.20);
+  const sheaveCheekGeo = new THREE.CylinderGeometry(0.105, 0.105, 0.22, 14);
+  const shankGeo = new THREE.CylinderGeometry(0.032, 0.032, 0.09, 10);
+  const hookGeo = new THREE.TorusGeometry(0.098, 0.032, 10, 20, Math.PI * 1.42);
+  disposables.push(crabDeckGeo, hoistDrumGeo, motorGeo, ropeGeo, sheaveBodyGeo, sheaveCheekGeo, shankGeo, hookGeo);
 
-  const crabFrame = new THREE.Mesh(crabFrameGeo, endCarriageMat);
-  crabFrame.position.set(0, 2.74, 0);
-  crabGroup.add(crabFrame);
+  const crabDeck = new THREE.Mesh(crabDeckGeo, safetyOchreMat);
+  crabDeck.position.set(0, 2.44, 0);
+  crabGroup.add(crabDeck);
 
-  const drum = new THREE.Mesh(drumGeo, beamMat);
+  const drum = new THREE.Mesh(hoistDrumGeo, darkCastMat);
   drum.rotation.z = Math.PI * 0.5;
-  drum.position.set(0, 2.86, 0);
+  drum.position.set(-0.08, 2.60, 0);
   crabGroup.add(drum);
 
-  [-0.12, 0.12].forEach((rx) => {
-    const rope = new THREE.Mesh(ropeGeo, cableMat);
-    rope.position.set(rx, 2.15, 0);
+  const motor = new THREE.Mesh(motorGeo, structuralSteelMat);
+  motor.rotation.z = Math.PI * 0.5;
+  motor.position.set(0.44, 2.60, 0);
+  crabGroup.add(motor);
+
+  [[-0.12, -0.05], [0.12, -0.05], [-0.12, 0.05], [0.12, 0.05]].forEach(([rx, rz]) => {
+    const rope = new THREE.Mesh(ropeGeo, wireRopeMat);
+    rope.position.set(rx, 2.06, rz);
     crabGroup.add(rope);
   });
 
-  const block = new THREE.Mesh(blockGeo, endCarriageMat);
-  block.position.set(0, 1.74, 0);
-  crabGroup.add(block);
+  const sheaveBody = new THREE.Mesh(sheaveBodyGeo, hazardStripeMat);
+  sheaveBody.position.set(0, 1.76, 0);
+  crabGroup.add(sheaveBody);
 
-  const hook = new THREE.Mesh(hookGeo, cableMat);
-  hook.position.set(0, 1.50, 0);
-  hook.rotation.z = Math.PI * 0.85;
+  const sheaveWheel = new THREE.Mesh(sheaveCheekGeo, darkCastMat);
+  sheaveWheel.rotation.x = Math.PI * 0.5;
+  sheaveWheel.position.set(0, 1.76, 0);
+  crabGroup.add(sheaveWheel);
+
+  const shank = new THREE.Mesh(shankGeo, wireRopeMat);
+  shank.position.set(0, 1.60, 0);
+  crabGroup.add(shank);
+
+  const hook = new THREE.Mesh(hookGeo, wireRopeMat);
+  hook.position.set(0, 1.48, 0);
+  hook.rotation.z = Math.PI * 0.86;
   crabGroup.add(hook);
 
   girderRoot.add(crabGroup);
   scene.add(girderRoot);
-  rigs.girders = { root: girderRoot, crabGroup, restY: 0, hideY: 3.4 };
+  rigs.girders = { root: girderRoot, crabGroup, restY: 0, hideY: 0.65 };
 
-  // 2. MOLTEN HEAT: Refractory Hearth Slab + Glowing Seam + 64 Rising Instanced Sparks
+  /* ------------------------------------------------------------------------
+     2. MOLTEN HEAT: Foundry Ladle Overhead Crane + Refractory Hearth + Additive Embers
+     ------------------------------------------------------------------------ */
   const sparksRoot = new THREE.Group();
   const hearthMat = new THREE.MeshStandardMaterial({
-    color: 0x171418,
-    roughness: 0.9,
-    metalness: 0.35
+    color: 0x1A1315,
+    roughness: 0.88,
+    metalness: 0.36
   });
-  const seamMat = new THREE.MeshBasicMaterial({
+  const ladleShieldMat = new THREE.MeshStandardMaterial({
+    color: 0x261D20,
+    roughness: 0.62,
+    metalness: 0.68
+  });
+  const emberGlowMat = new THREE.MeshBasicMaterial({
     color: 0xFF6A14,
-    transparent: true,
-    opacity: 0.86
-  });
-  const hearthGeo = new THREE.BoxGeometry(9.8, 0.14, 1.75);
-  const seamGeo = new THREE.PlaneGeometry(8.8, 0.22);
-  disposables.push(hearthMat, seamMat, hearthGeo, seamGeo);
-
-  const hearth = new THREE.Mesh(hearthGeo, hearthMat);
-  hearth.position.set(0, -1.53, 0);
-  hearth.receiveShadow = true;
-  sparksRoot.add(hearth);
-
-  const seam = new THREE.Mesh(seamGeo, seamMat);
-  seam.rotation.x = -Math.PI / 2;
-  seam.position.set(0, -1.45, 0.28);
-  sparksRoot.add(seam);
-
-  const SPARK_COUNT = 64;
-  const sparkGeo = new THREE.BoxGeometry(0.055, 0.09, 0.055);
-  const sparkMat = new THREE.MeshBasicMaterial({
-    color: 0xFF9F33,
     transparent: true,
     opacity: 0.92
   });
-  disposables.push(sparkGeo, sparkMat);
+  const haloMat = new THREE.MeshBasicMaterial({
+    map: haloTex,
+    transparent: true,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+    opacity: 0.85
+  });
 
-  const sparkMesh = new THREE.InstancedMesh(sparkGeo, sparkMat, SPARK_COUNT);
-  sparkMesh.frustumCulled = false;
+  const slagPitGeo = new THREE.BoxGeometry(9.6, 0.14, 1.65);
+  const slagChannelGeo = new THREE.PlaneGeometry(8.4, 0.26);
+  const ladleBeamGeo = new THREE.BoxGeometry(11.4, 0.28, 0.68);
+  const heatShieldGeo = new THREE.BoxGeometry(10.8, 0.08, 0.92);
+  const ladleHookArmGeo = new THREE.BoxGeometry(0.18, 0.95, 0.22);
+  const trunnionColGeo = new THREE.BoxGeometry(0.46, 3.72, 0.52);
+  const haloGeo = new THREE.PlaneGeometry(24, 16);
+  disposables.push(
+    hearthMat, ladleShieldMat, emberGlowMat, haloMat,
+    slagPitGeo, slagChannelGeo, ladleBeamGeo, heatShieldGeo, ladleHookArmGeo, trunnionColGeo, haloGeo
+  );
 
-  const sparkData = [];
-  const tmpColor = new THREE.Color();
+  // Seamless wide radial furnace glow behind the bay (fades cleanly to zero before bounds)
+  const furnaceHalo = new THREE.Mesh(haloGeo, haloMat);
+  furnaceHalo.position.set(0, 0.1, -4.4);
+  sparksRoot.add(furnaceHalo);
+
+  // Overhead hot-metal ladle crane beam + thermal heat-shield plate cleanly below swatch label
+  const ladleBeam = new THREE.Mesh(ladleBeamGeo, ladleShieldMat);
+  ladleBeam.position.set(0, 2.22, -0.35);
+  sparksRoot.add(ladleBeam);
+
+  const heatShield = new THREE.Mesh(heatShieldGeo, darkCastMat);
+  heatShield.position.set(0, 2.04, -0.35);
+  sparksRoot.add(heatShield);
+
+  [-4.6, 4.6].forEach((hx) => {
+    const arm = new THREE.Mesh(ladleHookArmGeo, darkCastMat);
+    arm.position.set(hx, 1.56, -0.35);
+    sparksRoot.add(arm);
+  });
+
+  const pitSlab = new THREE.Mesh(slagPitGeo, hearthMat);
+  pitSlab.position.set(0, -1.52, 0);
+  pitSlab.receiveShadow = true;
+  sparksRoot.add(pitSlab);
+
+  const slagChannel = new THREE.Mesh(slagChannelGeo, emberGlowMat);
+  slagChannel.rotation.x = -Math.PI / 2;
+  slagChannel.position.set(0, -1.44, 0.18);
+  sparksRoot.add(slagChannel);
+
+  [-5.35, 5.35].forEach((fx) => {
+    const pil = new THREE.Mesh(trunnionColGeo, hearthMat);
+    pil.position.set(fx, 0.30, -0.58);
+    sparksRoot.add(pil);
+  });
+
+  const SPARK_COUNT = 140;
+  const sparkPosArray = new Float32Array(SPARK_COUNT * 3);
+  const sparkMeta = [];
   for (let i = 0; i < SPARK_COUNT; i += 1) {
-    const seedX = ((Math.sin(i * 19.31) * 43758.54) % 1 + 1) % 1;
-    const seedY = ((Math.sin(i * 47.17) * 19341.21) % 1 + 1) % 1;
-    const seedZ = ((Math.sin(i * 91.73) * 28411.77) % 1 + 1) % 1;
-    sparkData.push({
-      x: (seedX - 0.5) * 9.8,
-      yOffset: seedY * 4.2,
-      z: (seedZ - 0.5) * 2.2,
-      speed: 0.7 + (i % 7) * 0.22,
-      drift: (seedZ - 0.5) * 0.6,
-      scale: 0.55 + (i % 5) * 0.25
+    const sx = (((Math.sin(i * 19.31) * 43758.54) % 1 + 1) % 1 - 0.5) * 10.8;
+    const sy = (((Math.sin(i * 47.17) * 19341.21) % 1 + 1) % 1) * 4.4;
+    const sz = (((Math.sin(i * 91.73) * 28411.77) % 1 + 1) % 1 - 0.5) * 2.4;
+    sparkMeta.push({
+      x: sx,
+      yOffset: sy,
+      z: sz,
+      speed: 0.55 + (i % 9) * 0.16,
+      sway: 0.12 + (i % 5) * 0.04
     });
-    tmpColor.setHex(i % 3 === 0 ? 0xFFE07D : (i % 2 === 0 ? 0xFF6A14 : 0xFFA23A));
-    sparkMesh.setColorAt(i, tmpColor);
+    sparkPosArray[i * 3] = sx;
+    sparkPosArray[i * 3 + 1] = -1.4 + sy;
+    sparkPosArray[i * 3 + 2] = sz;
   }
-  if (sparkMesh.instanceColor) sparkMesh.instanceColor.needsUpdate = true;
-  sparksRoot.add(sparkMesh);
+  const sparkGeo = new THREE.BufferGeometry();
+  sparkGeo.setAttribute('position', new THREE.BufferAttribute(sparkPosArray, 3));
+  const sparkPointsMat = new THREE.PointsMaterial({
+    map: emberTex,
+    size: isSoftwareGl ? 0.24 : 0.28,
+    transparent: true,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+    color: 0xFFAE52
+  });
+  disposables.push(sparkGeo, sparkPointsMat);
+  const sparkPoints = new THREE.Points(sparkGeo, sparkPointsMat);
+  sparkPoints.frustumCulled = false;
+  sparksRoot.add(sparkPoints);
 
   scene.add(sparksRoot);
-  rigs.sparks = { root: sparksRoot, sparkMesh, sparkData, restY: 0, hideY: -3.2 };
+  rigs.sparks = { root: sparksRoot, sparkPoints, sparkGeo, sparkMeta, restY: 0, hideY: -0.65 };
 
-  // 3. ENAMEL: Harohalli Proof-Test Plinth + Yellow/Charcoal Chevron Hazard Stripe Apron
+  /* ------------------------------------------------------------------------
+     3. ENAMEL: Harohalli 125% Proof-Load Test Bed + Supported Gantry & Test Weights
+     ------------------------------------------------------------------------ */
   const hazardRoot = new THREE.Group();
-  const plinthGeo = new THREE.BoxGeometry(9.6, 0.14, 1.58);
-  const apronGeo = new THREE.BoxGeometry(9.6, 0.10, 0.26);
-  const plinthMat = new THREE.MeshStandardMaterial({
-    color: 0x242C37,
-    roughness: 0.5,
-    metalness: 0.38
-  });
-  const apronMat = new THREE.MeshStandardMaterial({
-    map: hazardTex,
-    roughness: 0.34,
-    metalness: 0.12
-  });
-  disposables.push(plinthGeo, apronGeo, plinthMat, apronMat);
+  const testBedGeo = new THREE.BoxGeometry(9.6, 0.16, 1.72);
+  const apronGeo = new THREE.BoxGeometry(9.6, 0.10, 0.24);
+  const weightBlockGeo = new THREE.BoxGeometry(1.05, 0.30, 0.66);
+  const lugGeo = new THREE.TorusGeometry(0.09, 0.028, 8, 14, Math.PI);
+  const testBeamGeo = new THREE.BoxGeometry(11.0, 0.24, 0.42);
+  const testPostGeo = new THREE.BoxGeometry(0.24, 3.65, 0.28);
+  const dynaBodyGeo = new THREE.CylinderGeometry(0.16, 0.16, 0.32, 16);
+  const dynaCableGeo = new THREE.CylinderGeometry(0.02, 0.02, 0.52, 8);
+  disposables.push(testBedGeo, apronGeo, weightBlockGeo, lugGeo, testBeamGeo, testPostGeo, dynaBodyGeo, dynaCableGeo);
 
-  const plinth = new THREE.Mesh(plinthGeo, plinthMat);
-  plinth.position.set(0, -1.52, 0);
-  plinth.receiveShadow = true;
-  hazardRoot.add(plinth);
+  // Overhead Yellow Proof-Test Monorail supported by side steel gantry legs
+  const testBeam = new THREE.Mesh(testBeamGeo, safetyOchreMat);
+  testBeam.position.set(0, 2.22, -0.25);
+  hazardRoot.add(testBeam);
 
-  const apron = new THREE.Mesh(apronGeo, apronMat);
-  apron.position.set(0, -1.49, 0.88);
+  [-5.15, 5.15].forEach((tx) => {
+    const tPost = new THREE.Mesh(testPostGeo, structuralSteelMat);
+    tPost.position.set(tx, 0.36, -0.35);
+    hazardRoot.add(tPost);
+  });
+
+  const dynaCable = new THREE.Mesh(dynaCableGeo, wireRopeMat);
+  dynaCable.position.set(-0.14, 1.88, -0.1);
+  hazardRoot.add(dynaCable);
+
+  const dynaBody = new THREE.Mesh(dynaBodyGeo, darkCastMat);
+  dynaBody.position.set(-0.14, 1.60, -0.1);
+  hazardRoot.add(dynaBody);
+
+  const testBed = new THREE.Mesh(testBedGeo, darkCastMat);
+  testBed.position.set(0, -1.52, 0);
+  testBed.receiveShadow = true;
+  hazardRoot.add(testBed);
+
+  const apron = new THREE.Mesh(apronGeo, hazardStripeMat);
+  apron.position.set(0, -1.49, 0.94);
   hazardRoot.add(apron);
 
-  scene.add(hazardRoot);
-  rigs.hazard = { root: hazardRoot, restY: 0, hideY: -2.4 };
+  [-5.15, 5.15].forEach((wx) => {
+    for (let tier = 0; tier < 3; tier += 1) {
+      const wBlock = new THREE.Mesh(weightBlockGeo, tier === 2 ? safetyOchreMat : structuralSteelMat);
+      wBlock.position.set(wx, -1.34 + tier * 0.32, -0.15);
+      wBlock.castShadow = !isSoftwareGl;
+      wBlock.receiveShadow = true;
+      hazardRoot.add(wBlock);
+    }
+    const lug = new THREE.Mesh(lugGeo, wireRopeMat);
+    lug.position.set(wx, -0.52, -0.15);
+    hazardRoot.add(lug);
+  });
 
-  // 4. CAD: Calibrated Floor GridHelper + Span Datum Dimension Frame
+  scene.add(hazardRoot);
+  rigs.hazard = { root: hazardRoot, restY: 0, hideY: -0.65 };
+
+  /* ------------------------------------------------------------------------
+     4. CAD: Calibrated Drafting Grid + Rich 3D Wireframe Double-Girder Crane Assembly
+     ------------------------------------------------------------------------ */
   const cadRoot = new THREE.Group();
-  const grid = new THREE.GridHelper(24, 34, 0x1E4C9A, 0x8BB2DB);
+  const grid = new THREE.GridHelper(24, 34, 0x1E4C9A, 0x8EB4DC);
   grid.position.set(0, -1.48, 0);
   if (Array.isArray(grid.material)) {
     grid.material.forEach((m) => {
       m.transparent = true;
-      m.opacity = 0.55;
+      m.opacity = 0.56;
       disposables.push(m);
     });
   } else {
     grid.material.transparent = true;
-    grid.material.opacity = 0.55;
+    grid.material.opacity = 0.56;
     disposables.push(grid.material);
   }
   disposables.push(grid.geometry);
   cadRoot.add(grid);
 
-  const datumPts = new Float32Array([
-    -4.85, -1.35, 1.35,   4.85, -1.35, 1.35,
-    -4.85, -1.52, 1.35,  -4.85, -1.16, 1.35,
-     4.85, -1.52, 1.35,   4.85, -1.16, 1.35,
-    -4.85,  1.62, -0.7,   4.85,  1.62, -0.7,
-    -4.85,  1.45, -0.7,  -4.85,  1.78, -0.7,
-     4.85,  1.45, -0.7,   4.85,  1.78, -0.7
+  const cadPts = new Float32Array([
+    -4.85, -1.36, 1.32,   4.85, -1.36, 1.32,
+    -4.85, -1.52, 1.32,  -4.85, -1.18, 1.32,
+     4.85, -1.52, 1.32,   4.85, -1.18, 1.32,
+    // Overhead CAD wireframe box-girder bridge + truss cleanly below swatch label
+    -5.30,  1.96, -0.50,  5.30,  1.96, -0.50,
+    -5.30,  2.30, -0.50,  5.30,  2.30, -0.50,
+    -5.30,  1.96, -0.50, -5.30,  2.30, -0.50,
+     5.30,  1.96, -0.50,  5.30,  2.30, -0.50,
+    -4.00,  1.96, -0.50, -3.20,  2.30, -0.50,
+    -3.20,  1.96, -0.50, -2.40,  2.30, -0.50,
+    -2.40,  1.96, -0.50, -1.60,  2.30, -0.50,
+     1.60,  1.96, -0.50,  2.40,  2.30, -0.50,
+     2.40,  1.96, -0.50,  3.20,  2.30, -0.50,
+     3.20,  1.96, -0.50,  4.00,  2.30, -0.50,
+    -0.55,  2.30, -0.50,  0.55,  2.30, -0.50,
+    -0.55,  2.48, -0.50,  0.55,  2.48, -0.50,
+    -0.55,  2.30, -0.50, -0.55,  2.48, -0.50,
+     0.55,  2.30, -0.50,  0.55,  2.48, -0.50,
+    -0.14,  1.96, -0.50, -0.14,  1.45, -0.50,
+     0.14,  1.96, -0.50,  0.14,  1.45, -0.50,
+    -5.15, -1.30, -0.50, -5.15,  1.96, -0.50,
+     5.15, -1.30, -0.50,  5.15,  1.96, -0.50
   ]);
-  const datumGeo = new THREE.BufferGeometry();
-  datumGeo.setAttribute('position', new THREE.BufferAttribute(datumPts, 3));
-  const datumMat = new THREE.LineBasicMaterial({ color: 0x1E4C9A, transparent: true, opacity: 0.72 });
-  disposables.push(datumGeo, datumMat);
-  const datumLines = new THREE.LineSegments(datumGeo, datumMat);
-  cadRoot.add(datumLines);
+  const cadGeo = new THREE.BufferGeometry();
+  cadGeo.setAttribute('position', new THREE.BufferAttribute(cadPts, 3));
+  const cadMat = new THREE.LineBasicMaterial({ color: 0x133B7E, transparent: true, opacity: 0.78 });
+  disposables.push(cadGeo, cadMat);
+  cadRoot.add(new THREE.LineSegments(cadGeo, cadMat));
 
   scene.add(cadRoot);
-  rigs.cad = { root: cadRoot, restY: 0, hideY: -2.8 };
+  rigs.cad = { root: cadRoot, restY: 0, hideY: -0.65 };
 
-  // 5. GALVANIZED: Goliath Yard Twin Crane Runway Rails + Instanced Bolted Sleeper Ties
+  /* ------------------------------------------------------------------------
+     5. GALVANIZED: Goliath Portal Quay Crane — Flush Concrete Quay, Travel Bogies & A-Frame Legs
+     ------------------------------------------------------------------------ */
   const railsRoot = new THREE.Group();
-  const railGeo = new THREE.BoxGeometry(13.2, 0.11, 0.14);
-  const railMat = new THREE.MeshStandardMaterial({
+  const galvSteelMat = new THREE.MeshStandardMaterial({
     color: 0xB8C5D4,
     roughness: 0.28,
     metalness: 0.88
   });
-  const sleeperGeo = new THREE.BoxGeometry(0.24, 0.10, 2.25);
-  const sleeperMat = new THREE.MeshStandardMaterial({
-    color: 0x3D4958,
-    roughness: 0.72,
-    metalness: 0.35
-  });
-  disposables.push(railGeo, railMat, sleeperGeo, sleeperMat);
+  const quayDeckGeo = new THREE.BoxGeometry(11.8, 0.14, 2.1);
+  const quayChannelGeo = new THREE.BoxGeometry(11.8, 0.05, 0.10);
+  const portalLegGeo = new THREE.BoxGeometry(0.24, 3.72, 0.24);
+  const braceGeo = new THREE.BoxGeometry(0.11, 1.32, 0.11);
+  const sillBeamGeo = new THREE.BoxGeometry(0.36, 0.32, 1.92);
+  const bogieWheelGeo = new THREE.CylinderGeometry(0.13, 0.13, 0.12, 14);
+  const topBoxBeamGeo = new THREE.BoxGeometry(11.4, 0.30, 0.64);
+  const handrailGeo = new THREE.BoxGeometry(11.2, 0.04, 0.04);
+  disposables.push(
+    galvSteelMat, quayDeckGeo, quayChannelGeo, portalLegGeo, braceGeo,
+    sillBeamGeo, bogieWheelGeo, topBoxBeamGeo, handrailGeo
+  );
 
-  [-0.78, 0.78].forEach((rz) => {
-    const rail = new THREE.Mesh(railGeo, railMat);
-    rail.position.set(0, -1.43, rz);
-    rail.castShadow = !isSoftwareGl;
-    rail.receiveShadow = true;
-    railsRoot.add(rail);
+  const quayDeck = new THREE.Mesh(quayDeckGeo, darkCastMat);
+  quayDeck.position.set(0, -1.55, 0);
+  quayDeck.receiveShadow = true;
+  railsRoot.add(quayDeck);
+
+  [-0.72, 0.72].forEach((cz) => {
+    const channel = new THREE.Mesh(quayChannelGeo, galvSteelMat);
+    channel.position.set(0, -1.46, cz);
+    railsRoot.add(channel);
   });
 
-  const SLEEPER_COUNT = 18;
-  const sleepers = new THREE.InstancedMesh(sleeperGeo, sleeperMat, SLEEPER_COUNT);
-  const mat4 = new THREE.Matrix4();
-  for (let i = 0; i < SLEEPER_COUNT; i += 1) {
-    const sx = -5.95 + i * 0.70;
-    mat4.makeTranslation(sx, -1.52, 0);
-    sleepers.setMatrixAt(i, mat4);
-  }
-  sleepers.instanceMatrix.needsUpdate = true;
-  sleepers.computeBoundingSphere();
-  sleepers.receiveShadow = true;
-  railsRoot.add(sleepers);
+  // Overhead galvanized goliath box beam + handrail cleanly below top swatch label
+  const topBox = new THREE.Mesh(topBoxBeamGeo, galvSteelMat);
+  topBox.position.set(0, 2.22, 0);
+  railsRoot.add(topBox);
+
+  const railTop = new THREE.Mesh(handrailGeo, galvSteelMat);
+  railTop.position.set(0, 2.46, 0.30);
+  railsRoot.add(railTop);
+
+  [-5.15, 5.15].forEach((px) => {
+    const legF = new THREE.Mesh(portalLegGeo, galvSteelMat);
+    legF.position.set(px, 0.42, 0.38);
+    legF.rotation.x = 0.10;
+    railsRoot.add(legF);
+
+    const legR = new THREE.Mesh(portalLegGeo, galvSteelMat);
+    legR.position.set(px, 0.42, -0.38);
+    legR.rotation.x = -0.10;
+    railsRoot.add(legR);
+
+    const sill = new THREE.Mesh(sillBeamGeo, safetyOchreMat);
+    sill.position.set(px, -1.28, 0);
+    railsRoot.add(sill);
+
+    [-0.72, 0.72].forEach((wz) => {
+      const wheel = new THREE.Mesh(bogieWheelGeo, darkCastMat);
+      wheel.rotation.z = Math.PI * 0.5;
+      wheel.position.set(px, -1.41, wz);
+      railsRoot.add(wheel);
+    });
+
+    const braceA = new THREE.Mesh(braceGeo, galvSteelMat);
+    braceA.position.set(px, 0.34, 0);
+    braceA.rotation.x = Math.PI * 0.25;
+    railsRoot.add(braceA);
+
+    const braceB = new THREE.Mesh(braceGeo, galvSteelMat);
+    braceB.position.set(px, 0.34, 0);
+    braceB.rotation.x = -Math.PI * 0.25;
+    railsRoot.add(braceB);
+  });
 
   scene.add(railsRoot);
-  rigs.rails = { root: railsRoot, restY: 0, hideY: -2.5 };
+  rigs.rails = { root: railsRoot, restY: 0, hideY: -0.65 };
 
-  // Hide inactive rigs initially at off-stage Y
   Object.values(rigs).forEach((rig) => {
     rig.root.visible = false;
     rig.root.position.y = rig.hideY;
     rig.mix = 0;
   });
 
-  // Unused param lint guard if maxAniso passed
-  void maxAniso;
   return rigs;
 }
 
@@ -1145,7 +1542,7 @@ export function initHero3D() {
 
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.08;
+  renderer.toneMappingExposure = 1.12;
   renderer.setPixelRatio(isSoftwareGl ? 1 : Math.min(window.devicePixelRatio || 1, 2));
   renderer.shadowMap.enabled = !isSoftwareGl;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -1153,62 +1550,47 @@ export function initHero3D() {
   mount.appendChild(renderer.domElement);
 
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0xCBD6E2, 0.012);
+  scene.fog = new THREE.FogExp2(0xC6D1DE, 0.015);
 
-  let envTarget = null;
-  try {
-    const pmrem = new THREE.PMREMGenerator(renderer);
-    const roomEnv = new RoomEnvironment();
-    envTarget = pmrem.fromScene(roomEnv, 0.04);
-    scene.environment = envTarget.texture;
-    roomEnv.dispose();
-    pmrem.dispose();
-  } catch {
-    envTarget = null;
-  }
+  const envTarget = createIndustrialEnvTarget(renderer);
+  if (envTarget) scene.environment = envTarget.texture;
 
   const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 80);
-  camera.position.set(-0.55, 1.05, 11.4);
-  camera.lookAt(0, 0.08, 0);
+  camera.position.set(-0.35, 0.85, 11.6);
+  camera.lookAt(0, -0.22, 0);
 
-  // Studio + Industrial Bay Lighting Rig (damped per-theme)
-  const hemiLight = new THREE.HemisphereLight(0xEFF5FB, 0x5C6674, 0.65);
+  const hemiLight = new THREE.HemisphereLight(0xEEF4FB, 0x3D4754, 0.58);
   scene.add(hemiLight);
 
-  const keyLight = new THREE.DirectionalLight(0xFFF7EC, 1.72);
-  keyLight.position.set(-4.2, 8.2, 5.8);
+  const keyLight = new THREE.DirectionalLight(0xFFF7EC, 2.1);
+  keyLight.position.set(-5.2, 8.6, 5.8);
   keyLight.castShadow = !isSoftwareGl;
   keyLight.shadow.mapSize.set(1024, 1024);
   keyLight.shadow.camera.near = 1;
   keyLight.shadow.camera.far = 26;
-  keyLight.shadow.camera.left = -7.8;
-  keyLight.shadow.camera.right = 7.8;
-  keyLight.shadow.camera.top = 5.0;
-  keyLight.shadow.camera.bottom = -5.0;
+  keyLight.shadow.camera.left = -8.2;
+  keyLight.shadow.camera.right = 8.2;
+  keyLight.shadow.camera.top = 5.2;
+  keyLight.shadow.camera.bottom = -5.2;
   keyLight.shadow.bias = -0.0005;
   keyLight.shadow.normalBias = 0.02;
   scene.add(keyLight);
 
-  const rimLight = new THREE.DirectionalLight(0xC6DDF5, 0.72);
-  rimLight.position.set(6.0, 2.8, -4.6);
+  const rimLight = new THREE.DirectionalLight(0xB8D8F8, 1.05);
+  rimLight.position.set(6.4, 3.0, -4.6);
   scene.add(rimLight);
 
   const underGlowLight = new THREE.PointLight(0xFF5A14, 0, 14, 1.6);
   underGlowLight.position.set(0, -1.65, 1.4);
   scene.add(underGlowLight);
 
-  const shadowMat = new THREE.ShadowMaterial({ opacity: 0.24 });
-  const shadowPlane = new THREE.Mesh(new THREE.PlaneGeometry(28, 16), shadowMat);
-  shadowPlane.rotation.x = -Math.PI / 2;
-  shadowPlane.position.y = -1.49;
-  shadowPlane.receiveShadow = true;
-  scene.add(shadowPlane);
-
   const maxAniso = Math.min(8, renderer.capabilities.getMaxAnisotropy ? renderer.capabilities.getMaxAnisotropy() : 1);
   const steelTex = makeSteelPlateTexture(maxAniso);
-  const steelBumpTex = makeSteelBumpTexture();
-  const moltenAlbedoTex = makeMoltenAlbedoTexture(maxAniso);
-  const moltenEmissiveTex = makeMoltenEmissiveTexture(maxAniso);
+  const steelRoughBumpTex = makeSteelRoughnessAndBump();
+  const { albedoTex: floorAlbedoTex, alphaTex: floorAlphaTex } = makeConcreteFloorTextures(maxAniso);
+  const { albedoTex: moltenAlbedoTex, emissiveTex: moltenEmissiveTex } = makeMoltenAlbedoAndEmissive(maxAniso);
+  const emberTex = makeSoftEmberGlowTexture();
+  const haloTex = makeBackdropHaloTexture('rgba(255, 92, 22, 0.72)', 'rgba(180, 42, 10, 0.25)');
   const enamelStencilTex = makeEnamelStencilTexture(maxAniso);
   const hazardTex = makeHazardStripeTexture(maxAniso);
   const blueprintTex = makeBlueprintScriptTexture(maxAniso);
@@ -1216,13 +1598,44 @@ export function initHero3D() {
   const galvBumpTex = makeGalvanizedBumpTexture();
   const contactTex = makeContactShadowTexture();
 
+  // Grounded Industrial Concrete / Epoxy Floor (wide elliptical fade — zero hard edges)
+  const floorGeo = new THREE.PlaneGeometry(34, 24);
+  const floorMat = new THREE.MeshStandardMaterial({
+    color: 0xA8B5C4,
+    map: floorAlbedoTex,
+    alphaMap: floorAlphaTex,
+    transparent: true,
+    opacity: 0.68,
+    roughness: 0.62,
+    metalness: 0.16,
+    envMapIntensity: 0.18
+  });
+  const floorMesh = new THREE.Mesh(floorGeo, floorMat);
+  floorMesh.rotation.x = -Math.PI / 2;
+  floorMesh.position.set(0, -1.58, -1.2);
+  floorMesh.receiveShadow = true;
+  scene.add(floorMesh);
+
+  const shadowMat = new THREE.ShadowMaterial({ opacity: 0.30 });
+  const shadowPlane = new THREE.Mesh(new THREE.PlaneGeometry(24, 12), shadowMat);
+  shadowPlane.rotation.x = -Math.PI / 2;
+  shadowPlane.position.y = -1.55;
+  shadowPlane.receiveShadow = true;
+  scene.add(shadowPlane);
+
   const disposables = [
+    floorGeo,
+    floorMat,
     shadowMat,
     shadowPlane.geometry,
     steelTex,
-    steelBumpTex,
+    steelRoughBumpTex,
+    floorAlbedoTex,
+    floorAlphaTex,
     moltenAlbedoTex,
     moltenEmissiveTex,
+    emberTex,
+    haloTex,
     enamelStencilTex,
     hazardTex,
     blueprintTex,
@@ -1231,37 +1644,37 @@ export function initHero3D() {
     contactTex
   ];
 
-  // Build 5 live industrial workshop prop rigs
-  const propRigs = buildWorkshopRigs(scene, disposables, hazardTex, maxAniso);
+  // Build 5 high-detail industrial machinery environments
+  const propRigs = buildWorkshopRigs(scene, disposables, hazardTex, emberTex, haloTex);
 
-  // Build 5 multi-part sculpted letter groups ("S V I N D")
+  // Build 5 heavy machined letter blocks ("S V I N D")
   const svindGroup = new THREE.Group();
-  svindGroup.rotation.x = -0.06;
+  svindGroup.rotation.x = -0.04;
   scene.add(svindGroup);
 
-  const ENAMEL_PALETTE = ['#F2B705', '#1E3A6B', '#DF6426', '#1E3A6B', '#F2B705'];
+  const ENAMEL_PALETTE = ['#C98C07', '#13284D', '#B83B18', '#13284D', '#C98C07'];
   const LETTER_CONFIGS = [
-    { char: 'S', x: -3.72, y: 0.0, rotY: 0.15, rotZ: 0.025 },
-    { char: 'V', x: -1.88, y: 0.0, rotY: 0.08, rotZ: -0.015 },
+    { char: 'S', x: -3.72, y: 0.0, rotY: 0.14, rotZ: 0.02 },
+    { char: 'V', x: -1.88, y: 0.0, rotY: 0.07, rotZ: -0.012 },
     { char: 'I', x: -0.14, y: 0.0, rotY: 0.0, rotZ: 0.0 },
-    { char: 'N', x: 1.58, y: 0.0, rotY: -0.08, rotZ: 0.012 },
-    { char: 'D', x: 3.52, y: 0.0, rotY: -0.15, rotZ: -0.02 }
+    { char: 'N', x: 1.58, y: 0.0, rotY: -0.07, rotZ: 0.01 },
+    { char: 'D', x: 3.52, y: 0.0, rotY: -0.14, rotZ: -0.016 }
   ];
 
   const extrudeSettings = {
-    depth: 0.78,
+    depth: 0.80,
     bevelEnabled: true,
-    bevelThickness: 0.17,
-    bevelSize: 0.13,
-    bevelSegments: 8,
-    curveSegments: 22
+    bevelThickness: 0.14,
+    bevelSize: 0.09,
+    bevelSegments: 9,
+    curveSegments: 24
   };
 
   const backExtrudeSettings = {
-    depth: 0.14,
+    depth: 0.16,
     bevelEnabled: true,
-    bevelThickness: 0.08,
-    bevelSize: 0.06,
+    bevelThickness: 0.06,
+    bevelSize: 0.05,
     bevelSegments: 4,
     curveSegments: 14
   };
@@ -1285,13 +1698,14 @@ export function initHero3D() {
     const mainMat = new THREE.MeshPhysicalMaterial({
       color: 0xFFFFFF,
       map: steelTex,
-      bumpMap: steelBumpTex,
-      bumpScale: 0.018,
+      roughnessMap: steelRoughBumpTex,
+      bumpMap: steelRoughBumpTex,
+      bumpScale: 0.022,
       roughness: 0.28,
-      metalness: 0.88,
+      metalness: 0.92,
       clearcoat: 0.25,
-      clearcoatRoughness: 0.35,
-      envMapIntensity: 0.95
+      clearcoatRoughness: 0.34,
+      envMapIntensity: 1.25
     });
     disposables.push(mainMat);
 
@@ -1308,14 +1722,14 @@ export function initHero3D() {
     disposables.push(backGeom);
 
     const backMat = new THREE.MeshStandardMaterial({
-      color: 0x1E2631,
-      roughness: 0.88,
-      metalness: 0.24
+      color: 0x161D26,
+      roughness: 0.82,
+      metalness: 0.35
     });
     disposables.push(backMat);
 
     const backMesh = new THREE.Mesh(backGeom, backMat);
-    backMesh.scale.set(0.95, 0.95, 1);
+    backMesh.scale.set(0.96, 0.96, 1);
     backMesh.position.z = -0.46;
     backMesh.castShadow = !isSoftwareGl;
     group.add(backMesh);
@@ -1325,7 +1739,7 @@ export function initHero3D() {
       map: contactTex,
       transparent: true,
       depthWrite: false,
-      opacity: 0.72
+      opacity: 0.78
     });
     disposables.push(contactGeom, contactMat);
     const contactMesh = new THREE.Mesh(contactGeom, contactMat);
@@ -1343,7 +1757,7 @@ export function initHero3D() {
       backMesh,
       backMat,
       contactMesh,
-      pos: new THREE.Vector3(cfg.x, cfg.y + (prefersReducedMotion() ? 0 : 0.35 + idx * 0.1), 0),
+      pos: new THREE.Vector3(cfg.x, cfg.y + (prefersReducedMotion() ? 0 : 0.3 + idx * 0.09), 0),
       vel: new THREE.Vector3(),
       target: new THREE.Vector3(cfg.x, cfg.y, 0),
       rot: new THREE.Vector3(0, cfg.rotY, cfg.rotZ),
@@ -1354,10 +1768,10 @@ export function initHero3D() {
     group.position.copy(letterStates[idx].pos);
   });
 
-  // Technical CAD edge overlay lines (visible on CAD theme)
+  // Crisp CAD wireframe edges (shown on CAD theme)
   const blueprintLines = letterStates.map((st) => {
     const edges = new THREE.EdgesGeometry(st.mainMesh.geometry, 24);
-    const lineMat = new THREE.LineBasicMaterial({ color: 0x9EE0FF, transparent: true, opacity: 0.82 });
+    const lineMat = new THREE.LineBasicMaterial({ color: 0x9EE0FF, transparent: true, opacity: 0.85 });
     disposables.push(edges, lineMat);
     const seg = new THREE.LineSegments(edges, lineMat);
     seg.visible = false;
@@ -1366,29 +1780,34 @@ export function initHero3D() {
   });
 
   /* ==========================================================================
-     CINEMATOGRAPHY TARGET STATE (Damped smoothly per theme)
+     LOCKED CAMERA + DAMPED ENVIRONMENT LIGHTING STATE
      ========================================================================== */
-  const camCurrentPos = new THREE.Vector3(-0.55, 1.05, 11.4);
-  const camTargetPos = new THREE.Vector3(-0.55, 1.05, 11.4);
-  const camCurrentLook = new THREE.Vector3(0, 0.08, 0);
-  const camTargetLook = new THREE.Vector3(0, 0.08, 0);
+  const camCurrentPos = new THREE.Vector3(-0.35, 0.85, 11.6);
+  const camTargetPos = new THREE.Vector3(-0.35, 0.85, 11.6);
+  const camCurrentLook = new THREE.Vector3(0, -0.22, 0);
+  const camTargetLook = new THREE.Vector3(0, -0.22, 0);
   let targetFov = 34;
 
-  const targetFogColor = new THREE.Color(0xCBD6E2);
-  let targetFogDensity = 0.012;
-  let targetExposure = 1.08;
-  const targetHemiSky = new THREE.Color(0xEFF5FB);
-  const targetHemiGround = new THREE.Color(0x5C6674);
-  let targetHemiInt = 0.65;
+  const targetFogColor = new THREE.Color(0xC6D1DE);
+  let targetFogDensity = 0.015;
+  let targetExposure = 1.12;
+  const targetHemiSky = new THREE.Color(0xEEF4FB);
+  const targetHemiGround = new THREE.Color(0x3D4754);
+  let targetHemiInt = 0.58;
   const targetKeyColor = new THREE.Color(0xFFF7EC);
-  let targetKeyInt = 1.72;
-  const targetKeyPos = new THREE.Vector3(-4.2, 8.2, 5.8);
-  const targetRimColor = new THREE.Color(0xC6DDF5);
-  let targetRimInt = 0.72;
-  const targetRimPos = new THREE.Vector3(6.0, 2.8, -4.6);
+  let targetKeyInt = 2.1;
+  const targetKeyPos = new THREE.Vector3(-5.2, 8.6, 5.8);
+  const targetRimColor = new THREE.Color(0xB8D8F8);
+  let targetRimInt = 1.05;
+  const targetRimPos = new THREE.Vector3(6.4, 3.0, -4.6);
   const targetUnderColor = new THREE.Color(0xFF5A14);
   let targetUnderInt = 0;
-  let targetShadowOpacity = 0.24;
+  const targetFloorColor = new THREE.Color(0xA8B5C4);
+  let targetFloorRoughness = 0.62;
+  let targetFloorMetalness = 0.16;
+  let targetFloorOpacity = 0.68;
+  let targetFloorEnvInt = 0.18;
+  let targetShadowOpacity = 0.30;
 
   function computeResponsiveCamTargets(dir) {
     const rect = mount.getBoundingClientRect();
@@ -1399,14 +1818,14 @@ export function initHero3D() {
     const mobileScale = compact ? 0.45 : 1;
 
     const halfV = Math.tan(THREE.MathUtils.degToRad(dir.fov * 0.5));
-    const safeHalfWidth = 5.2 + Math.abs(dir.camX * mobileScale) * 0.28;
+    const safeHalfWidth = 5.4 + Math.abs(dir.camX * mobileScale) * 0.25;
     const minZForWidth = safeHalfWidth / (halfV * Math.max(0.44, aspect));
     const camZ = Math.max(10.8 + dir.camZBoost, minZForWidth);
 
     const camX = dir.camX * mobileScale;
-    const camY = (compact ? 0.32 : 0.78) + dir.camYOffset * (compact ? 0.55 : 1);
+    const camY = (compact ? 0.30 : 0.72) + dir.camYOffset * (compact ? 0.55 : 1);
     const lookX = dir.lookX * mobileScale;
-    const lookY = (compact ? -0.95 : -0.1) + dir.lookYOffset * (compact ? 0.45 : 1);
+    const lookY = (compact ? -0.95 : -0.10) + dir.lookYOffset * (compact ? 0.45 : 1);
 
     camTargetPos.set(camX, camY, camZ);
     camTargetLook.set(lookX, lookY, 0);
@@ -1421,62 +1840,68 @@ export function initHero3D() {
       mat.emissive.setHex(0x000000);
       mat.emissiveMap = null;
       mat.emissiveIntensity = 0;
+      mat.roughnessMap = null;
 
       if (preset === 'raw-steel') {
         mat.map = steelTex;
-        mat.color.set(idx === 3 ? '#5E7DA6' : '#DCE4EE');
-        mat.bumpMap = steelBumpTex;
-        mat.bumpScale = 0.024;
-        mat.roughness = 0.22;
-        mat.metalness = 0.92;
-        mat.clearcoat = 0.28;
-        mat.clearcoatRoughness = 0.32;
-        mat.envMapIntensity = 1.15;
-        st.backMat.color.set('#19212C');
+        mat.color.set(idx === 3 ? '#5A78A0' : '#DFE6EE');
+        mat.roughnessMap = steelRoughBumpTex;
+        mat.bumpMap = steelRoughBumpTex;
+        mat.bumpScale = 0.026;
+        mat.roughness = 0.32;
+        mat.metalness = 0.94;
+        mat.clearcoat = 0.22;
+        mat.clearcoatRoughness = 0.35;
+        mat.envMapIntensity = 1.28;
+        st.backMat.color.set('#141A22');
       } else if (preset === 'molten-heat') {
         mat.map = moltenAlbedoTex;
         mat.color.set('#FFFFFF');
         mat.emissive.setHex(0xFF5A14);
         mat.emissiveMap = moltenEmissiveTex;
-        mat.emissiveIntensity = 1.65;
+        mat.emissiveIntensity = 1.85;
+        mat.roughnessMap = steelRoughBumpTex;
         mat.bumpMap = galvBumpTex;
-        mat.bumpScale = 0.028;
-        mat.roughness = 0.62;
-        mat.metalness = 0.48;
-        mat.clearcoat = 0.08;
-        mat.envMapIntensity = 0.35;
-        st.backMat.color.set('#140C0A');
+        mat.bumpScale = 0.036;
+        mat.roughness = 0.72;
+        mat.metalness = 0.42;
+        mat.clearcoat = 0.05;
+        mat.envMapIntensity = 0.24;
+        st.backMat.color.set('#120B09');
       } else if (preset === 'enamel') {
-        mat.map = idx === 3 ? enamelStencilTex : null;
-        mat.color.set(idx === 3 ? '#FFFFFF' : ENAMEL_PALETTE[idx]);
-        mat.bumpMap = null;
-        mat.roughness = 0.14;
-        mat.metalness = 0.08;
-        mat.clearcoat = 0.94;
-        mat.clearcoatRoughness = 0.08;
-        mat.envMapIntensity = 0.78;
-        st.backMat.color.set(idx === 0 || idx === 4 ? '#8A6304' : '#142644');
+        // Put the crisp riveted IS 807 specification badge cleanly on solid 'I' (idx === 2)
+        mat.map = idx === 2 ? enamelStencilTex : null;
+        mat.color.set(idx === 2 ? '#FFFFFF' : ENAMEL_PALETTE[idx]);
+        mat.bumpMap = steelRoughBumpTex;
+        mat.bumpScale = 0.004;
+        mat.roughness = 0.16;
+        mat.metalness = 0.14;
+        mat.clearcoat = 0.92;
+        mat.clearcoatRoughness = 0.10;
+        mat.envMapIntensity = 0.96;
+        st.backMat.color.set(idx === 0 || idx === 4 ? '#755303' : '#101F3A');
       } else if (preset === 'cad') {
         mat.map = blueprintTex;
         mat.color.set('#FFFFFF');
         mat.bumpMap = null;
         mat.roughness = 0.72;
-        mat.metalness = 0.1;
+        mat.metalness = 0.12;
         mat.clearcoat = 0.0;
-        mat.envMapIntensity = 0.38;
+        mat.envMapIntensity = 0.36;
         bpLine.visible = true;
-        st.backMat.color.set('#0E254D');
+        st.backMat.color.set('#0D234A');
       } else if (preset === 'galvanized') {
         mat.map = galvTex;
-        mat.color.set('#EAEFF5');
+        mat.color.set('#EDF2F7');
+        mat.roughnessMap = galvBumpTex;
         mat.bumpMap = galvBumpTex;
-        mat.bumpScale = 0.022;
-        mat.roughness = 0.26;
-        mat.metalness = 0.84;
-        mat.clearcoat = 0.24;
-        mat.clearcoatRoughness = 0.28;
-        mat.envMapIntensity = 1.05;
-        st.backMat.color.set('#4D5B6B');
+        mat.bumpScale = 0.028;
+        mat.roughness = 0.32;
+        mat.metalness = 0.90;
+        mat.clearcoat = 0.22;
+        mat.clearcoatRoughness = 0.30;
+        mat.envMapIntensity = 1.28;
+        st.backMat.color.set('#404D5C');
       }
       mat.needsUpdate = true;
     });
@@ -1501,9 +1926,14 @@ export function initHero3D() {
     targetRimPos.set(dir.rimPos[0], dir.rimPos[1], dir.rimPos[2]);
     targetUnderColor.setHex(dir.underColor);
     targetUnderInt = dir.underInt;
+    targetFloorColor.setHex(dir.floorColor);
+    targetFloorRoughness = dir.floorRoughness;
+    targetFloorMetalness = dir.floorMetalness;
+    targetFloorOpacity = dir.floorOpacity;
+    targetFloorEnvInt = dir.floorEnvInt;
     targetShadowOpacity = dir.shadowOpacity;
 
-    // Immediately clear outgoing workshop rigs so no girders/sparks/plinths bleed between themes
+    // Immediately hide inactive rigs so no props bleed between switches
     Object.entries(propRigs).forEach(([key, rig]) => {
       const active = key === dir.rig;
       if (!active) {
@@ -1539,6 +1969,11 @@ export function initHero3D() {
       rimLight.position.copy(targetRimPos);
       underGlowLight.color.copy(targetUnderColor);
       underGlowLight.intensity = targetUnderInt;
+      floorMat.color.copy(targetFloorColor);
+      floorMat.roughness = targetFloorRoughness;
+      floorMat.metalness = targetFloorMetalness;
+      floorMat.opacity = targetFloorOpacity;
+      floorMat.envMapIntensity = targetFloorEnvInt;
       shadowMat.opacity = targetShadowOpacity;
     }
 
@@ -1668,9 +2103,9 @@ export function initHero3D() {
   function triggerLetterWave(focusIdx = -1) {
     if (prefersReducedMotion()) return;
     letterStates.forEach((st, i) => {
-      const boost = focusIdx === -1 ? 2.1 + i * 0.28 : (i === focusIdx ? 3.8 : 1.0);
+      const boost = focusIdx === -1 ? 1.8 + i * 0.24 : (i === focusIdx ? 3.4 : 0.9);
       st.vel.y += boost;
-      st.rotVel.y += (i % 2 === 0 ? 1 : -1) * (i === focusIdx ? 2.8 : 0.75);
+      st.rotVel.y += (i % 2 === 0 ? 1 : -1) * (i === focusIdx ? 2.4 : 0.65);
       st.target.set(st.cfg.x, st.cfg.y, 0);
       st.targetRot.set(0, st.cfg.rotY, st.cfg.rotZ);
     });
@@ -1686,23 +2121,19 @@ export function initHero3D() {
   onWaveRequested = (idx) => triggerLetterWave(idx);
 
   /* ==========================================================================
-     RENDER LOOP (SPRING PHYSICS + CINEMATOGRAPHY + WORKSHOP MOTION)
+     RENDER LOOP (SPRING PHYSICS + REALISTIC WORKSHOP ENVIRONMENT MOTION)
      ========================================================================== */
   let frameId = 0;
   let running = false;
   let prevTime = performance.now();
   let elapsedSim = 0;
 
-  // Reusable zero-alloc objects for InstancedMesh spark loop
-  const _sparkPos = new THREE.Vector3();
-  const _sparkQuat = new THREE.Quaternion();
-  const _sparkScale = new THREE.Vector3();
-  const _sparkMat4 = new THREE.Matrix4();
+  let heroInView = true;
 
   function afterDraw(cb) {
     const gl = renderer.getContext();
     if (!gl || typeof gl.fenceSync !== 'function') {
-      frameId = window.setTimeout(cb, 80);
+      frameId = window.setTimeout(cb, 100);
       return;
     }
     const sync = gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE, 0);
@@ -1711,11 +2142,11 @@ export function initHero3D() {
     const poll = () => {
       polls += 1;
       const state = sync && gl.getSyncParameter(sync, gl.SYNC_STATUS);
-      if (state === gl.UNSIGNALED && polls < 4) {
+      if (state === gl.UNSIGNALED && polls < 200) {
         frameId = window.setTimeout(poll, 5);
       } else {
         if (sync) gl.deleteSync(sync);
-        frameId = window.setTimeout(cb, 80);
+        frameId = window.setTimeout(cb, 95);
       }
     };
     frameId = window.setTimeout(poll, 5);
@@ -1723,7 +2154,8 @@ export function initHero3D() {
 
   function stepScene(dt) {
     const clampedDt = Math.min(dt, 0.045);
-    elapsedSim += clampedDt;
+    const uiDt = Math.min(Math.max(dt, 0.016), 0.35);
+    elapsedSim += uiDt;
     const dir = THEME_DIRECTORS[activePreset] || THEME_DIRECTORS['raw-steel'];
 
     const stiffness = 135;
@@ -1767,7 +2199,7 @@ export function initHero3D() {
       st.contactMesh.position.z = st.pos.z;
       const shadowScale = Math.max(0.45, 1 - lift * 0.25);
       st.contactMesh.scale.set(shadowScale, shadowScale, 1);
-      st.contactMesh.material.opacity = Math.max(0.16, 0.62 - lift * 0.22);
+      st.contactMesh.material.opacity = Math.max(0.16, 0.65 - lift * 0.22);
 
       if (
         st.vel.lengthSq() > 1e-4 ||
@@ -1778,65 +2210,61 @@ export function initHero3D() {
       }
     }
 
-    // 2. Camera Cinematography & Parallax Damping
-    const camSpeed = 6.2;
-    camCurrentPos.x = THREE.MathUtils.damp(camCurrentPos.x, camTargetPos.x, camSpeed, clampedDt);
-    camCurrentPos.y = THREE.MathUtils.damp(camCurrentPos.y, camTargetPos.y, camSpeed, clampedDt);
-    camCurrentPos.z = THREE.MathUtils.damp(camCurrentPos.z, camTargetPos.z, camSpeed, clampedDt);
-    camCurrentLook.x = THREE.MathUtils.damp(camCurrentLook.x, camTargetLook.x, camSpeed, clampedDt);
-    camCurrentLook.y = THREE.MathUtils.damp(camCurrentLook.y, camTargetLook.y, camSpeed, clampedDt);
-    camCurrentLook.z = THREE.MathUtils.damp(camCurrentLook.z, camTargetLook.z, camSpeed, clampedDt);
-
-    if (
-      camCurrentPos.distanceToSquared(camTargetPos) > 1e-4 ||
-      camCurrentLook.distanceToSquared(camTargetLook) > 1e-4 ||
-      Math.abs(camera.fov - targetFov) > 0.04
-    ) {
-      moving = true;
-    }
-
+    // 2. Camera keeps steady locked pose across all themes
+    const camSpeed = 8.5;
+    camCurrentPos.x = THREE.MathUtils.damp(camCurrentPos.x, camTargetPos.x, camSpeed, uiDt);
+    camCurrentPos.y = THREE.MathUtils.damp(camCurrentPos.y, camTargetPos.y, camSpeed, uiDt);
+    camCurrentPos.z = THREE.MathUtils.damp(camCurrentPos.z, camTargetPos.z, camSpeed, uiDt);
+    camCurrentLook.x = THREE.MathUtils.damp(camCurrentLook.x, camTargetLook.x, camSpeed, uiDt);
+    camCurrentLook.y = THREE.MathUtils.damp(camCurrentLook.y, camTargetLook.y, camSpeed, uiDt);
+    camCurrentLook.z = THREE.MathUtils.damp(camCurrentLook.z, camTargetLook.z, camSpeed, uiDt);
     camera.position.copy(camCurrentPos);
-    camera.fov = THREE.MathUtils.damp(camera.fov, targetFov, camSpeed, clampedDt);
+    camera.fov = THREE.MathUtils.damp(camera.fov, targetFov, camSpeed, uiDt);
     camera.lookAt(camCurrentLook);
     camera.updateProjectionMatrix();
 
-    // 3. Lighting & Atmospheric Fog Transitions
-    const lightSpeed = 6.5;
-    const lerpFactor = 1 - Math.exp(-lightSpeed * clampedDt);
+    // 3. Lighting, Floor & Fog Transitions (real wall-clock uiDt so SwiftShader & GPU stay crisp)
+    const lightSpeed = 9.5;
+    const lerpFactor = 1 - Math.exp(-lightSpeed * uiDt);
     scene.fog.color.lerp(targetFogColor, lerpFactor);
-    scene.fog.density = THREE.MathUtils.damp(scene.fog.density, targetFogDensity, lightSpeed, clampedDt);
-    renderer.toneMappingExposure = THREE.MathUtils.damp(renderer.toneMappingExposure, targetExposure, lightSpeed, clampedDt);
+    scene.fog.density = THREE.MathUtils.damp(scene.fog.density, targetFogDensity, lightSpeed, uiDt);
+    renderer.toneMappingExposure = THREE.MathUtils.damp(renderer.toneMappingExposure, targetExposure, lightSpeed, uiDt);
 
     hemiLight.color.lerp(targetHemiSky, lerpFactor);
     hemiLight.groundColor.lerp(targetHemiGround, lerpFactor);
-    hemiLight.intensity = THREE.MathUtils.damp(hemiLight.intensity, targetHemiInt, lightSpeed, clampedDt);
+    hemiLight.intensity = THREE.MathUtils.damp(hemiLight.intensity, targetHemiInt, lightSpeed, uiDt);
 
     keyLight.color.lerp(targetKeyColor, lerpFactor);
-    keyLight.intensity = THREE.MathUtils.damp(keyLight.intensity, targetKeyInt, lightSpeed, clampedDt);
+    keyLight.intensity = THREE.MathUtils.damp(keyLight.intensity, targetKeyInt, lightSpeed, uiDt);
     keyLight.position.lerp(targetKeyPos, lerpFactor);
 
     rimLight.color.lerp(targetRimColor, lerpFactor);
-    rimLight.intensity = THREE.MathUtils.damp(rimLight.intensity, targetRimInt, lightSpeed, clampedDt);
+    rimLight.intensity = THREE.MathUtils.damp(rimLight.intensity, targetRimInt, lightSpeed, uiDt);
     rimLight.position.lerp(targetRimPos, lerpFactor);
 
     underGlowLight.color.lerp(targetUnderColor, lerpFactor);
     const furnaceFlicker = activePreset === 'molten-heat' && !prefersReducedMotion()
-      ? 0.25 * Math.sin(elapsedSim * 5.2)
+      ? 0.35 * Math.sin(elapsedSim * 4.8)
       : 0;
     underGlowLight.intensity = THREE.MathUtils.damp(
       underGlowLight.intensity,
       Math.max(0, targetUnderInt + furnaceFlicker),
       lightSpeed,
-      clampedDt
+      uiDt
     );
 
-    shadowMat.opacity = THREE.MathUtils.damp(shadowMat.opacity, targetShadowOpacity, lightSpeed, clampedDt);
+    floorMat.color.lerp(targetFloorColor, lerpFactor);
+    floorMat.roughness = THREE.MathUtils.damp(floorMat.roughness, targetFloorRoughness, lightSpeed, uiDt);
+    floorMat.metalness = THREE.MathUtils.damp(floorMat.metalness, targetFloorMetalness, lightSpeed, uiDt);
+    floorMat.opacity = THREE.MathUtils.damp(floorMat.opacity, targetFloorOpacity, lightSpeed, uiDt);
+    floorMat.envMapIntensity = THREE.MathUtils.damp(floorMat.envMapIntensity, targetFloorEnvInt, lightSpeed, uiDt);
+    shadowMat.opacity = THREE.MathUtils.damp(shadowMat.opacity, targetShadowOpacity, lightSpeed, uiDt);
 
-    // 4. Live Workshop Structural Prop Rigs Transition & Idle Motion
+    // 4. Environment Rig Entrance & Subtle Industrial Motion
     Object.entries(propRigs).forEach(([key, rig]) => {
       const targetMix = key === dir.rig ? 1 : 0;
-      rig.mix = THREE.MathUtils.damp(rig.mix, targetMix, 7.5, clampedDt);
-      if (Math.abs(rig.mix - targetMix) > 0.006) {
+      rig.mix = THREE.MathUtils.damp(rig.mix, targetMix, 12.0, uiDt);
+      if (Math.abs(rig.mix - targetMix) > 0.004) {
         moving = true;
       }
       rig.root.visible = rig.mix > 0.015;
@@ -1844,9 +2272,8 @@ export function initHero3D() {
     });
 
     if (!prefersReducedMotion()) {
-      // Gentle pointer parallax tilt of wordmark
-      const targetGroupRotY = pointerHoverX * 0.05;
-      const targetGroupRotX = pointerHoverY * -0.035;
+      const targetGroupRotY = pointerHoverX * 0.045;
+      const targetGroupRotX = pointerHoverY * -0.03;
       const nextY = THREE.MathUtils.damp(svindGroup.rotation.y, targetGroupRotY, 6, clampedDt);
       const nextX = THREE.MathUtils.damp(svindGroup.rotation.x, targetGroupRotX, 6, clampedDt);
       if (Math.abs(nextY - svindGroup.rotation.y) > 1e-4 || Math.abs(nextX - svindGroup.rotation.x) > 1e-4) {
@@ -1855,30 +2282,27 @@ export function initHero3D() {
       svindGroup.rotation.y = nextY;
       svindGroup.rotation.x = nextX;
 
-      // Overhead EOT crane crab traverse on Raw Steel theme
+      // Weighty realistic EOT crane hoist crab traverse
       if (activePreset === 'raw-steel' && propRigs.girders.root.visible) {
-        propRigs.girders.crabGroup.position.x = Math.sin(elapsedSim * 0.42) * 1.85;
+        propRigs.girders.crabGroup.position.x = Math.sin(elapsedSim * 0.28) * 1.9;
         moving = true;
       }
 
-      // Rising molten forge sparks on Molten Heat theme
+      // Soft buoyant thermal convection sparks in Molten Heat bay
       if (activePreset === 'molten-heat' && propRigs.sparks.root.visible) {
-        const { sparkMesh, sparkData } = propRigs.sparks;
-        for (let i = 0; i < sparkData.length; i += 1) {
-          const sp = sparkData[i];
-          const cyc = (sp.yOffset + elapsedSim * sp.speed) % 4.4;
-          const fade = cyc < 3.4 ? 1 : Math.max(0, 1 - (cyc - 3.4));
-          _sparkPos.set(
-            sp.x + Math.sin(elapsedSim * 1.8 + i) * 0.14 * sp.drift,
+        const { sparkGeo, sparkMeta } = propRigs.sparks;
+        const posAttr = sparkGeo.attributes.position;
+        for (let i = 0; i < sparkMeta.length; i += 1) {
+          const sm = sparkMeta[i];
+          const cyc = (sm.yOffset + elapsedSim * sm.speed) % 4.5;
+          posAttr.setXYZ(
+            i,
+            sm.x + Math.sin(elapsedSim * 1.6 + i) * sm.sway,
             -1.42 + cyc,
-            sp.z
+            sm.z + Math.cos(elapsedSim * 1.2 + i) * 0.08
           );
-          const sc = sp.scale * fade;
-          _sparkScale.set(sc, sc * 1.35, sc);
-          _sparkMat4.compose(_sparkPos, _sparkQuat, _sparkScale);
-          sparkMesh.setMatrixAt(i, _sparkMat4);
         }
-        sparkMesh.instanceMatrix.needsUpdate = true;
+        posAttr.needsUpdate = true;
         moving = true;
       }
     }
@@ -1887,6 +2311,10 @@ export function initHero3D() {
   }
 
   function renderFrame() {
+    if (!heroInView && dragIndex < 0) {
+      running = false;
+      return;
+    }
     const now = performance.now();
     const dt = (now - prevTime) / 1000;
     prevTime = now;
@@ -1903,12 +2331,24 @@ export function initHero3D() {
   }
 
   function startLoop() {
-    if (running) return;
+    if (running || (!heroInView && dragIndex < 0)) return;
     running = true;
     prevTime = performance.now();
     if (isSoftwareGl) afterDraw(renderFrame);
     else frameId = window.requestAnimationFrame(renderFrame);
   }
+
+  const io = typeof IntersectionObserver !== 'undefined'
+    ? new IntersectionObserver((entries) => {
+        const entry = entries[0];
+        if (!entry) return;
+        heroInView = entry.isIntersecting;
+        if (heroInView && !prefersReducedMotion()) {
+          startLoop();
+        }
+      }, { threshold: 0.02 })
+    : null;
+  io?.observe(section);
 
   function onContextLost(ev) {
     ev.preventDefault();
@@ -1928,7 +2368,6 @@ export function initHero3D() {
     document.fonts.ready.then(resizeScene);
   }
 
-  // Initialize starting theme immediately
   selectPreset('raw-steel');
   applyTheme('raw-steel', true);
 
@@ -1936,7 +2375,7 @@ export function initHero3D() {
     try {
       renderer.compile(scene, camera);
     } catch {
-      // Non-fatal on restricted GPU drivers; draw proceeds on render
+      // Non-fatal on restricted GPU drivers
     }
   }
 
@@ -1950,6 +2389,7 @@ export function initHero3D() {
     window.cancelAnimationFrame(frameId);
     window.clearTimeout(frameId);
     ro.disconnect();
+    io?.disconnect();
     window.removeEventListener('resize', resizeScene);
     renderer.domElement.removeEventListener('webglcontextlost', onContextLost);
     renderer.domElement.removeEventListener('pointerdown', onPointerDown);
