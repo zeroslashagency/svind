@@ -1,5 +1,12 @@
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import {
+  FLOOR_Y,
+  GANTRY_DIMS,
+  LETTER_SPECS,
+  computeFestoonGeometryData,
+  computeDinHookProfile
+} from './sv-hero-specs.js';
 
 const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
 
@@ -208,59 +215,84 @@ function createIndustrialEnvTarget(renderer) {
    PROCEDURAL INDUSTRIAL TEXTURE & PBR MAP GENERATORS
    ========================================================================== */
 function makeSteelPlateTexture(maxAnisotropy) {
+  const S = 1024;
   const canvas = document.createElement('canvas');
-  canvas.width = 512;
-  canvas.height = 512;
+  canvas.width = S;
+  canvas.height = S;
   const ctx = canvas.getContext('2d');
 
-  // Rich hot-rolled mill steel finish with directional sheen & oxide mottling
-  const grad = ctx.createLinearGradient(0, 0, 512, 512);
-  grad.addColorStop(0, '#AEBAC8');
-  grad.addColorStop(0.35, '#7A8798');
-  grad.addColorStop(0.7, '#909EAE');
-  grad.addColorStop(1, '#505D6E');
+  // High-resolution cold-rolled brushed mill steel base with subtle studio tonal variation
+  const grad = ctx.createLinearGradient(0, 0, S, S);
+  grad.addColorStop(0, '#B9C4D0');
+  grad.addColorStop(0.28, '#8E9AA8');
+  grad.addColorStop(0.54, '#A4B0BD');
+  grad.addColorStop(0.82, '#788494');
+  grad.addColorStop(1, '#596575');
   ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, 512, 512);
+  ctx.fillRect(0, 0, S, S);
 
-  // Subtle brushed metal micro-streaks
-  for (let y = 0; y < 512; y += 2) {
-    const alpha = 0.06 + ((y * 19) % 13) * 0.014;
-    ctx.strokeStyle = y % 4 === 0 ? `rgba(255,255,255,${alpha})` : `rgba(12,18,26,${alpha})`;
+  // Subtle multi-frequency brushed metal horizontal grain streaks
+  for (let y = 0; y < S; y += 2) {
+    const wave = Math.sin(y * 0.19) * 0.5 + 0.5;
+    const alpha = 0.035 + ((y * 17) % 11) * 0.008 + wave * 0.025;
+    ctx.strokeStyle = y % 4 === 0 ? `rgba(255,255,255,${alpha})` : `rgba(14,20,28,${alpha})`;
+    ctx.lineWidth = y % 6 === 0 ? 1.5 : 1;
     ctx.beginPath();
     ctx.moveTo(0, y);
-    ctx.lineTo(512, y);
+    ctx.lineTo(S, y);
     ctx.stroke();
   }
 
-  // Welded structural gusset plate seams & chamfered bolts
-  ctx.strokeStyle = 'rgba(18, 26, 36, 0.42)';
-  ctx.lineWidth = 3;
-  ctx.strokeRect(20, 20, 472, 472);
+  // Subtle rolled steel mottling & patina spots (low opacity so brushing stays sharp)
+  for (let i = 0; i < 620; i += 1) {
+    const px = (i * 211) % S;
+    const py = (i * 389) % S;
+    const rw = 22 + (i % 68);
+    const rh = 6 + (i % 18);
+    const dark = i % 3 === 0;
+    ctx.fillStyle = dark ? 'rgba(28, 36, 46, 0.055)' : 'rgba(230, 238, 246, 0.05)';
+    ctx.fillRect(px, py, rw, rh);
+  }
+
+  // Subtle thermal TIG/MIG heat-affected zone patina above & below the mid-height welded seam (v = 0.5)
+  const hazGrad = ctx.createLinearGradient(0, S * 0.41, 0, S * 0.59);
+  hazGrad.addColorStop(0, 'rgba(65, 52, 42, 0)');
+  hazGrad.addColorStop(0.26, 'rgba(132, 96, 62, 0.16)');
+  hazGrad.addColorStop(0.42, 'rgba(72, 78, 108, 0.24)');
+  hazGrad.addColorStop(0.50, 'rgba(20, 24, 30, 0.72)');
+  hazGrad.addColorStop(0.58, 'rgba(72, 78, 108, 0.24)');
+  hazGrad.addColorStop(0.74, 'rgba(132, 96, 62, 0.16)');
+  hazGrad.addColorStop(1, 'rgba(65, 52, 42, 0)');
+  ctx.fillStyle = hazGrad;
+  ctx.fillRect(0, S * 0.40, S, S * 0.20);
+
+  // Mid-height welded butt seam trench + specular weld bead hatch scallops
+  ctx.strokeStyle = 'rgba(14, 18, 24, 0.78)';
+  ctx.lineWidth = 6;
   ctx.beginPath();
-  ctx.moveTo(20, 256);
-  ctx.lineTo(492, 256);
+  ctx.moveTo(0, S * 0.5);
+  ctx.lineTo(S, S * 0.5);
   ctx.stroke();
 
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.16)';
-  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = 'rgba(226, 234, 242, 0.42)';
+  ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.moveTo(20, 259);
-  ctx.lineTo(492, 259);
+  ctx.moveTo(0, S * 0.5 - 3);
+  ctx.lineTo(S, S * 0.5 - 3);
   ctx.stroke();
 
-  // Machined hex-bolt heads with recessed shadow halo
-  [48, 256, 464].forEach((x) => {
-    [48, 232, 280, 464].forEach((y) => {
-      ctx.fillStyle = 'rgba(12, 18, 26, 0.55)';
-      ctx.beginPath();
-      ctx.arc(x + 1.5, y + 1.5, 4.5, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = 'rgba(235, 242, 250, 0.72)';
-      ctx.beginPath();
-      ctx.arc(x, y, 3.6, 0, Math.PI * 2);
-      ctx.fill();
-    });
-  });
+  for (let wx = 4; wx < S; wx += 14) {
+    ctx.strokeStyle = wx % 28 === 4 ? 'rgba(240, 246, 255, 0.28)' : 'rgba(24, 30, 38, 0.34)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(wx, S * 0.5, 4.5, -Math.PI * 0.45, Math.PI * 0.45);
+    ctx.stroke();
+  }
+
+  // Subtle darkened perimeter plate edge patina
+  ctx.strokeStyle = 'rgba(18, 24, 32, 0.28)';
+  ctx.lineWidth = 14;
+  ctx.strokeRect(4, 4, S - 8, S - 8);
 
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
@@ -269,29 +301,177 @@ function makeSteelPlateTexture(maxAnisotropy) {
 }
 
 function makeSteelRoughnessAndBump() {
+  const S = 512;
   const canvas = document.createElement('canvas');
-  canvas.width = 256;
-  canvas.height = 256;
+  canvas.width = S;
+  canvas.height = S;
   const ctx = canvas.getContext('2d');
-  ctx.fillStyle = '#707070';
-  ctx.fillRect(0, 0, 256, 256);
-  for (let y = 0; y < 256; y += 2) {
-    const shade = 78 + ((y * 29) % 72);
+  ctx.fillStyle = '#5C5C5C';
+  ctx.fillRect(0, 0, S, S);
+
+  for (let y = 0; y < S; y += 2) {
+    const shade = 74 + ((y * 23) % 58);
     ctx.fillStyle = `rgb(${shade},${shade},${shade})`;
-    ctx.fillRect(0, y, 256, 1);
+    ctx.fillRect(0, y, S, 1);
   }
-  // Subtle mottled mill-scale variation
-  for (let i = 0; i < 420; i += 1) {
-    const x = (i * 89) % 256;
-    const y = (i * 173) % 256;
-    const v = 50 + (i % 90);
-    ctx.fillStyle = `rgba(${v},${v},${v},0.35)`;
-    ctx.fillRect(x, y, 8, 5);
+
+  for (let i = 0; i < 680; i += 1) {
+    const x = (i * 113) % S;
+    const y = (i * 211) % S;
+    const v = 54 + (i % 78);
+    ctx.fillStyle = `rgba(${v},${v},${v},0.32)`;
+    ctx.fillRect(x, y, 16, 4);
   }
+
+  // Rough matte weld bead along horizontal center seam (v = 0.5)
+  ctx.fillStyle = '#A8A8A8';
+  ctx.fillRect(0, S * 0.5 - 5, S, 10);
+
   const tex = new THREE.CanvasTexture(canvas);
+  tex.anisotropy = 4;
+  return tex;
+}
+
+function makeSteelNormalMap(maxAnisotropy) {
+  const S = 512;
+  const hCanvas = document.createElement('canvas');
+  hCanvas.width = S;
+  hCanvas.height = S;
+  const hctx = hCanvas.getContext('2d');
+  hctx.fillStyle = '#808080';
+  hctx.fillRect(0, 0, S, S);
+
+  for (let y = 0; y < S; y += 2) {
+    const v = 122 + ((y * 19) % 14);
+    hctx.fillStyle = `rgb(${v},${v},${v})`;
+    hctx.fillRect(0, y, S, 1);
+  }
+
+  // Raised welded seam bead + recessed groove along center Y
+  hctx.fillStyle = '#484848';
+  hctx.fillRect(0, S * 0.5 - 5, S, 10);
+  hctx.fillStyle = '#BDBDBD';
+  hctx.fillRect(0, S * 0.5 - 2, S, 4);
+  for (let wx = 4; wx < S; wx += 10) {
+    hctx.fillStyle = wx % 20 === 4 ? '#DADADA' : '#6A6A6A';
+    hctx.fillRect(wx, S * 0.5 - 3, 4, 6);
+  }
+
+  const srcData = hctx.getImageData(0, 0, S, S).data;
+  const nCanvas = document.createElement('canvas');
+  nCanvas.width = S;
+  nCanvas.height = S;
+  const nctx = nCanvas.getContext('2d');
+  const outImg = nctx.createImageData(S, S);
+  const out = outImg.data;
+  const strength = 2.6;
+
+  for (let y = 0; y < S; y += 1) {
+    const ym = (y - 1 + S) % S;
+    const yp = (y + 1) % S;
+    for (let x = 0; x < S; x += 1) {
+      const xm = (x - 1 + S) % S;
+      const xp = (x + 1) % S;
+      const hL = srcData[(y * S + xm) * 4] / 255;
+      const hR = srcData[(y * S + xp) * 4] / 255;
+      const hU = srcData[(ym * S + x) * 4] / 255;
+      const hD = srcData[(yp * S + x) * 4] / 255;
+      const dx = (hL - hR) * strength;
+      const dy = (hU - hD) * strength;
+      const nz = 1.0;
+      const len = Math.hypot(dx, dy, nz) || 1;
+      const idx = (y * S + x) * 4;
+      out[idx] = Math.round(((dx / len) * 0.5 + 0.5) * 255);
+      out[idx + 1] = Math.round(((dy / len) * 0.5 + 0.5) * 255);
+      out[idx + 2] = Math.round(((nz / len) * 0.5 + 0.5) * 255);
+      out[idx + 3] = 255;
+    }
+  }
+  nctx.putImageData(outImg, 0, 0);
+
+  const tex = new THREE.CanvasTexture(nCanvas);
+  tex.anisotropy = maxAnisotropy;
+  return tex;
+}
+
+function makeOchreEndTruckTexture(maxAnisotropy) {
+  const S = 512;
+  const canvas = document.createElement('canvas');
+  canvas.width = S;
+  canvas.height = S;
+  const ctx = canvas.getContext('2d');
+
+  // Weathered industrial crane ochre enamel with subtle oil/scuff wear & welded panel lines
+  const grad = ctx.createLinearGradient(0, 0, 0, S);
+  grad.addColorStop(0, '#E3AE28');
+  grad.addColorStop(0.55, '#CFA017');
+  grad.addColorStop(1, '#AE7F0D');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, S, S);
+
+  for (let i = 0; i < 900; i += 1) {
+    const x = (i * 179) % S;
+    const y = (i * 293) % S;
+    const dark = i % 4 !== 0;
+    ctx.fillStyle = dark ? 'rgba(42, 34, 18, 0.11)' : 'rgba(255, 240, 190, 0.09)';
+    ctx.fillRect(x, y, 4 + (i % 12), 2 + (i % 6));
+  }
+
+  // Welded inspection cover seams & scuffed metallic corner wear
+  ctx.strokeStyle = 'rgba(34, 26, 12, 0.42)';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(22, 22, S - 44, S - 44);
+
+  ctx.strokeStyle = 'rgba(255, 232, 168, 0.25)';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(25, 25, S - 50, S - 50);
+
+  // Corner metal scuff marks revealing dark primer steel underneath
+  [[14, 14], [S - 36, 14], [14, S - 36], [S - 36, S - 36]].forEach(([cx, cy]) => {
+    ctx.fillStyle = 'rgba(54, 58, 66, 0.42)';
+    ctx.fillRect(cx, cy, 22, 12);
+    ctx.fillRect(cx, cy, 12, 22);
+  });
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = maxAnisotropy;
+  return tex;
+}
+
+function makeWireRopeDrumTexture(maxAnisotropy) {
+  const W = 512;
+  const H = 256;
+  const canvas = document.createElement('canvas');
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  ctx.fillStyle = '#4B5562';
+  ctx.fillRect(0, 0, W, H);
+
+  // Tight helical grooved steel wire-rope cable turns across hoist drum barrel
+  for (let x = 0; x < W; x += 10) {
+    ctx.fillStyle = '#202630';
+    ctx.fillRect(x, 0, 3, H);
+    ctx.fillStyle = '#9AA6B4';
+    ctx.fillRect(x + 3, 0, 4, H);
+    ctx.fillStyle = '#C7D1DC';
+    ctx.fillRect(x + 4, 0, 2, H);
+  }
+  for (let y = 0; y < H; y += 8) {
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(W, y + 6);
+    ctx.stroke();
+  }
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
   tex.wrapS = THREE.RepeatWrapping;
   tex.wrapT = THREE.RepeatWrapping;
-  tex.repeat.set(2, 2);
+  tex.anisotropy = maxAnisotropy;
   return tex;
 }
 
@@ -301,20 +481,20 @@ function makeConcreteFloorTextures(maxAnisotropy) {
   albedoCanvas.height = 512;
   const actx = albedoCanvas.getContext('2d');
 
-  // Neutral near-white troweled concrete base so floorMat.color tints accurately on light & dark bays
-  actx.fillStyle = '#E6E9ED';
+  // Pale brushed studio concrete slab (matches reference floor lightness while taking clean shadows)
+  actx.fillStyle = '#DCE2E9';
   actx.fillRect(0, 0, 512, 512);
 
-  for (let i = 0; i < 2600; i += 1) {
+  for (let i = 0; i < 3200; i += 1) {
     const x = (i * 139) % 512;
     const y = (i * 257) % 512;
-    const w = 5 + (i % 16);
-    const v = 212 + (i % 34);
-    actx.fillStyle = `rgba(${v},${v + 2},${v + 4},0.22)`;
-    actx.fillRect(x, y, w, w * 0.55);
+    const w = 6 + (i % 18);
+    const v = 202 + (i % 42);
+    actx.fillStyle = `rgba(${v},${v + 2},${v + 5},0.20)`;
+    actx.fillRect(x, y, w, w * 0.5);
   }
-  actx.strokeStyle = 'rgba(20, 26, 34, 0.16)';
-  actx.lineWidth = 2;
+  actx.strokeStyle = 'rgba(28, 36, 48, 0.11)';
+  actx.lineWidth = 1.5;
   for (let g = 0; g < 512; g += 128) {
     actx.beginPath();
     actx.moveTo(g, 0);
@@ -330,7 +510,7 @@ function makeConcreteFloorTextures(maxAnisotropy) {
   albedoTex.colorSpace = THREE.SRGBColorSpace;
   albedoTex.wrapS = THREE.RepeatWrapping;
   albedoTex.wrapT = THREE.RepeatWrapping;
-  albedoTex.repeat.set(7, 5);
+  albedoTex.repeat.set(8, 6);
   albedoTex.anisotropy = maxAnisotropy;
 
   // Tight radial vignette alpha map so floor fades invisibly with zero rectangular borders on desktop or mobile
@@ -340,11 +520,11 @@ function makeConcreteFloorTextures(maxAnisotropy) {
   const lctx = alphaCanvas.getContext('2d');
   lctx.fillStyle = '#000000';
   lctx.fillRect(0, 0, 256, 256);
-  const grad = lctx.createRadialGradient(128, 128, 18, 128, 128, 118);
+  const grad = lctx.createRadialGradient(128, 128, 24, 128, 128, 120);
   grad.addColorStop(0, '#FFFFFF');
-  grad.addColorStop(0.42, '#C8C8C8');
-  grad.addColorStop(0.72, '#404040');
-  grad.addColorStop(0.92, '#080808');
+  grad.addColorStop(0.48, '#D2D2D2');
+  grad.addColorStop(0.76, '#484848');
+  grad.addColorStop(0.94, '#0A0A0A');
   grad.addColorStop(1, '#000000');
   lctx.fillStyle = grad;
   lctx.fillRect(0, 0, 256, 256);
@@ -877,37 +1057,37 @@ function normalizeExtrudeUVs(geometry) {
    5 INDUSTRIAL ENVIRONMENT DIRECTORS (Locked camera; complete world shift)
    ========================================================================== */
 const LOCKED_CAMERA = {
-  camX: -0.35,
-  camYOffset: 0.46,
-  camZBoost: 1.18,
-  lookX: 0,
-  lookYOffset: -0.22,
-  fov: 34
+  camX: 0.0,
+  camYOffset: 0.18,
+  camZBoost: 2.35,
+  lookX: 0.0,
+  lookYOffset: 0.24,
+  fov: 31
 };
 
 const THEME_DIRECTORS = {
   'raw-steel': {
     ...LOCKED_CAMERA,
-    exposure: 1.12,
-    fogColor: 0xC6D1DE,
-    fogDensity: 0.015,
-    hemiSky: 0xEEF4FB,
-    hemiGround: 0x3D4754,
-    hemiInt: 0.58,
-    keyColor: 0xFFF7EC,
-    keyInt: 2.15,
-    keyPos: [-5.2, 8.6, 5.8],
+    exposure: 1.14,
+    fogColor: 0xD0DAE4,
+    fogDensity: 0.011,
+    hemiSky: 0xF5F8FC,
+    hemiGround: 0x45505E,
+    hemiInt: 0.66,
+    keyColor: 0xFFFBF2,
+    keyInt: 2.25,
+    keyPos: [-4.6, 8.8, 6.8],
     rimColor: 0xB8D8F8,
-    rimInt: 1.1,
-    rimPos: [6.4, 3.0, -4.6],
+    rimInt: 1.15,
+    rimPos: [6.4, 3.2, -4.6],
     underColor: 0x4A6382,
     underInt: 0.0,
-    floorColor: 0xA8B5C4,
-    floorRoughness: 0.62,
-    floorMetalness: 0.16,
-    floorOpacity: 0.68,
-    floorEnvInt: 0.18,
-    shadowOpacity: 0.30,
+    floorColor: 0xCBD4DE,
+    floorRoughness: 0.68,
+    floorMetalness: 0.10,
+    floorOpacity: 0.78,
+    floorEnvInt: 0.14,
+    shadowOpacity: 0.34,
     rig: 'girders'
   },
   'molten-heat': {
@@ -1011,13 +1191,22 @@ const THEME_DIRECTORS = {
 /* ==========================================================================
    DETAILED HEAVY CRANE & INDUSTRIAL WORKSHOP RIGS (5 Distinct Environments)
    ========================================================================== */
-function buildWorkshopRigs(scene, disposables, hazardTex, emberTex, haloTex) {
+function buildWorkshopRigs(scene, disposables, {
+  hazardTex,
+  emberTex,
+  haloTex,
+  ochreTex,
+  drumTex,
+  steelNormalTex
+}) {
   const rigs = {};
 
   const structuralSteelMat = new THREE.MeshStandardMaterial({
-    color: 0x2F3B4A,
-    roughness: 0.34,
-    metalness: 0.86
+    color: 0x333F4F,
+    normalMap: steelNormalTex,
+    normalScale: new THREE.Vector2(0.32, 0.32),
+    roughness: 0.38,
+    metalness: 0.84
   });
   const darkCastMat = new THREE.MeshStandardMaterial({
     color: 0x1A2029,
@@ -1025,156 +1214,360 @@ function buildWorkshopRigs(scene, disposables, hazardTex, emberTex, haloTex) {
     metalness: 0.62
   });
   const safetyOchreMat = new THREE.MeshStandardMaterial({
-    color: 0xC98C07,
-    roughness: 0.24,
-    metalness: 0.24
+    color: 0xEEB626,
+    map: ochreTex,
+    roughness: 0.40,
+    metalness: 0.20
+  });
+  const forgedHookMat = new THREE.MeshStandardMaterial({
+    color: 0x3A434F,
+    roughness: 0.34,
+    metalness: 0.88
   });
   const wireRopeMat = new THREE.MeshStandardMaterial({
-    color: 0xC5CFD9,
+    color: 0xCFD8E2,
     roughness: 0.22,
     metalness: 0.94
+  });
+  const hoistDrumMat = new THREE.MeshStandardMaterial({
+    color: 0xFFFFFF,
+    map: drumTex,
+    bumpMap: drumTex,
+    bumpScale: 0.024,
+    roughness: 0.28,
+    metalness: 0.86
   });
   const hazardStripeMat = new THREE.MeshStandardMaterial({
     map: hazardTex,
     roughness: 0.36,
     metalness: 0.14
   });
-  disposables.push(structuralSteelMat, darkCastMat, safetyOchreMat, wireRopeMat, hazardStripeMat);
+  disposables.push(
+    structuralSteelMat,
+    darkCastMat,
+    safetyOchreMat,
+    forgedHookMat,
+    wireRopeMat,
+    hoistDrumMat,
+    hazardStripeMat
+  );
 
   /* ------------------------------------------------------------------------
-     1. RAW STEEL: Double-Girder EOT Bay + Multi-Fall Hoist & Festoon Cable
+     1. RAW STEEL: Detailed Double-Girder EOT Bay, H-Columns w/ Anchor Baseplates,
+        Weathered End-Trucks, C-Track Festoon Clamps & Forged DIN Sheave Hook
      ------------------------------------------------------------------------ */
   const girderRoot = new THREE.Group();
 
-  const webGeo = new THREE.BoxGeometry(11.4, 0.30, 0.12);
-  const flangeGeo = new THREE.BoxGeometry(11.4, 0.055, 0.30);
-  const ribGeo = new THREE.BoxGeometry(0.05, 0.28, 0.26);
-  const bogieGeo = new THREE.BoxGeometry(0.46, 0.44, 1.46);
-  const wheelGeo = new THREE.CylinderGeometry(0.13, 0.13, 0.14, 16);
-  const colWebGeo = new THREE.BoxGeometry(0.14, 4.0, 0.34);
-  const colFlangeGeo = new THREE.BoxGeometry(0.32, 4.0, 0.07);
-  const corbelGeo = new THREE.BoxGeometry(0.55, 0.26, 1.05);
-  disposables.push(webGeo, flangeGeo, ribGeo, bogieGeo, wheelGeo, colWebGeo, colFlangeGeo, corbelGeo);
+  const webGeo = new THREE.BoxGeometry(GANTRY_DIMS.girderSpan, 0.32, 0.11);
+  const flangeGeo = new THREE.BoxGeometry(GANTRY_DIMS.girderSpan, 0.055, 0.28);
+  const railBarGeo = new THREE.BoxGeometry(GANTRY_DIMS.girderSpan - 0.8, 0.045, 0.055);
+  const ribGeo = new THREE.BoxGeometry(0.045, 0.30, 0.25);
+  const splicePlateGeo = new THREE.BoxGeometry(0.28, 0.26, 0.15);
 
-  // Twin fabricated box bridge girders positioned cleanly below top swatch bar
-  [-0.44, 0.44].forEach((zOff) => {
+  const endTruckGeo = new THREE.BoxGeometry(0.54, 0.44, 1.18);
+  const endPlateGeo = new THREE.BoxGeometry(0.56, 0.46, 0.05);
+  const bumperGeo = new THREE.CylinderGeometry(0.06, 0.075, 0.10, 12);
+  const wheelGeo = new THREE.CylinderGeometry(0.125, 0.125, 0.14, 16);
+
+  const colHeight = GANTRY_DIMS.columnTopY - (FLOOR_Y + 0.06);
+  const colCenterY = (FLOOR_Y + 0.06 + GANTRY_DIMS.columnTopY) * 0.5;
+  const colWebGeo = new THREE.BoxGeometry(0.11, colHeight, 0.30);
+  const colFlangeGeo = new THREE.BoxGeometry(0.32, colHeight, 0.06);
+  const basePlateGeo = new THREE.BoxGeometry(0.68, 0.06, 0.74);
+  const anchorBoltGeo = new THREE.CylinderGeometry(0.026, 0.026, 0.045, 6);
+  const capSaddleGeo = new THREE.BoxGeometry(0.64, 0.15, 0.96);
+
+  // Gusset knee bracket at column cap & baseplate
+  const gussetShape = new THREE.Shape();
+  gussetShape.moveTo(0, 0);
+  gussetShape.lineTo(0.22, 0);
+  gussetShape.lineTo(0, 0.28);
+  gussetShape.closePath();
+  const gussetGeo = new THREE.ExtrudeGeometry(gussetShape, {
+    depth: 0.04,
+    bevelEnabled: false
+  });
+  gussetGeo.translate(0, 0, -0.02);
+
+  disposables.push(
+    webGeo, flangeGeo, railBarGeo, ribGeo, splicePlateGeo,
+    endTruckGeo, endPlateGeo, bumperGeo, wheelGeo,
+    colWebGeo, colFlangeGeo, basePlateGeo, anchorBoltGeo, capSaddleGeo, gussetGeo
+  );
+
+  // Twin fabricated I/box bridge girders + top rail bars
+  [-GANTRY_DIMS.girderZOffset, GANTRY_DIMS.girderZOffset].forEach((zOff) => {
     const web = new THREE.Mesh(webGeo, structuralSteelMat);
-    web.position.set(0, 2.22, zOff);
+    web.position.set(0, GANTRY_DIMS.girderY, zOff);
+    web.castShadow = !isSoftwareGl;
     girderRoot.add(web);
 
     const topF = new THREE.Mesh(flangeGeo, structuralSteelMat);
-    topF.position.set(0, 2.38, zOff);
+    topF.position.set(0, GANTRY_DIMS.girderY + 0.185, zOff);
+    topF.castShadow = !isSoftwareGl;
     girderRoot.add(topF);
 
     const botF = new THREE.Mesh(flangeGeo, structuralSteelMat);
-    botF.position.set(0, 2.06, zOff);
+    botF.position.set(0, GANTRY_DIMS.girderY - 0.185, zOff);
     girderRoot.add(botF);
+
+    const rail = new THREE.Mesh(railBarGeo, wireRopeMat);
+    rail.position.set(0, GANTRY_DIMS.girderY + 0.23, zOff);
+    girderRoot.add(rail);
+
+    // Mid-span bolted web splice plates
+    [-2.4, 2.4].forEach((sx) => {
+      const sp = new THREE.Mesh(splicePlateGeo, darkCastMat);
+      sp.position.set(sx, GANTRY_DIMS.girderY, zOff);
+      girderRoot.add(sp);
+    });
   });
 
-  // Instanced structural vertical web stiffener ribs across both bridge girders
-  const ribInst = new THREE.InstancedMesh(ribGeo, structuralSteelMat, 20);
+  // 22 Instanced vertical web stiffener T-ribs across front & rear girders
+  const ribInst = new THREE.InstancedMesh(ribGeo, structuralSteelMat, 22);
   const tmpM = new THREE.Matrix4();
-  for (let i = 0; i < 10; i += 1) {
-    const rx = -4.5 + i * 1.0;
-    tmpM.makeTranslation(rx, 2.22, -0.44);
+  for (let i = 0; i < 11; i += 1) {
+    const rx = -4.5 + i * 0.9;
+    tmpM.makeTranslation(rx, GANTRY_DIMS.girderY, -GANTRY_DIMS.girderZOffset);
     ribInst.setMatrixAt(i * 2, tmpM);
-    tmpM.makeTranslation(rx, 2.22, 0.44);
+    tmpM.makeTranslation(rx, GANTRY_DIMS.girderY, GANTRY_DIMS.girderZOffset);
     ribInst.setMatrixAt(i * 2 + 1, tmpM);
   }
   ribInst.instanceMatrix.needsUpdate = true;
   ribInst.computeBoundingSphere();
   girderRoot.add(ribInst);
 
-  // Looped festoon power cable hanging cleanly along front girder underside
-  const festoonPts = [];
-  for (let k = 0; k <= 32; k += 1) {
-    const t = k / 32;
-    const fx = -4.6 + t * 9.2;
-    const dip = Math.abs(Math.sin(t * Math.PI * 5)) * 0.16;
-    festoonPts.push(new THREE.Vector3(fx, 2.02 - dip, 0.56));
-  }
-  const festoonGeo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(festoonPts), 48, 0.020, 6, false);
-  disposables.push(festoonGeo);
+  // Smooth 5-span festoon power cable + C-track carrier clamp hangers under front bottom flange
+  const festoonData = computeFestoonGeometryData({
+    xMin: -4.45,
+    xMax: 4.45,
+    railY: GANTRY_DIMS.girderY - 0.215,
+    zOffset: GANTRY_DIMS.girderZOffset + 0.14,
+    spanCount: 5,
+    sagDepth: 0.20,
+    stepsPerSpan: 12
+  });
+  const festoonVecs = festoonData.points.map((p) => new THREE.Vector3(p.x, p.y, p.z));
+  const festoonGeo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(festoonVecs), 96, 0.025, 8, false);
+  const clampGeo = new THREE.BoxGeometry(0.06, 0.06, 0.07);
+  disposables.push(festoonGeo, clampGeo);
   girderRoot.add(new THREE.Mesh(festoonGeo, darkCastMat));
 
-  // End-carriages + flanged steel bridge wheels + H-section bay stanchions
-  [-5.35, 5.35].forEach((xEnd) => {
-    const bogie = new THREE.Mesh(bogieGeo, safetyOchreMat);
-    bogie.position.set(xEnd, 2.22, 0);
-    girderRoot.add(bogie);
+  const clampInst = new THREE.InstancedMesh(clampGeo, safetyOchreMat, festoonData.clampXs.length);
+  festoonData.clampXs.forEach((cx, idx) => {
+    tmpM.makeTranslation(cx, GANTRY_DIMS.girderY - 0.20, GANTRY_DIMS.girderZOffset + 0.14);
+    clampInst.setMatrixAt(idx, tmpM);
+  });
+  clampInst.instanceMatrix.needsUpdate = true;
+  clampInst.computeBoundingSphere();
+  girderRoot.add(clampInst);
 
-    [-0.52, 0.52].forEach((wz) => {
+  // Left & Right End-Trucks (clear yellow side & front housings) + Wheels + Columns on Bolted Baseplates
+  [-1, 1].forEach((side) => {
+    const xEnd = side * GANTRY_DIMS.endTruckX;
+    const xCol = side * GANTRY_DIMS.columnX;
+
+    // Weathered yellow boxed crane end-truck clearly visible at outer bridge ends
+    const truck = new THREE.Mesh(endTruckGeo, safetyOchreMat);
+    truck.position.set(xEnd, GANTRY_DIMS.girderY, 0.04);
+    truck.castShadow = !isSoftwareGl;
+    girderRoot.add(truck);
+
+    // Compact dark steel end-caps & bumpers strictly on outer X faces (never blocking front yellow box)
+    const sideCap = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.36, 0.88), darkCastMat);
+    sideCap.position.set(xEnd + side * 0.285, GANTRY_DIMS.girderY, 0.04);
+    girderRoot.add(sideCap);
+    disposables.push(sideCap.geometry);
+
+    [-0.36, 0.36].forEach((ez) => {
+      const bumper = new THREE.Mesh(bumperGeo, darkCastMat);
+      bumper.rotation.x = Math.PI * 0.5;
+      bumper.position.set(xEnd, GANTRY_DIMS.girderY - 0.12, 0.04 + (ez > 0 ? 0.58 : -0.58));
+      girderRoot.add(bumper);
+    });
+
+    // Exposed double-flanged dark bridge wheels riding column runway saddle
+    [-0.42, 0.42].forEach((wz) => {
       const wheel = new THREE.Mesh(wheelGeo, darkCastMat);
       wheel.rotation.z = Math.PI * 0.5;
-      wheel.position.set(xEnd, 2.00, wz);
+      wheel.position.set(xEnd, GANTRY_DIMS.girderY - 0.22, wz);
       girderRoot.add(wheel);
     });
 
+    // H-section vertical bay stanchion anchored cleanly onto bolted concrete floor baseplate
     const cWeb = new THREE.Mesh(colWebGeo, structuralSteelMat);
-    cWeb.position.set(xEnd, 0.36, -0.58);
+    cWeb.position.set(xCol, colCenterY, GANTRY_DIMS.columnZ);
+    cWeb.castShadow = !isSoftwareGl;
     girderRoot.add(cWeb);
 
-    [-0.16, 0.16].forEach((fz) => {
+    [-0.14, 0.14].forEach((fz) => {
       const cFlange = new THREE.Mesh(colFlangeGeo, structuralSteelMat);
-      cFlange.position.set(xEnd, 0.36, -0.58 + fz);
+      cFlange.position.set(xCol, colCenterY, GANTRY_DIMS.columnZ + fz);
+      cFlange.castShadow = !isSoftwareGl;
       girderRoot.add(cFlange);
     });
 
-    const corbel = new THREE.Mesh(corbelGeo, darkCastMat);
-    corbel.position.set(xEnd, 1.92, -0.2);
-    girderRoot.add(corbel);
+    // Heavy floor baseplate flush on FLOOR_Y + 4 hex anchor bolts + side gusset brackets
+    const basePlate = new THREE.Mesh(basePlateGeo, structuralSteelMat);
+    basePlate.position.set(xCol, FLOOR_Y + 0.03, GANTRY_DIMS.columnZ);
+    basePlate.receiveShadow = true;
+    girderRoot.add(basePlate);
+
+    [[-0.24, -0.26], [0.24, -0.26], [-0.24, 0.26], [0.24, 0.26]].forEach(([bx, bz]) => {
+      const bolt = new THREE.Mesh(anchorBoltGeo, wireRopeMat);
+      bolt.position.set(xCol + bx, FLOOR_Y + 0.075, GANTRY_DIMS.columnZ + bz);
+      girderRoot.add(bolt);
+    });
+
+    const gInner = new THREE.Mesh(gussetGeo, darkCastMat);
+    gInner.position.set(xCol - side * 0.16, FLOOR_Y + 0.06, GANTRY_DIMS.columnZ);
+    if (side > 0) gInner.rotation.y = Math.PI;
+    girderRoot.add(gInner);
+
+    // Capital runway saddle & upper gusset haunches supporting end-truck
+    const saddle = new THREE.Mesh(capSaddleGeo, darkCastMat);
+    saddle.position.set(xCol, GANTRY_DIMS.columnTopY - 0.06, -0.10);
+    girderRoot.add(saddle);
+
+    const capGusset = new THREE.Mesh(gussetGeo, structuralSteelMat);
+    capGusset.position.set(xCol - side * 0.16, GANTRY_DIMS.columnTopY - 0.42, GANTRY_DIMS.columnZ);
+    if (side > 0) capGusset.rotation.y = Math.PI;
+    girderRoot.add(capGusset);
   });
 
-  // Heavy 4-Fall Wire Rope Hoist Crab Trolley + Electric Gearbox + Sheave Block & Forged DIN Hook
+  // Heavy 4-Fall Wire Rope Hoist Crab Trolley + Helical Gearbox + Sheave Block & Forged DIN Hook
   const crabGroup = new THREE.Group();
-  crabGroup.position.set(0.25, 0, 0);
-  const crabDeckGeo = new THREE.BoxGeometry(1.26, 0.15, 0.98);
-  const hoistDrumGeo = new THREE.CylinderGeometry(0.16, 0.16, 0.64, 18);
-  const motorGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.38, 14);
-  const ropeGeo = new THREE.CylinderGeometry(0.016, 0.016, 0.44, 8);
-  const sheaveBodyGeo = new THREE.BoxGeometry(0.34, 0.26, 0.20);
-  const sheaveCheekGeo = new THREE.CylinderGeometry(0.105, 0.105, 0.22, 14);
-  const shankGeo = new THREE.CylinderGeometry(0.032, 0.032, 0.09, 10);
-  const hookGeo = new THREE.TorusGeometry(0.098, 0.032, 10, 20, Math.PI * 1.42);
-  disposables.push(crabDeckGeo, hoistDrumGeo, motorGeo, ropeGeo, sheaveBodyGeo, sheaveCheekGeo, shankGeo, hookGeo);
+  crabGroup.position.set(GANTRY_DIMS.hookRestX, 0, 0);
+
+  const crabDeckGeo = new THREE.BoxGeometry(1.38, 0.14, 0.92);
+  const crabWheelGeo = new THREE.CylinderGeometry(0.085, 0.085, 0.09, 14);
+  const crabFrameArchGeo = new THREE.BoxGeometry(0.10, 0.34, 0.84);
+  const hoistDrumGeo = new THREE.CylinderGeometry(0.155, 0.155, 0.64, 24);
+  const drumFlangeGeo = new THREE.CylinderGeometry(0.195, 0.195, 0.03, 24);
+  const gearboxGeo = new THREE.BoxGeometry(0.24, 0.30, 0.28);
+  const motorGeo = new THREE.CylinderGeometry(0.115, 0.115, 0.36, 16);
+  const brakeCapGeo = new THREE.CylinderGeometry(0.09, 0.09, 0.08, 14);
+  const ropeGeo = new THREE.CylinderGeometry(0.015, 0.015, 0.64, 8);
+
+  const cheekPlateGeo = new THREE.BoxGeometry(0.36, 0.28, 0.045);
+  const sheaveCoreGeo = new THREE.BoxGeometry(0.32, 0.24, 0.14);
+  const sheaveWheelGeo = new THREE.CylinderGeometry(0.105, 0.105, 0.16, 18);
+  const axlePinGeo = new THREE.CylinderGeometry(0.032, 0.032, 0.26, 12);
+  const collarGeo = new THREE.CylinderGeometry(0.048, 0.056, 0.06, 14);
+
+  const hookPts = computeDinHookProfile(0.88);
+  const hookShape = new THREE.Shape();
+  hookShape.moveTo(hookPts[0][0], hookPts[0][1]);
+  for (let i = 1; i < hookPts.length; i += 1) {
+    hookShape.lineTo(hookPts[i][0], hookPts[i][1]);
+  }
+  hookShape.closePath();
+  const forgedHookGeo = new THREE.ExtrudeGeometry(hookShape, {
+    depth: 0.036,
+    bevelEnabled: true,
+    bevelThickness: 0.014,
+    bevelSize: 0.012,
+    bevelSegments: 3
+  });
+  forgedHookGeo.translate(0, 0, -0.018);
+
+  const latchGeo = new THREE.BoxGeometry(0.016, 0.135, 0.024);
+
+  disposables.push(
+    crabDeckGeo, crabWheelGeo, crabFrameArchGeo, hoistDrumGeo, drumFlangeGeo,
+    gearboxGeo, motorGeo, brakeCapGeo, ropeGeo,
+    cheekPlateGeo, sheaveCoreGeo, sheaveWheelGeo, axlePinGeo, collarGeo,
+    forgedHookGeo, latchGeo
+  );
 
   const crabDeck = new THREE.Mesh(crabDeckGeo, safetyOchreMat);
-  crabDeck.position.set(0, 2.44, 0);
+  crabDeck.position.set(0, GANTRY_DIMS.trolleyBaseY, 0);
+  crabDeck.castShadow = !isSoftwareGl;
   crabGroup.add(crabDeck);
 
-  const drum = new THREE.Mesh(hoistDrumGeo, darkCastMat);
+  // 4 machined trolley rail wheels
+  [[-0.52, -GANTRY_DIMS.girderZOffset], [0.52, -GANTRY_DIMS.girderZOffset], [-0.52, GANTRY_DIMS.girderZOffset], [0.52, GANTRY_DIMS.girderZOffset]].forEach(([wx, wz]) => {
+    const cw = new THREE.Mesh(crabWheelGeo, darkCastMat);
+    cw.rotation.x = Math.PI * 0.5;
+    cw.position.set(wx, GANTRY_DIMS.trolleyBaseY - 0.02, wz);
+    crabGroup.add(cw);
+  });
+
+  // Side hoist support pedestals on trolley deck
+  [-0.44, 0.24].forEach((fx) => {
+    const frame = new THREE.Mesh(crabFrameArchGeo, darkCastMat);
+    frame.position.set(fx, GANTRY_DIMS.trolleyBaseY + 0.18, 0);
+    crabGroup.add(frame);
+  });
+
+  // Grooved steel wire-rope hoist drum + side flanges
+  const drum = new THREE.Mesh(hoistDrumGeo, hoistDrumMat);
   drum.rotation.z = Math.PI * 0.5;
-  drum.position.set(-0.08, 2.60, 0);
+  drum.position.set(-0.10, GANTRY_DIMS.trolleyBaseY + 0.19, 0);
   crabGroup.add(drum);
+
+  [-0.41, 0.21].forEach((dfx) => {
+    const df = new THREE.Mesh(drumFlangeGeo, structuralSteelMat);
+    df.rotation.z = Math.PI * 0.5;
+    df.position.set(dfx, GANTRY_DIMS.trolleyBaseY + 0.19, 0);
+    crabGroup.add(df);
+  });
+
+  // Helical reduction gearbox + finned motor + rear brake bell
+  const gearbox = new THREE.Mesh(gearboxGeo, darkCastMat);
+  gearbox.position.set(0.32, GANTRY_DIMS.trolleyBaseY + 0.18, 0);
+  crabGroup.add(gearbox);
 
   const motor = new THREE.Mesh(motorGeo, structuralSteelMat);
   motor.rotation.z = Math.PI * 0.5;
-  motor.position.set(0.44, 2.60, 0);
+  motor.position.set(0.56, GANTRY_DIMS.trolleyBaseY + 0.19, 0);
   crabGroup.add(motor);
 
-  [[-0.12, -0.05], [0.12, -0.05], [-0.12, 0.05], [0.12, 0.05]].forEach(([rx, rz]) => {
+  const brakeCap = new THREE.Mesh(brakeCapGeo, darkCastMat);
+  brakeCap.rotation.z = Math.PI * 0.5;
+  brakeCap.position.set(0.76, GANTRY_DIMS.trolleyBaseY + 0.19, 0);
+  crabGroup.add(brakeCap);
+
+  // 4-Fall steel wire ropes
+  [[-0.10, -0.055], [0.10, -0.055], [-0.10, 0.055], [0.10, 0.055]].forEach(([rx, rz]) => {
     const rope = new THREE.Mesh(ropeGeo, wireRopeMat);
-    rope.position.set(rx, 2.06, rz);
+    rope.position.set(rx, GANTRY_DIMS.sheaveCenterY + 0.36, rz);
     crabGroup.add(rope);
   });
 
-  const sheaveBody = new THREE.Mesh(sheaveBodyGeo, hazardStripeMat);
-  sheaveBody.position.set(0, 1.76, 0);
-  crabGroup.add(sheaveBody);
+  // Twin yellow cheek-plate bottom sheave pulley block
+  const sheaveCore = new THREE.Mesh(sheaveCoreGeo, darkCastMat);
+  sheaveCore.position.set(0, GANTRY_DIMS.sheaveCenterY, 0);
+  crabGroup.add(sheaveCore);
 
-  const sheaveWheel = new THREE.Mesh(sheaveCheekGeo, darkCastMat);
+  [-0.092, 0.092].forEach((cz) => {
+    const cheek = new THREE.Mesh(cheekPlateGeo, safetyOchreMat);
+    cheek.position.set(0, GANTRY_DIMS.sheaveCenterY, cz);
+    crabGroup.add(cheek);
+  });
+
+  const sheaveWheel = new THREE.Mesh(sheaveWheelGeo, darkCastMat);
   sheaveWheel.rotation.x = Math.PI * 0.5;
-  sheaveWheel.position.set(0, 1.76, 0);
+  sheaveWheel.position.set(0, GANTRY_DIMS.sheaveCenterY + 0.02, 0);
   crabGroup.add(sheaveWheel);
 
-  const shank = new THREE.Mesh(shankGeo, wireRopeMat);
-  shank.position.set(0, 1.60, 0);
-  crabGroup.add(shank);
+  const axlePin = new THREE.Mesh(axlePinGeo, wireRopeMat);
+  axlePin.rotation.x = Math.PI * 0.5;
+  axlePin.position.set(0, GANTRY_DIMS.sheaveCenterY + 0.02, 0);
+  crabGroup.add(axlePin);
 
-  const hook = new THREE.Mesh(hookGeo, wireRopeMat);
-  hook.position.set(0, 1.48, 0);
-  hook.rotation.z = Math.PI * 0.86;
+  const collar = new THREE.Mesh(collarGeo, forgedHookMat);
+  collar.position.set(0, GANTRY_DIMS.sheaveCenterY - 0.145, 0);
+  crabGroup.add(collar);
+
+  const hook = new THREE.Mesh(forgedHookGeo, forgedHookMat);
+  hook.position.set(0, GANTRY_DIMS.sheaveCenterY - 0.165, 0);
   crabGroup.add(hook);
+
+  const safetyLatch = new THREE.Mesh(latchGeo, structuralSteelMat);
+  safetyLatch.position.set(0.072, GANTRY_DIMS.sheaveCenterY - 0.295, 0);
+  safetyLatch.rotation.z = 0.62;
+  crabGroup.add(safetyLatch);
 
   girderRoot.add(crabGroup);
   scene.add(girderRoot);
@@ -1587,6 +1980,9 @@ export function initHero3D() {
   const maxAniso = Math.min(8, renderer.capabilities.getMaxAnisotropy ? renderer.capabilities.getMaxAnisotropy() : 1);
   const steelTex = makeSteelPlateTexture(maxAniso);
   const steelRoughBumpTex = makeSteelRoughnessAndBump();
+  const steelNormalTex = makeSteelNormalMap(maxAniso);
+  const ochreTex = makeOchreEndTruckTexture(maxAniso);
+  const drumTex = makeWireRopeDrumTexture(maxAniso);
   const { albedoTex: floorAlbedoTex, alphaTex: floorAlphaTex } = makeConcreteFloorTextures(maxAniso);
   const { albedoTex: moltenAlbedoTex, emissiveTex: moltenEmissiveTex } = makeMoltenAlbedoAndEmissive(maxAniso);
   const emberTex = makeSoftEmberGlowTexture();
@@ -1601,25 +1997,25 @@ export function initHero3D() {
   // Grounded Industrial Concrete / Epoxy Floor (wide elliptical fade — zero hard edges)
   const floorGeo = new THREE.PlaneGeometry(34, 24);
   const floorMat = new THREE.MeshStandardMaterial({
-    color: 0xA8B5C4,
+    color: 0xCBD4DE,
     map: floorAlbedoTex,
     alphaMap: floorAlphaTex,
     transparent: true,
-    opacity: 0.68,
-    roughness: 0.62,
-    metalness: 0.16,
-    envMapIntensity: 0.18
+    opacity: 0.78,
+    roughness: 0.68,
+    metalness: 0.10,
+    envMapIntensity: 0.14
   });
   const floorMesh = new THREE.Mesh(floorGeo, floorMat);
   floorMesh.rotation.x = -Math.PI / 2;
-  floorMesh.position.set(0, -1.58, -1.2);
+  floorMesh.position.set(0, FLOOR_Y, -1.0);
   floorMesh.receiveShadow = true;
   scene.add(floorMesh);
 
-  const shadowMat = new THREE.ShadowMaterial({ opacity: 0.30 });
+  const shadowMat = new THREE.ShadowMaterial({ opacity: 0.34 });
   const shadowPlane = new THREE.Mesh(new THREE.PlaneGeometry(24, 12), shadowMat);
   shadowPlane.rotation.x = -Math.PI / 2;
-  shadowPlane.position.y = -1.55;
+  shadowPlane.position.y = FLOOR_Y + 0.015;
   shadowPlane.receiveShadow = true;
   scene.add(shadowPlane);
 
@@ -1630,6 +2026,9 @@ export function initHero3D() {
     shadowPlane.geometry,
     steelTex,
     steelRoughBumpTex,
+    steelNormalTex,
+    ochreTex,
+    drumTex,
     floorAlbedoTex,
     floorAlphaTex,
     moltenAlbedoTex,
@@ -1645,29 +2044,29 @@ export function initHero3D() {
   ];
 
   // Build 5 high-detail industrial machinery environments
-  const propRigs = buildWorkshopRigs(scene, disposables, hazardTex, emberTex, haloTex);
+  const propRigs = buildWorkshopRigs(scene, disposables, {
+    hazardTex,
+    emberTex,
+    haloTex,
+    ochreTex,
+    drumTex,
+    steelNormalTex
+  });
 
-  // Build 5 heavy machined letter blocks ("S V I N D")
+  // Build 5 heavy machined letter blocks ("S V I N D") with physical 3D hex rivet studs
   const svindGroup = new THREE.Group();
-  svindGroup.rotation.x = -0.04;
+  svindGroup.rotation.x = -0.025;
   scene.add(svindGroup);
 
   const ENAMEL_PALETTE = ['#C98C07', '#13284D', '#B83B18', '#13284D', '#C98C07'];
-  const LETTER_CONFIGS = [
-    { char: 'S', x: -3.72, y: 0.0, rotY: 0.14, rotZ: 0.02 },
-    { char: 'V', x: -1.88, y: 0.0, rotY: 0.07, rotZ: -0.012 },
-    { char: 'I', x: -0.14, y: 0.0, rotY: 0.0, rotZ: 0.0 },
-    { char: 'N', x: 1.58, y: 0.0, rotY: -0.07, rotZ: 0.01 },
-    { char: 'D', x: 3.52, y: 0.0, rotY: -0.14, rotZ: -0.016 }
-  ];
 
   const extrudeSettings = {
     depth: 0.80,
     bevelEnabled: true,
     bevelThickness: 0.14,
     bevelSize: 0.09,
-    bevelSegments: 9,
-    curveSegments: 24
+    bevelSegments: 10,
+    curveSegments: 28
   };
 
   const backExtrudeSettings = {
@@ -1676,13 +2075,24 @@ export function initHero3D() {
     bevelThickness: 0.06,
     bevelSize: 0.05,
     bevelSegments: 4,
-    curveSegments: 14
+    curveSegments: 16
   };
+
+  const rivetHeadGeo = new THREE.CylinderGeometry(0.022, 0.030, 0.026, 8);
+  rivetHeadGeo.rotateX(Math.PI * 0.5);
+  const rivetMat = new THREE.MeshStandardMaterial({
+    color: 0x7A8694,
+    roughness: 0.30,
+    metalness: 0.92
+  });
+  disposables.push(rivetHeadGeo, rivetMat);
 
   const letterStates = [];
   const raycastTargets = [];
+  const rivetGroups = [];
+  const rivetMat4 = new THREE.Matrix4();
 
-  LETTER_CONFIGS.forEach((cfg, idx) => {
+  LETTER_SPECS.forEach((cfg, idx) => {
     const group = new THREE.Group();
     group.position.set(cfg.x, cfg.y, 0);
     group.rotation.set(0, cfg.rotY, cfg.rotZ);
@@ -1693,19 +2103,23 @@ export function initHero3D() {
     mainGeom.center();
     normalizeExtrudeUVs(mainGeom);
     mainGeom.computeVertexNormals();
+    if (mainGeom.index && typeof mainGeom.computeTangents === 'function') {
+      mainGeom.computeTangents();
+    }
     disposables.push(mainGeom);
 
     const mainMat = new THREE.MeshPhysicalMaterial({
-      color: 0xFFFFFF,
+      color: cfg.rawColor,
       map: steelTex,
+      normalMap: steelNormalTex,
+      normalScale: new THREE.Vector2(0.55, 0.55),
       roughnessMap: steelRoughBumpTex,
-      bumpMap: steelRoughBumpTex,
-      bumpScale: 0.022,
-      roughness: 0.28,
-      metalness: 0.92,
-      clearcoat: 0.25,
-      clearcoatRoughness: 0.34,
-      envMapIntensity: 1.25
+      roughness: cfg.rawRoughness,
+      metalness: cfg.rawMetalness,
+      anisotropy: 0.68,
+      clearcoat: 0.26,
+      clearcoatRoughness: 0.30,
+      envMapIntensity: 1.32
     });
     disposables.push(mainMat);
 
@@ -1715,6 +2129,18 @@ export function initHero3D() {
     mainMesh.userData.letterIndex = idx;
     group.add(mainMesh);
     raycastTargets.push(mainMesh);
+
+    // Physical 3D machined rivet studs mounted flush onto front steel plate face
+    const frontFaceZ = (mainGeom.boundingBox ? mainGeom.boundingBox.max.z : 0.54) + 0.008;
+    const rivetsInst = new THREE.InstancedMesh(rivetHeadGeo, rivetMat, cfg.rivets.length);
+    cfg.rivets.forEach(([rx, ry], rIdx) => {
+      rivetMat4.makeTranslation(rx, ry, frontFaceZ);
+      rivetsInst.setMatrixAt(rIdx, rivetMat4);
+    });
+    rivetsInst.instanceMatrix.needsUpdate = true;
+    rivetsInst.computeBoundingSphere();
+    group.add(rivetsInst);
+    rivetGroups.push(rivetsInst);
 
     const backGeom = new THREE.ExtrudeGeometry(shape, backExtrudeSettings);
     backGeom.center();
@@ -1739,12 +2165,12 @@ export function initHero3D() {
       map: contactTex,
       transparent: true,
       depthWrite: false,
-      opacity: 0.78
+      opacity: 0.82
     });
     disposables.push(contactGeom, contactMat);
     const contactMesh = new THREE.Mesh(contactGeom, contactMat);
     contactMesh.rotation.x = -Math.PI / 2;
-    contactMesh.position.set(cfg.x, -1.46, 0);
+    contactMesh.position.set(cfg.x, FLOOR_Y + 0.025, 0);
     scene.add(contactMesh);
 
     svindGroup.add(group);
@@ -1757,7 +2183,7 @@ export function initHero3D() {
       backMesh,
       backMat,
       contactMesh,
-      pos: new THREE.Vector3(cfg.x, cfg.y + (prefersReducedMotion() ? 0 : 0.3 + idx * 0.09), 0),
+      pos: new THREE.Vector3(cfg.x, cfg.y + (prefersReducedMotion() ? 0 : 0.22 + idx * 0.08), 0),
       vel: new THREE.Vector3(),
       target: new THREE.Vector3(cfg.x, cfg.y, 0),
       rot: new THREE.Vector3(0, cfg.rotY, cfg.rotZ),
@@ -1818,7 +2244,7 @@ export function initHero3D() {
     const mobileScale = compact ? 0.45 : 1;
 
     const halfV = Math.tan(THREE.MathUtils.degToRad(dir.fov * 0.5));
-    const safeHalfWidth = 5.4 + Math.abs(dir.camX * mobileScale) * 0.25;
+    const safeHalfWidth = (compact ? 5.95 : 5.65) + Math.abs(dir.camX * mobileScale) * 0.25;
     const minZForWidth = safeHalfWidth / (halfV * Math.max(0.44, aspect));
     const camZ = Math.max(10.8 + dir.camZBoost, minZForWidth);
 
@@ -1833,6 +2259,23 @@ export function initHero3D() {
   }
 
   function applyThemeMaterials(preset) {
+    rivetGroups.forEach((rg) => {
+      rg.visible = preset !== 'cad';
+    });
+    if (preset === 'molten-heat') {
+      rivetMat.color.set('#3A2520');
+      rivetMat.roughness = 0.68;
+      rivetMat.metalness = 0.65;
+    } else if (preset === 'enamel') {
+      rivetMat.color.set('#E2E8F0');
+      rivetMat.roughness = 0.20;
+      rivetMat.metalness = 0.92;
+    } else {
+      rivetMat.color.set('#7A8694');
+      rivetMat.roughness = 0.30;
+      rivetMat.metalness = 0.92;
+    }
+
     letterStates.forEach((st, idx) => {
       const mat = st.mainMat;
       const bpLine = blueprintLines[idx];
@@ -1841,19 +2284,23 @@ export function initHero3D() {
       mat.emissiveMap = null;
       mat.emissiveIntensity = 0;
       mat.roughnessMap = null;
+      mat.normalMap = null;
+      mat.bumpMap = null;
+      mat.anisotropy = 0.0;
 
       if (preset === 'raw-steel') {
         mat.map = steelTex;
-        mat.color.set(idx === 3 ? '#5A78A0' : '#DFE6EE');
+        mat.color.set(st.cfg.rawColor);
+        mat.normalMap = steelNormalTex;
+        mat.normalScale.set(0.55, 0.55);
         mat.roughnessMap = steelRoughBumpTex;
-        mat.bumpMap = steelRoughBumpTex;
-        mat.bumpScale = 0.026;
-        mat.roughness = 0.32;
-        mat.metalness = 0.94;
-        mat.clearcoat = 0.22;
-        mat.clearcoatRoughness = 0.35;
-        mat.envMapIntensity = 1.28;
-        st.backMat.color.set('#141A22');
+        mat.roughness = st.cfg.rawRoughness;
+        mat.metalness = st.cfg.rawMetalness;
+        mat.anisotropy = 0.68;
+        mat.clearcoat = 0.26;
+        mat.clearcoatRoughness = 0.30;
+        mat.envMapIntensity = 1.34;
+        st.backMat.color.set(idx === 3 ? '#111F36' : '#141A22');
       } else if (preset === 'molten-heat') {
         mat.map = moltenAlbedoTex;
         mat.color.set('#FFFFFF');
@@ -1883,7 +2330,6 @@ export function initHero3D() {
       } else if (preset === 'cad') {
         mat.map = blueprintTex;
         mat.color.set('#FFFFFF');
-        mat.bumpMap = null;
         mat.roughness = 0.72;
         mat.metalness = 0.12;
         mat.clearcoat = 0.0;
@@ -2282,9 +2728,9 @@ export function initHero3D() {
       svindGroup.rotation.y = nextY;
       svindGroup.rotation.x = nextX;
 
-      // Weighty realistic EOT crane hoist crab traverse
+      // Gentle balanced hoist crab traverse centered near the I-monolith
       if (activePreset === 'raw-steel' && propRigs.girders.root.visible) {
-        propRigs.girders.crabGroup.position.x = Math.sin(elapsedSim * 0.28) * 1.9;
+        propRigs.girders.crabGroup.position.x = GANTRY_DIMS.hookRestX + Math.sin(elapsedSim * 0.26) * 0.42;
         moving = true;
       }
 
