@@ -13,6 +13,237 @@ function isReducedMotion() {
 }
 
 /* ==========================================================================
+   0. MILESTONE 25 YEARS — PINNED KINETIC RIBBON & ORBITAL STRING SEQUENCE
+   ========================================================================== */
+function initMilestone25Scroll() {
+  const section = document.querySelector('#milestone-25');
+  if (!section) return;
+
+  const ribbonSegs = Array.from(section.querySelectorAll('.sv-m25__ribbon-seg'));
+  const folds = Array.from(section.querySelectorAll('.sv-m25__fold'));
+  const wires = Array.from(section.querySelectorAll('.sv-m25__wire'));
+  const nodes = Array.from(section.querySelectorAll('.sv-m25__node'));
+  const wireGroup = section.querySelector('.sv-m25__wire-group');
+  const ribbonGroup = section.querySelector('.sv-m25__ribbon-group');
+  const contentEls = [
+    section.querySelector('.sv-m25__kicker'),
+    section.querySelector('.sv-m25__title'),
+    section.querySelector('.sv-m25__actions')
+  ].filter(Boolean);
+
+  function prepStroke(el) {
+    if (typeof el.getTotalLength !== 'function') return 0;
+    const len = el.getTotalLength();
+    el.style.strokeDasharray = `${len}`;
+    el.style.strokeDashoffset = `${len}`;
+    return len;
+  }
+
+  function resetStroke(el) {
+    el.style.strokeDasharray = '';
+    el.style.strokeDashoffset = '';
+  }
+
+  const mm = gsap.matchMedia();
+
+  // Desktop (>= 1024px): pinned scroll sequence tracing wire strings into "25"
+  mm.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
+    const wireLens = wires.map(prepStroke);
+    const segLens = ribbonSegs.map(prepStroke);
+    const foldLens = folds.map(prepStroke);
+    gsap.set([...ribbonSegs, ...folds], { opacity: 0 });
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top 64px',
+        end: '+=140%',
+        pin: true,
+        pinSpacing: true,
+        scrub: 0.7,
+        anticipatePin: 1
+      }
+    });
+
+    // 1. Orbital wire strings stream across first
+    wires.forEach((wire, i) => {
+      if (!wireLens[i]) return;
+      tl.to(wire, {
+        strokeDashoffset: 0,
+        duration: 0.65,
+        ease: 'none'
+      }, i * 0.06);
+    });
+
+    // 2. Multi-color ribbon segments weave into "25" (revealed only as each starts drawing)
+    ribbonSegs.forEach((seg, i) => {
+      if (!segLens[i]) return;
+      const startAt = 0.1 + i * 0.15;
+      tl.to(seg, {
+        opacity: 1,
+        duration: 0.015,
+        ease: 'none'
+      }, startAt);
+      tl.to(seg, {
+        strokeDashoffset: 0,
+        duration: 0.24,
+        ease: 'power1.inOut'
+      }, startAt);
+    });
+
+    // 3. Dark ribbon fold intersections snap cleanly at crossings
+    folds.forEach((fold, i) => {
+      if (!foldLens[i]) return;
+      const startAt = 0.22 + i * 0.16;
+      tl.to(fold, {
+        opacity: 1,
+        duration: 0.012,
+        ease: 'none'
+      }, startAt);
+      tl.to(fold, {
+        strokeDashoffset: 0,
+        duration: 0.12,
+        ease: 'none'
+      }, startAt);
+    });
+
+    // 4. Node beads lock onto orbital wire curves
+    if (nodes.length) {
+      tl.fromTo(nodes,
+        { scale: 0, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.14, stagger: 0.025, ease: 'back.out(2)' },
+        0.12
+      );
+    }
+
+    // 5. Left editorial headline & CTA settle cleanly inside frame
+    if (contentEls.length) {
+      tl.fromTo(contentEls,
+        { y: 24, opacity: 0.18 },
+        { y: 0, opacity: 1, duration: 0.34, stagger: 0.07, ease: 'power2.out' },
+        0.08
+      );
+    }
+
+    // Subtle differential cursor parallax across wires vs ribbon
+    let onPointerMove = null;
+    let onPointerLeave = null;
+    if (wireGroup && ribbonGroup && window.matchMedia('(hover: hover)').matches) {
+      const wireX = gsap.quickTo(wireGroup, 'x', { duration: 0.45, ease: 'power2.out' });
+      const wireY = gsap.quickTo(wireGroup, 'y', { duration: 0.45, ease: 'power2.out' });
+      const ribX = gsap.quickTo(ribbonGroup, 'x', { duration: 0.55, ease: 'power2.out' });
+      const ribY = gsap.quickTo(ribbonGroup, 'y', { duration: 0.55, ease: 'power2.out' });
+
+      onPointerMove = (ev) => {
+        const rect = section.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+        const nx = (ev.clientX - rect.left) / rect.width - 0.5;
+        const ny = (ev.clientY - rect.top) / rect.height - 0.5;
+        wireX(nx * 14);
+        wireY(ny * 10);
+        ribX(nx * 6);
+        ribY(ny * 4);
+      };
+
+      onPointerLeave = () => {
+        wireX(0);
+        wireY(0);
+        ribX(0);
+        ribY(0);
+      };
+
+      section.addEventListener('pointermove', onPointerMove, { passive: true });
+      section.addEventListener('pointerleave', onPointerLeave, { passive: true });
+    }
+
+    return () => {
+      tl.kill();
+      wires.forEach(resetStroke);
+      ribbonSegs.forEach(resetStroke);
+      folds.forEach(resetStroke);
+      if (onPointerMove) section.removeEventListener('pointermove', onPointerMove);
+      if (onPointerLeave) section.removeEventListener('pointerleave', onPointerLeave);
+      if (wireGroup) gsap.set(wireGroup, { clearProps: 'transform' });
+      if (ribbonGroup) gsap.set(ribbonGroup, { clearProps: 'transform' });
+      if (ribbonSegs.length || folds.length) gsap.set([...ribbonSegs, ...folds], { clearProps: 'opacity' });
+      if (nodes.length) gsap.set(nodes, { clearProps: 'transform,opacity' });
+      if (contentEls.length) gsap.set(contentEls, { clearProps: 'transform,opacity' });
+    };
+  });
+
+  // Tablet & mobile (< 1024px): clean unpinned path trace on scroll entry
+  mm.add('(max-width: 1023.98px) and (prefers-reduced-motion: no-preference)', () => {
+    const wireLens = wires.map(prepStroke);
+    const segLens = ribbonSegs.map(prepStroke);
+    const foldLens = folds.map(prepStroke);
+    gsap.set([...ribbonSegs, ...folds], { opacity: 0 });
+
+    const mobileTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top 82%',
+        once: true
+      }
+    });
+
+    wires.forEach((wire, i) => {
+      if (!wireLens[i]) return;
+      mobileTl.to(wire, {
+        strokeDashoffset: 0,
+        duration: 1.05,
+        ease: 'power2.out'
+      }, i * 0.08);
+    });
+
+    ribbonSegs.forEach((seg, i) => {
+      if (!segLens[i]) return;
+      const startAt = 0.14 + i * 0.14;
+      mobileTl.to(seg, {
+        opacity: 1,
+        duration: 0.02,
+        ease: 'none'
+      }, startAt);
+      mobileTl.to(seg, {
+        strokeDashoffset: 0,
+        duration: 0.42,
+        ease: 'power2.out'
+      }, startAt);
+    });
+
+    folds.forEach((fold, i) => {
+      if (!foldLens[i]) return;
+      const startAt = 0.35 + i * 0.14;
+      mobileTl.to(fold, {
+        opacity: 1,
+        duration: 0.02,
+        ease: 'none'
+      }, startAt);
+      mobileTl.to(fold, {
+        strokeDashoffset: 0,
+        duration: 0.2,
+        ease: 'power1.out'
+      }, startAt);
+    });
+
+    if (nodes.length) {
+      mobileTl.fromTo(nodes,
+        { scale: 0, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.3, stagger: 0.02, ease: 'back.out(1.7)', clearProps: 'transform,opacity' },
+        0.2
+      );
+    }
+
+    return () => {
+      mobileTl.kill();
+      wires.forEach(resetStroke);
+      ribbonSegs.forEach(resetStroke);
+      folds.forEach(resetStroke);
+      if (ribbonSegs.length || folds.length) gsap.set([...ribbonSegs, ...folds], { clearProps: 'opacity' });
+    };
+  });
+}
+
+/* ==========================================================================
    1. SCOPED GSAP SCROLLTRIGGER CHOREOGRAPHY (Section 04 ONLY)
    ========================================================================== */
 function initSection04Scroll() {
@@ -1449,8 +1680,12 @@ function initSection04Modal() {
 }
 
 function boot() {
+  initMilestone25Scroll();
   initSection04Scroll();
   initSection04Modal();
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => ScrollTrigger.refresh());
+  }
 }
 
 if (document.readyState === 'loading') {

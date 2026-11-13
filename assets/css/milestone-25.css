@@ -1,0 +1,212 @@
+/* ==========================================================================
+   MILESTONE 25 YEARS — Kinetic Multi-Color Ribbon & Orbital Wire Section
+   Placed between #services and #capability-scale.
+   Framed #FAF8F5 gallery surface, sharp 1px architectural perimeter,
+   sweeping multi-stop "25" ribbon + fine wire strings & node beads.
+   ========================================================================== */
+.sv-m25 {
+  position: relative;
+  width: 100%;
+  background-color: #FAF8F5;
+  padding: clamp(20px, 2.4vw, 34px);
+  scroll-margin-top: 64px;
+  overflow: clip;
+  border-top: 1px solid #D5DAE3;
+}
+
+@media (min-width: 1024px) {
+  .sv-m25 {
+    height: calc(100svh - 64px);
+    min-height: 600px;
+    display: flex;
+    align-items: stretch;
+  }
+}
+
+.sv-m25__frame {
+  position: relative;
+  width: 100%;
+  border: 1px solid rgba(26, 29, 33, 0.78);
+  background-color: #FAF8F5;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  .sv-m25__frame {
+    min-height: 0;
+    flex: 1 1 auto;
+    display: block;
+  }
+}
+
+/* Editorial content (lower-left anchored inside architectural frame) */
+.sv-m25__content {
+  position: relative;
+  z-index: 3;
+  padding: 6px clamp(20px, 3.2vw, 48px) clamp(26px, 3.5vw, 44px);
+  max-width: 44ch;
+}
+
+@media (min-width: 1024px) {
+  .sv-m25__content {
+    position: absolute;
+    left: clamp(32px, 4.5vw, 76px);
+    bottom: clamp(34px, 6vh, 72px);
+    padding: 0;
+    max-width: 42ch;
+  }
+}
+
+.sv-m25__kicker {
+  margin: 0 0 14px;
+  font-family: var(--font-mono, "IBM Plex Mono", monospace);
+  font-size: clamp(11px, 0.9vw, 13px);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #5A6067;
+}
+
+.sv-m25__title {
+  margin: 0 0 26px;
+  font-family: var(--font-display, "Inter Tight", sans-serif);
+  font-size: clamp(28px, 3vw, 46px);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--color-ink, #1A1D21);
+  max-width: 16ch;
+  text-wrap: balance;
+}
+
+.sv-m25__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+
+.sv-m25__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 26px;
+  background-color: var(--color-ink, #1A1D21);
+  color: var(--color-surface, #FFFFFF);
+  border: 1px solid var(--color-ink, #1A1D21);
+  border-radius: 0;
+  font-family: var(--font-mono, "IBM Plex Mono", monospace);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 180ms var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)),
+              border-color 180ms var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)),
+              transform 180ms var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.sv-m25__cta:hover,
+.sv-m25__cta:focus-visible {
+  background-color: var(--color-navy, #1E3A6B);
+  border-color: var(--color-navy, #1E3A6B);
+  transform: translateY(-1px);
+}
+
+.sv-m25__cta:focus-visible {
+  outline: 2px solid var(--color-navy, #1E3A6B);
+  outline-offset: 3px;
+}
+
+/* Vector Kinetic Artwork Layer */
+.sv-m25__art {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  min-height: 210px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+@media (min-width: 1024px) {
+  .sv-m25__art {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    min-height: 0;
+    aspect-ratio: auto;
+    overflow: visible;
+  }
+}
+
+.sv-m25__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+@media (max-width: 1023.98px) {
+  .sv-m25__svg {
+    transform: scale(1.16) translateX(-7%);
+    transform-origin: center center;
+  }
+}
+
+.sv-m25__ribbon-seg,
+.sv-m25__fold,
+.sv-m25__wire {
+  will-change: stroke-dashoffset, opacity;
+}
+
+.sv-m25__node {
+  transform-box: fill-box;
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+
+/* Subtle architectural corner label inside top of frame */
+.sv-m25__badge {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 14px;
+  padding: clamp(18px, 2.4vw, 28px) clamp(20px, 3.2vw, 48px) 0;
+  font-family: var(--font-mono, "IBM Plex Mono", monospace);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-navy, #1E3A6B);
+}
+
+@media (min-width: 1024px) {
+  .sv-m25__badge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: clamp(22px, 2.6vw, 34px) clamp(32px, 4.5vw, 76px) 0;
+  }
+}
+
+.sv-m25__badge-sub {
+  color: #5A6067;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sv-m25__cta {
+    transition: none !important;
+  }
+}
