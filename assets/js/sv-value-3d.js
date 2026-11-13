@@ -1683,7 +1683,11 @@ function initSection04Modal() {
 }
 
 function boot() {
-  initHero3D();
+  try {
+    initHero3D();
+  } catch (err) {
+    console.warn('SVIND Hero 3D fallback active:', err);
+  }
   initMilestone25Scroll();
   initSection04Scroll();
   initSection04Modal();

@@ -11,7 +11,6 @@ const isSoftwareGl = (() => {
     const ext = gl.getExtension('WEBGL_debug_renderer_info');
     const param = ext ? ext.UNMASKED_RENDERER_WEBGL : gl.RENDERER;
     const gpu = String(gl.getParameter(param) || '');
-    gl.getExtension('WEBGL_lose_context')?.loseContext();
     return /SwiftShader|llvmpipe|softpipe|Software|Basic Render/i.test(gpu);
   } catch {
     return true;
@@ -20,6 +19,84 @@ const isSoftwareGl = (() => {
 
 function prefersReducedMotion() {
   return Boolean(window.matchMedia && window.matchMedia(REDUCED_MOTION_QUERY).matches);
+}
+
+function createWebGLRendererSafely() {
+  const attempts = [
+    { antialias: !isSoftwareGl, alpha: true, powerPreference: 'default' },
+    { antialias: false, alpha: true }
+  ];
+  for (let i = 0; i < attempts.length; i += 1) {
+    try {
+      const r = new THREE.WebGLRenderer(attempts[i]);
+      if (r && r.getContext()) return r;
+      r?.dispose?.();
+    } catch {
+      // Try next fallback flags
+    }
+  }
+  return null;
+}
+
+function mountSvgFallbackWordmark(mount, section) {
+  if (!mount || mount.querySelector('.sv-hero3d__fallback')) return { setPreset: () => {}, wave: () => {} };
+  mount.innerHTML = `
+    <div class="sv-hero3d__fallback" aria-hidden="true">
+      <svg viewBox="0 0 1120 340" role="presentation" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="svf-swirl" patternUnits="userSpaceOnUse" width="180" height="220">
+            <rect width="180" height="220" fill="#DC6E37"/>
+            <path d="M-20,60 C45,10 115,110 200,50 L200,110 C115,160 45,65 -20,120 Z" fill="#F2B182"/>
+            <path d="M-20,160 C55,115 125,215 200,155 L200,210 C120,255 45,170 -20,215 Z" fill="#F2B182"/>
+          </pattern>
+          <pattern id="svf-blueprint" patternUnits="userSpaceOnUse" width="32" height="32">
+            <rect width="32" height="32" fill="#4B88A6"/>
+            <path d="M32 0H0v32" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
+          </pattern>
+        </defs>
+        <g class="sv-hero3d__fallback-letter" data-idx="0" transform="translate(26,34)">
+          <path d="M168,46 C140,18 62,16 32,46 C8,70 10,114 48,136 L122,164 C150,176 154,206 130,224 C100,246 42,240 16,214 L0,256 C36,288 124,292 164,258 C200,226 196,158 148,134 L74,104 C50,94 50,68 74,56 C100,44 134,54 152,72 Z" transform="translate(10,16)" fill="#2D6125"/>
+          <path d="M168,46 C140,18 62,16 32,46 C8,70 10,114 48,136 L122,164 C150,176 154,206 130,224 C100,246 42,240 16,214 L0,256 C36,288 124,292 164,258 C200,226 196,158 148,134 L74,104 C50,94 50,68 74,56 C100,44 134,54 152,72 Z" fill="#468E3B" stroke="rgba(255,255,255,0.28)" stroke-width="4"/>
+        </g>
+        <g class="sv-hero3d__fallback-letter" data-idx="1" transform="translate(232,32)">
+          <polygon points="10,14 78,14 108,148 138,14 206,14 148,266 68,266" transform="translate(10,16)" fill="#A64D21" stroke="#A64D21" stroke-width="26" stroke-linejoin="round"/>
+          <polygon points="10,14 78,14 108,148 138,14 206,14 148,266 68,266" fill="url(#svf-swirl)" stroke="url(#svf-swirl)" stroke-width="26" stroke-linejoin="round"/>
+        </g>
+        <g class="sv-hero3d__fallback-letter" data-idx="2" transform="translate(468,32)">
+          <path d="M12,98 A74,74 0 0 1 160,98 L160,268 L12,268 Z" transform="translate(10,16)" fill="#B4638E" stroke="#B4638E" stroke-width="18" stroke-linejoin="round"/>
+          <path d="M12,98 A74,74 0 0 1 160,98 L160,268 L12,268 Z" fill="#DE90B8" stroke="rgba(255,255,255,0.26)" stroke-width="6" stroke-linejoin="round"/>
+        </g>
+        <g class="sv-hero3d__fallback-letter" data-idx="3" transform="translate(664,32)">
+          <polygon points="10,266 10,14 76,14 138,136 138,14 202,14 202,266 138,266 74,142 74,266" transform="translate(10,16)" fill="#2E5B72" stroke="#2E5B72" stroke-width="24" stroke-linejoin="round"/>
+          <polygon points="10,266 10,14 76,14 138,136 138,14 202,14 202,266 138,266 74,142 74,266" fill="url(#svf-blueprint)" stroke="rgba(255,255,255,0.22)" stroke-width="20" stroke-linejoin="round"/>
+        </g>
+        <g class="sv-hero3d__fallback-letter" data-idx="4" transform="translate(894,32)">
+          <path d="M14,14 L104,14 C178,14 206,68 206,140 C206,212 178,266 104,266 L14,266 Z M76,84 L76,196 L102,196 C132,196 142,174 142,140 C142,106 132,84 102,84 Z" fill-rule="evenodd" transform="translate(10,16)" fill="#BD8F28" stroke="#BD8F28" stroke-width="20" stroke-linejoin="round"/>
+          <path d="M14,14 L104,14 C178,14 206,68 206,140 C206,212 178,266 104,266 L14,266 Z M76,84 L76,196 L102,196 C132,196 142,174 142,140 C142,106 132,84 102,84 Z" fill-rule="evenodd" fill="#F0C04E" stroke="rgba(255,255,255,0.26)" stroke-width="14" stroke-linejoin="round"/>
+        </g>
+      </svg>
+    </div>
+  `;
+  const letters = Array.from(mount.querySelectorAll('.sv-hero3d__fallback-letter'));
+  const clayPalette = ['#468E3B', 'url(#svf-swirl)', '#DE90B8', 'url(#svf-blueprint)', '#F0C04E'];
+  const wave = (focusIdx = -1) => {
+    letters.forEach((el, idx) => {
+      const dy = focusIdx === -1 ? -12 : (idx === focusIdx ? -18 : -5);
+      el.style.transform = `translateY(${dy}px)`;
+      window.setTimeout(() => { el.style.transform = ''; }, 280 + idx * 40);
+    });
+  };
+  const setPreset = (preset) => {
+    letters.forEach((el, idx) => {
+      const shape = el.children[1];
+      if (!shape) return;
+      if (preset === 'blueprint') shape.setAttribute('fill', '#CBE3F4');
+      else if (preset === 'steel') shape.setAttribute('fill', idx === 3 ? '#466796' : '#AEB8C6');
+      else if (preset === 'terracotta') shape.setAttribute('fill', 'url(#svf-swirl)');
+      else shape.setAttribute('fill', clayPalette[idx]);
+    });
+  };
+  return { setPreset, wave, section };
 }
 
 /* ==========================================================================
@@ -398,15 +475,130 @@ export function initHero3D() {
   const mount = document.querySelector('#sv-hero3d-mount');
   if (!section || !mount) return;
 
-  // WebGL feature guard (graceful degradation if context creation fails)
-  let renderer;
-  try {
-    renderer = new THREE.WebGLRenderer({
-      antialias: !isSoftwareGl,
-      alpha: true,
-      powerPreference: 'high-performance'
+  // Bind UI controls first so swatch presets, inspector card & spec tiles work in both WebGL and SVG fallback
+  let onPresetChanged = null;
+  let onCoverChanged = null;
+  let onWaveRequested = null;
+  let onResetRequested = null;
+  let activePreset = 'clay';
+  let coverEnabled = true;
+
+  const swatchBtns = Array.from(section.querySelectorAll('.sv-hero3d__swatch[data-preset]'));
+  const specTiles = Array.from(section.querySelectorAll('.sv-hero3d__tile[data-spec]'));
+  const specPop = section.querySelector('#sv-hero3d-spec-pop');
+  const specTitleEl = section.querySelector('#sv-hero3d-spec-title');
+  const specBodyEl = section.querySelector('#sv-hero3d-spec-body');
+
+  function selectPreset(preset) {
+    activePreset = preset;
+    swatchBtns.forEach((btn) => {
+      const isActive = btn.dataset.preset === preset;
+      btn.classList.toggle('is-active', isActive);
+      btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
     });
-  } catch {
+    onPresetChanged?.(preset);
+  }
+
+  swatchBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      selectPreset(btn.dataset.preset || 'clay');
+      onWaveRequested?.(-1);
+    });
+  });
+
+  const presetsOrder = ['clay', 'blueprint', 'steel', 'enamel', 'terracotta'];
+  const backdropsOrder = ['sky', 'paper', 'mist', 'blush'];
+  const typefacesOrder = ['display', 'mono', 'editorial'];
+
+  const paletteBtn = section.querySelector('[data-hero-action="palette"]');
+  const backdropBtn = section.querySelector('[data-hero-action="backdrop"]');
+  const coverBtn = section.querySelector('[data-hero-action="cover"]');
+  const typeBtn = section.querySelector('[data-hero-action="typeface"]');
+  const cloudsBtn = section.querySelector('[data-hero-action="clouds"]');
+  const resetBtn = section.querySelector('[data-hero-action="reset"]');
+
+  paletteBtn?.addEventListener('click', () => {
+    const next = presetsOrder[(presetsOrder.indexOf(activePreset) + 1) % presetsOrder.length];
+    selectPreset(next);
+    const valEl = paletteBtn.querySelector('.sv-hero3d__bento-sample');
+    if (valEl) valEl.textContent = next.charAt(0).toUpperCase() + next.slice(1);
+    onWaveRequested?.(-1);
+  });
+
+  backdropBtn?.addEventListener('click', () => {
+    const curr = section.dataset.backdrop || 'sky';
+    const next = backdropsOrder[(backdropsOrder.indexOf(curr) + 1) % backdropsOrder.length];
+    section.dataset.backdrop = next;
+    const valEl = backdropBtn.querySelector('.sv-hero3d__bento-sample');
+    if (valEl) valEl.textContent = next.charAt(0).toUpperCase() + next.slice(1);
+  });
+
+  coverBtn?.addEventListener('click', () => {
+    coverEnabled = !coverEnabled;
+    coverBtn.classList.toggle('is-active', coverEnabled);
+    coverBtn.setAttribute('aria-pressed', coverEnabled ? 'true' : 'false');
+    const valEl = coverBtn.querySelector('.sv-hero3d__bento-sample');
+    if (valEl) valEl.textContent = coverEnabled ? 'Pattern' : 'Solid';
+    onCoverChanged?.(activePreset);
+  });
+
+  typeBtn?.addEventListener('click', () => {
+    const curr = section.dataset.typeface || 'display';
+    const next = typefacesOrder[(typefacesOrder.indexOf(curr) + 1) % typefacesOrder.length];
+    section.dataset.typeface = next;
+    const valEl = typeBtn.querySelector('.sv-hero3d__bento-sample');
+    if (valEl) valEl.textContent = next === 'mono' ? 'Mono' : next === 'editorial' ? 'Serif' : 'Sans';
+  });
+
+  cloudsBtn?.addEventListener('click', () => {
+    const isOff = section.dataset.clouds === 'off';
+    section.dataset.clouds = isOff ? 'on' : 'off';
+    cloudsBtn.classList.toggle('is-active', isOff);
+    cloudsBtn.setAttribute('aria-pressed', isOff ? 'true' : 'false');
+    const valEl = cloudsBtn.querySelector('.sv-hero3d__bento-sample');
+    if (valEl) valEl.textContent = isOff ? 'Mist On' : 'Mist Off';
+  });
+
+  resetBtn?.addEventListener('click', () => {
+    onResetRequested?.();
+  });
+
+  specTiles.forEach((tile) => {
+    tile.addEventListener('click', () => {
+      const key = tile.dataset.spec;
+      const spec = TILE_SPECS[key];
+      if (!spec) return;
+      const wasActive = tile.classList.contains('is-active');
+      specTiles.forEach((t) => {
+        t.classList.remove('is-active');
+        t.setAttribute('aria-pressed', 'false');
+      });
+      if (wasActive) {
+        if (specPop) specPop.hidden = true;
+        return;
+      }
+      tile.classList.add('is-active');
+      tile.setAttribute('aria-pressed', 'true');
+      if (specTitleEl) specTitleEl.textContent = spec.title;
+      if (specBodyEl) specBodyEl.textContent = spec.text;
+      if (specPop) specPop.hidden = false;
+      onWaveRequested?.(spec.letterIndex);
+    });
+  });
+
+  const activateFallback = () => {
+    const fb = mountSvgFallbackWordmark(mount, section);
+    onPresetChanged = (preset) => fb.setPreset(preset);
+    onCoverChanged = (preset) => fb.setPreset(preset);
+    onWaveRequested = (idx) => fb.wave(idx);
+    onResetRequested = () => fb.wave(-1);
+    fb.setPreset(activePreset);
+  };
+
+  // WebGL initialization with automatic fallback if unavailable
+  const renderer = createWebGLRendererSafely();
+  if (!renderer) {
+    activateFallback();
     return;
   }
 
@@ -416,15 +608,23 @@ export function initHero3D() {
   renderer.setPixelRatio(isSoftwareGl ? 1 : Math.min(window.devicePixelRatio || 1, 2));
   renderer.shadowMap.enabled = !isSoftwareGl;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  mount.innerHTML = '';
   mount.appendChild(renderer.domElement);
 
   const scene = new THREE.Scene();
 
-  // Studio environment reflections (PMREM RoomEnvironment)
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  const envTarget = pmrem.fromScene(new RoomEnvironment(), 0.04);
-  scene.environment = envTarget.texture;
-  pmrem.dispose();
+  // Studio environment reflections (PMREM RoomEnvironment guarded so fallback lighting always holds)
+  let envTarget = null;
+  try {
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    const roomEnv = new RoomEnvironment();
+    envTarget = pmrem.fromScene(roomEnv, 0.04);
+    scene.environment = envTarget.texture;
+    roomEnv.dispose();
+    pmrem.dispose();
+  } catch {
+    envTarget = null;
+  }
 
   const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 80);
   camera.position.set(-0.25, 1.35, 11.2);
@@ -614,8 +814,6 @@ export function initHero3D() {
   /* ==========================================================================
      FINISH PRESETS & LIVE UI CONTROLS
      ========================================================================== */
-  let coverEnabled = true;
-
   function applyFinishPreset(preset) {
     letterStates.forEach((st, idx) => {
       const mat = st.mainMat;
@@ -680,19 +878,22 @@ export function initHero3D() {
      ========================================================================== */
   function resizeScene() {
     const rect = mount.getBoundingClientRect();
-    const w = Math.max(1, Math.round(rect.width));
-    const h = Math.max(1, Math.round(rect.height));
+    if (rect.width < 2 || rect.height < 2) return;
+    const w = Math.round(rect.width);
+    const h = Math.round(rect.height);
     const aspect = w / h;
+    const compact = w < 1024;
     camera.aspect = aspect;
     const halfV = Math.tan(THREE.MathUtils.degToRad(camera.fov * 0.5));
     const minZForWidth = 5.15 / (halfV * Math.max(0.45, aspect));
     camera.position.z = Math.max(11.0, minZForWidth);
-    camera.position.y = aspect < 1 ? 0.55 : 1.35;
-    camera.position.x = aspect < 1 ? 0 : -0.25;
-    camera.lookAt(0, aspect < 1 ? -1.35 : -0.08, 0);
+    camera.position.y = compact ? 0.45 : 1.35;
+    camera.position.x = compact ? 0 : -0.25;
+    camera.lookAt(0, compact ? -1.1 : -0.08, 0);
     camera.updateProjectionMatrix();
+    renderer.setPixelRatio(isSoftwareGl ? 1 : Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(w, h, false);
-    requestSingleRender();
+    renderer.render(scene, camera);
   }
 
   /* ==========================================================================
@@ -708,12 +909,11 @@ export function initHero3D() {
   let dragIndex = -1;
   let pointerHoverX = 0;
   let pointerHoverY = 0;
-  let activePreset = 'clay';
 
   function updateNdc(ev) {
     const rect = renderer.domElement.getBoundingClientRect();
-    pointerNdc.x = ((ev.clientX - rect.left) / rect.width) * 2 - 1;
-    pointerNdc.y = -((ev.clientY - rect.top) / rect.height) * 2 + 1;
+    pointerNdc.x = ((ev.clientX - rect.left) / Math.max(1, rect.width)) * 2 - 1;
+    pointerNdc.y = -((ev.clientY - rect.top) / Math.max(1, rect.height)) * 2 + 1;
   }
 
   function onPointerDown(ev) {
@@ -806,117 +1006,16 @@ export function initHero3D() {
   window.addEventListener('pointerup', releaseDrag);
   window.addEventListener('pointercancel', releaseDrag);
 
-  /* ==========================================================================
-     WIRE DOM CONTROLS (Swatch Pill, Inspector Bento Card, Corner Spec Tiles)
-     ========================================================================== */
-  const swatchBtns = Array.from(section.querySelectorAll('.sv-hero3d__swatch[data-preset]'));
-  const specTiles = Array.from(section.querySelectorAll('.sv-hero3d__tile[data-spec]'));
-  const specPop = section.querySelector('#sv-hero3d-spec-pop');
-  const specTitleEl = section.querySelector('#sv-hero3d-spec-title');
-  const specBodyEl = section.querySelector('#sv-hero3d-spec-body');
-
-  function selectPreset(preset) {
-    activePreset = preset;
-    swatchBtns.forEach((btn) => {
-      const isActive = btn.dataset.preset === preset;
-      btn.classList.toggle('is-active', isActive);
-      btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-    });
-    applyFinishPreset(preset);
-  }
-
-  swatchBtns.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      selectPreset(btn.dataset.preset || 'clay');
-      triggerLetterWave(-1);
-    });
-  });
-
-  // Top-left 6-tile Style Card buttons
-  const presetsOrder = ['clay', 'blueprint', 'steel', 'enamel', 'terracotta'];
-  const backdropsOrder = ['sky', 'paper', 'mist', 'blush'];
-  const typefacesOrder = ['display', 'mono', 'editorial'];
-
-  const paletteBtn = section.querySelector('[data-hero-action="palette"]');
-  const backdropBtn = section.querySelector('[data-hero-action="backdrop"]');
-  const coverBtn = section.querySelector('[data-hero-action="cover"]');
-  const typeBtn = section.querySelector('[data-hero-action="typeface"]');
-  const cloudsBtn = section.querySelector('[data-hero-action="clouds"]');
-  const resetBtn = section.querySelector('[data-hero-action="reset"]');
-
-  paletteBtn?.addEventListener('click', () => {
-    const next = presetsOrder[(presetsOrder.indexOf(activePreset) + 1) % presetsOrder.length];
-    selectPreset(next);
-    const valEl = paletteBtn.querySelector('.sv-hero3d__bento-sample');
-    if (valEl) valEl.textContent = next.charAt(0).toUpperCase() + next.slice(1);
-    triggerLetterWave(-1);
-  });
-
-  backdropBtn?.addEventListener('click', () => {
-    const curr = section.dataset.backdrop || 'sky';
-    const next = backdropsOrder[(backdropsOrder.indexOf(curr) + 1) % backdropsOrder.length];
-    section.dataset.backdrop = next;
-    const valEl = backdropBtn.querySelector('.sv-hero3d__bento-sample');
-    if (valEl) valEl.textContent = next.charAt(0).toUpperCase() + next.slice(1);
-  });
-
-  coverBtn?.addEventListener('click', () => {
-    coverEnabled = !coverEnabled;
-    coverBtn.classList.toggle('is-active', coverEnabled);
-    coverBtn.setAttribute('aria-pressed', coverEnabled ? 'true' : 'false');
-    const valEl = coverBtn.querySelector('.sv-hero3d__bento-sample');
-    if (valEl) valEl.textContent = coverEnabled ? 'Pattern' : 'Solid';
-    applyFinishPreset(activePreset);
-  });
-
-  typeBtn?.addEventListener('click', () => {
-    const curr = section.dataset.typeface || 'display';
-    const next = typefacesOrder[(typefacesOrder.indexOf(curr) + 1) % typefacesOrder.length];
-    section.dataset.typeface = next;
-    const valEl = typeBtn.querySelector('.sv-hero3d__bento-sample');
-    if (valEl) valEl.textContent = next === 'mono' ? 'Mono' : next === 'editorial' ? 'Serif' : 'Sans';
-  });
-
-  cloudsBtn?.addEventListener('click', () => {
-    const isOff = section.dataset.clouds === 'off';
-    section.dataset.clouds = isOff ? 'on' : 'off';
-    cloudsBtn.classList.toggle('is-active', isOff);
-    cloudsBtn.setAttribute('aria-pressed', isOff ? 'true' : 'false');
-    const valEl = cloudsBtn.querySelector('.sv-hero3d__bento-sample');
-    if (valEl) valEl.textContent = isOff ? 'Mist On' : 'Mist Off';
-  });
-
-  resetBtn?.addEventListener('click', () => {
+  onPresetChanged = (preset) => applyFinishPreset(preset);
+  onCoverChanged = (preset) => applyFinishPreset(preset);
+  onWaveRequested = (idx) => triggerLetterWave(idx);
+  onResetRequested = () => {
     letterStates.forEach((st) => {
       st.target.set(st.cfg.x, st.cfg.y, 0);
       st.targetRot.set(0, st.cfg.rotY, st.cfg.rotZ);
     });
     triggerLetterWave(-1);
-  });
-
-  // Corner spec tiles
-  specTiles.forEach((tile) => {
-    tile.addEventListener('click', () => {
-      const key = tile.dataset.spec;
-      const spec = TILE_SPECS[key];
-      if (!spec) return;
-      const wasActive = tile.classList.contains('is-active');
-      specTiles.forEach((t) => {
-        t.classList.remove('is-active');
-        t.setAttribute('aria-pressed', 'false');
-      });
-      if (wasActive) {
-        if (specPop) specPop.hidden = true;
-        return;
-      }
-      tile.classList.add('is-active');
-      tile.setAttribute('aria-pressed', 'true');
-      if (specTitleEl) specTitleEl.textContent = spec.title;
-      if (specBodyEl) specBodyEl.textContent = spec.text;
-      if (specPop) specPop.hidden = false;
-      triggerLetterWave(spec.letterIndex);
-    });
-  });
+  };
 
   /* ==========================================================================
      RENDER LOOP (SPRING PHYSICS + SOFTWARE-WEBGL SAFE PACING)
@@ -1043,25 +1142,36 @@ export function initHero3D() {
     else frameId = window.requestAnimationFrame(renderFrame);
   }
 
-  function requestSingleRender() {
-    if (!running) {
-      renderer.render(scene, camera);
-    }
+  function onContextLost(ev) {
+    ev.preventDefault();
+    running = false;
+    window.cancelAnimationFrame(frameId);
+    window.clearTimeout(frameId);
+    activateFallback();
   }
+  renderer.domElement.addEventListener('webglcontextlost', onContextLost, false);
 
   const ro = new ResizeObserver(resizeScene);
   ro.observe(mount);
+  window.addEventListener('resize', resizeScene, { passive: true });
   resizeScene();
-
-  if (!isSoftwareGl) {
-    renderer.compile(scene, camera);
+  window.requestAnimationFrame(resizeScene);
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(resizeScene);
   }
 
-  // Trigger subtle initial entrance settle or immediate render
+  if (!isSoftwareGl) {
+    try {
+      renderer.compile(scene, camera);
+    } catch {
+      // Non-fatal on restricted GPU drivers; draw proceeds on render
+    }
+  }
+
+  // Render first frame immediately & trigger subtle entrance wave if motion allowed
+  renderer.render(scene, camera);
   if (!prefersReducedMotion()) {
     startLoop();
-  } else {
-    renderer.render(scene, camera);
   }
 
   // Cleanup hook for page unload
@@ -1070,12 +1180,14 @@ export function initHero3D() {
     window.cancelAnimationFrame(frameId);
     window.clearTimeout(frameId);
     ro.disconnect();
+    window.removeEventListener('resize', resizeScene);
+    renderer.domElement.removeEventListener('webglcontextlost', onContextLost);
     renderer.domElement.removeEventListener('pointerdown', onPointerDown);
     window.removeEventListener('pointermove', onPointerMove);
     window.removeEventListener('pointerup', releaseDrag);
     window.removeEventListener('pointercancel', releaseDrag);
     disposables.forEach((d) => d.dispose?.());
-    envTarget.dispose();
+    envTarget?.dispose?.();
     renderer.dispose();
   }, { once: true });
 }
