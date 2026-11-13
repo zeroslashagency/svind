@@ -91,10 +91,11 @@ function initMilestone25Scroll() {
       }, startAt);
     });
 
-    // 3. Dark ribbon fold intersections snap cleanly at crossings
+    // 3. Dark ribbon fold intersections snap cleanly right as each crossing weaves through
+    const foldStarts = [0.26, 0.42, 0.68, 0.86];
     folds.forEach((fold, i) => {
       if (!foldLens[i]) return;
-      const startAt = 0.22 + i * 0.16;
+      const startAt = foldStarts[i] ?? (0.26 + i * 0.18);
       tl.to(fold, {
         opacity: 1,
         duration: 0.012,
@@ -102,7 +103,7 @@ function initMilestone25Scroll() {
       }, startAt);
       tl.to(fold, {
         strokeDashoffset: 0,
-        duration: 0.12,
+        duration: 0.1,
         ease: 'none'
       }, startAt);
     });
@@ -210,9 +211,10 @@ function initMilestone25Scroll() {
       }, startAt);
     });
 
+    const mobileFoldStarts = [0.35, 0.52, 0.74, 0.94];
     folds.forEach((fold, i) => {
       if (!foldLens[i]) return;
-      const startAt = 0.35 + i * 0.14;
+      const startAt = mobileFoldStarts[i] ?? (0.35 + i * 0.18);
       mobileTl.to(fold, {
         opacity: 1,
         duration: 0.02,
@@ -220,7 +222,7 @@ function initMilestone25Scroll() {
       }, startAt);
       mobileTl.to(fold, {
         strokeDashoffset: 0,
-        duration: 0.2,
+        duration: 0.18,
         ease: 'power1.out'
       }, startAt);
     });

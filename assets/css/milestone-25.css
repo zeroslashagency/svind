@@ -7,11 +7,10 @@
 .sv-m25 {
   position: relative;
   width: 100%;
-  background-color: #FAF8F5;
-  padding: clamp(20px, 2.4vw, 34px);
+  background-color: var(--color-surface, #FFFFFF);
+  padding: 0;
   scroll-margin-top: 64px;
   overflow: clip;
-  border-top: 1px solid #D5DAE3;
 }
 
 @media (min-width: 1024px) {
@@ -26,12 +25,13 @@
 .sv-m25__frame {
   position: relative;
   width: 100%;
-  border: 1px solid rgba(26, 29, 33, 0.78);
-  background-color: #FAF8F5;
+  border: 0;
+  background-color: var(--color-surface, #FFFFFF);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: 8px;
+  padding-top: clamp(16px, 3vw, 28px);
   overflow: hidden;
 }
 
@@ -40,14 +40,15 @@
     min-height: 0;
     flex: 1 1 auto;
     display: block;
+    padding-top: 0;
   }
 }
 
-/* Editorial content (lower-left anchored inside architectural frame) */
+/* Editorial content (lower-left anchored edge-to-edge) */
 .sv-m25__content {
   position: relative;
   z-index: 3;
-  padding: 6px clamp(20px, 3.2vw, 48px) clamp(26px, 3.5vw, 44px);
+  padding: 8px clamp(20px, 5vw, 44px) clamp(32px, 6vw, 48px);
   max-width: 44ch;
 }
 
@@ -55,7 +56,7 @@
   .sv-m25__content {
     position: absolute;
     left: clamp(32px, 4.5vw, 76px);
-    bottom: clamp(34px, 6vh, 72px);
+    bottom: clamp(38px, 6.5vh, 76px);
     padding: 0;
     max-width: 42ch;
   }
