@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="assets/css/value-prop.css">
   <link rel="stylesheet" href="assets/css/hro.css">
   <link rel="stylesheet" href="assets/css/hero-3d.css?v=20261113e">
+  <link rel="stylesheet" href="assets/css/floor-crane.css?v=20261113l">
   <!-- resources-bento.css removed with section -->
   <!-- vmc.css removed -->
   <script type="importmap">
@@ -722,21 +723,68 @@
         </li>
       </ul>
 
-      <div class="core-split" style="margin-block-start: var(--space-8)">
-        <figure class="core-cutout core-cutout--inset">
-          <img src="assets/img/cutouts/cutout-crab-unit.png" width="1135" height="841"
-               alt="Wire-rope hoist crab unit assembled at the SVIND works"
-               loading="lazy" decoding="async">
-        </figure>
-        <div>
-          <h3 class="core-panel__title">Components built in-house</h3>
-          <p class="core-lead">
-            Crab units, forged hooks, rope drums, sheaves, DSL and shrouded busbars,
-            pendant cables and gearboxes. Because we make the components, spares match
-            the crane you already own.
+      <div class="sv-fc" id="floor-crane-showcase">
+        <div class="sv-fc__head">
+          <p class="sv-fc__kicker">Floor Cranes · Easy Installation · Low Maintenance · High Performance</p>
+          <p class="sv-fc__intro">
+            Custom-built mobile floor cranes engineered for rugged construction, plant maintenance, and effortless material loading or unloading from trolleys and trucks.
           </p>
-          <div class="core-actions">
-            <a class="core-btn core-btn--plain" href="/products/spare-parts">Spares &amp; components</a>
+        </div>
+
+        <div class="sv-fc__stage">
+          <div class="sv-fc__viewport">
+            <div class="sv-fc__mount" id="sv-fc-mount"></div>
+
+            <div class="sv-fc__fallback" id="sv-fc-fallback" hidden>
+              <img src="public/assets/aistudio/image_a246b7cf.png" width="1280" height="600"
+                   alt="SVIND industrial floor crane with telescoping boom, swivel hook, rear winch and screw-down jacks"
+                   loading="lazy" decoding="async">
+            </div>
+
+            <svg class="sv-fc__leader-svg" aria-hidden="true">
+              <g class="sv-fc__leader is-active" data-fc-leader="0">
+                <polyline class="sv-fc__leader-line" points=""></polyline>
+                <circle class="sv-fc__leader-dot" cx="0" cy="0" r="3.5"></circle>
+              </g>
+              <g class="sv-fc__leader" data-fc-leader="1">
+                <polyline class="sv-fc__leader-line" points=""></polyline>
+                <circle class="sv-fc__leader-dot" cx="0" cy="0" r="3.5"></circle>
+              </g>
+              <g class="sv-fc__leader" data-fc-leader="2">
+                <polyline class="sv-fc__leader-line" points=""></polyline>
+                <circle class="sv-fc__leader-dot" cx="0" cy="0" r="3.5"></circle>
+              </g>
+              <g class="sv-fc__leader" data-fc-leader="3">
+                <polyline class="sv-fc__leader-line" points=""></polyline>
+                <circle class="sv-fc__leader-dot" cx="0" cy="0" r="3.5"></circle>
+              </g>
+            </svg>
+          </div>
+
+          <div class="sv-fc__boxes" role="group" aria-label="Floor crane engineering highlights">
+            <button type="button" class="sv-fc__box sv-fc__box--tl is-active" data-fc-box="0" aria-pressed="true">
+              <span class="sv-fc__box-meta">01 · Custom Reach</span>
+              <span class="sv-fc__box-title">Telescoping Boom &amp; Over-Hoist Switch</span>
+              <span class="sv-fc__box-copy">Hydraulic elevation and tailored reach for truck and trolley loading.</span>
+            </button>
+
+            <button type="button" class="sv-fc__box sv-fc__box--bl" data-fc-box="1" aria-pressed="false">
+              <span class="sv-fc__box-meta">02 · High Performance</span>
+              <span class="sv-fc__box-title">Forged Swivel Hook &amp; Snatch Block</span>
+              <span class="sv-fc__box-copy">Deep-throat alloy hook with safety latch for precise load positioning.</span>
+            </button>
+
+            <button type="button" class="sv-fc__box sv-fc__box--tr" data-fc-box="2" aria-pressed="false">
+              <span class="sv-fc__box-meta">03 · Low Maintenance</span>
+              <span class="sv-fc__box-title">Winch Drum &amp; 1.5T Ballast Cage</span>
+              <span class="sv-fc__box-copy">Sealed helical gearbox, grooved drum, and custom counterweight mass.</span>
+            </button>
+
+            <button type="button" class="sv-fc__box sv-fc__box--br" data-fc-box="3" aria-pressed="false">
+              <span class="sv-fc__box-meta">04 · Easy Installation</span>
+              <span class="sv-fc__box-title">Swivel Casters &amp; Screw-Down Jacks</span>
+              <span class="sv-fc__box-copy">Roll directly to the bay and wind down floor pads with zero civil work.</span>
+            </button>
           </div>
         </div>
       </div>
@@ -1311,6 +1359,6 @@
   </div>
 
   <script src="assets/js/site.js?v=20261113e" defer></script>
-  <script type="module" src="assets/js/sv-value-3d.js?v=20261113h"></script>
+  <script type="module" src="assets/js/sv-value-3d.js?v=20261113l"></script>
 </body>
 </html>
