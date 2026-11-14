@@ -21,6 +21,7 @@
   <link rel="stylesheet" href="assets/css/hero-3d.css?v=20261113e">
   <link rel="stylesheet" href="assets/css/scope-4col.css?v=20261113m">
   <link rel="stylesheet" href="assets/css/bay-grid.css?v=20261113o">
+  <link rel="stylesheet" href="assets/css/floor-crane.css?v=20261114a">
   <link rel="stylesheet" href="assets/css/rfq-plate.css?v=20261113n">
   <!-- resources-bento.css removed with section -->
   <!-- vmc.css removed -->
@@ -673,6 +674,70 @@
       </div>
     </section>
 
+    <!-- Floor Crane 3D Interactive Showcase -->
+    <section class="core-band" id="floor-crane-showcase" aria-labelledby="fc-h">
+      <div class="sv-fc">
+        <div class="sv-fc__head">
+          <p class="sv-fc__kicker">1.0–3.0 TON SWL · WORKSHOP FLOOR CRANE</p>
+          <h2 class="core-head" id="fc-h">Cantilever floor crane assembly</h2>
+          <p class="sv-fc__intro">
+            Hydraulic luffing boom, twin-sheave snatch block, rear ballast drive, and screw-down outriggers—scroll or select a station to inspect each mechanism in 3D.
+          </p>
+        </div>
+
+        <div class="sv-fc__stage">
+          <div class="sv-fc__viewport">
+            <div class="sv-fc__mount" id="sv-fc-mount"></div>
+            <div class="sv-fc__fallback" id="sv-fc-fallback" hidden>
+              <img src="assets/img/cutouts/cutout-crab-unit.png" width="511" height="384"
+                   alt="SVIND floor crane and hoist assembly" loading="lazy" decoding="async">
+            </div>
+            <svg class="sv-fc__leader-svg" aria-hidden="true">
+              <g class="sv-fc__leader is-active" data-fc-leader="0">
+                <polyline class="sv-fc__leader-line" points=""></polyline>
+                <circle class="sv-fc__leader-dot" cx="0" cy="0" r="4"></circle>
+              </g>
+              <g class="sv-fc__leader" data-fc-leader="1">
+                <polyline class="sv-fc__leader-line" points=""></polyline>
+                <circle class="sv-fc__leader-dot" cx="0" cy="0" r="4"></circle>
+              </g>
+              <g class="sv-fc__leader" data-fc-leader="2">
+                <polyline class="sv-fc__leader-line" points=""></polyline>
+                <circle class="sv-fc__leader-dot" cx="0" cy="0" r="4"></circle>
+              </g>
+              <g class="sv-fc__leader" data-fc-leader="3">
+                <polyline class="sv-fc__leader-line" points=""></polyline>
+                <circle class="sv-fc__leader-dot" cx="0" cy="0" r="4"></circle>
+              </g>
+            </svg>
+          </div>
+
+          <div class="sv-fc__boxes" role="group" aria-label="Floor crane mechanical stations">
+            <button type="button" class="sv-fc__box is-active" data-fc-box="0" aria-pressed="true">
+              <span class="sv-fc__box-meta">01 · BOOM &amp; HYDRAULICS</span>
+              <span class="sv-fc__box-title">Cantilever Telescoping Boom</span>
+              <span class="sv-fc__box-copy">1.0–3.0 T SWL telescoping jib arm driven by a coupled chrome-rod hydraulic luffing ram.</span>
+            </button>
+            <button type="button" class="sv-fc__box" data-fc-box="1" aria-pressed="false">
+              <span class="sv-fc__box-meta">02 · HOOK &amp; REEVING</span>
+              <span class="sv-fc__box-title">Forged Swivel Hook &amp; Block</span>
+              <span class="sv-fc__box-copy">Twin-sheave snatch block with machined steel pulleys, limit arm, and 360° forged swivel hook.</span>
+            </button>
+            <button type="button" class="sv-fc__box" data-fc-box="2" aria-pressed="false">
+              <span class="sv-fc__box-meta">03 · WINCH &amp; BALLAST</span>
+              <span class="sv-fc__box-title">Rear Winch &amp; Helical Drive</span>
+              <span class="sv-fc__box-copy">1.5 T counterweight cage supporting a grooved drum winch, helical gearbox, and E-stop control panel.</span>
+            </button>
+            <button type="button" class="sv-fc__box" data-fc-box="3" aria-pressed="false">
+              <span class="sv-fc__box-meta">04 · CHASSIS &amp; JACKS</span>
+              <span class="sv-fc__box-title">Outrigger Base &amp; Screw Jacks</span>
+              <span class="sv-fc__box-copy">Box-section outrigger frame on heavy polyurethane casters with four screw-down leveling jacks.</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Local -->
     <section class="core-band core-band--canvas" aria-labelledby="local-h" style="background-image: url('assets/img/bands/band-fabrication-bay-eot.jpg'); background-size: cover; background-position: center; position: relative;">
       
@@ -1146,6 +1211,6 @@
   </div>
 
   <script src="assets/js/site.js?v=20261113e" defer></script>
-  <script type="module" src="assets/js/sv-value-3d.js?v=20261113l"></script>
+  <script type="module" src="assets/js/sv-value-3d.js?v=20261114a"></script>
 </body>
 </html>

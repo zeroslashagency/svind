@@ -6,8 +6,8 @@
   "main": "server.js",
   "scripts": {
     "dev": "node server.js",
-    "build": "node --check server.js && node --check assets/js/sv-hero-3d.js && node --check assets/js/sv-value-3d.js && node --check assets/js/sv-scope-3d.js && node scripts/build.mjs",
-    "lint": "node --check server.js && node --check assets/js/site.js && node --check assets/js/sv-hero-3d.js && node --check assets/js/sv-value-3d.js && node --check assets/js/sv-scope-3d.js && node --check scripts/build.mjs",
+    "build": "node --check server.js && node --check assets/js/sv-hero-3d.js && node --check assets/js/sv-value-3d.js && node --check assets/js/sv-scope-3d.js && node --check assets/js/sv-floor-crane-3d.js && node scripts/build.mjs",
+    "lint": "node --check server.js && node --check assets/js/site.js && node --check assets/js/sv-hero-3d.js && node --check assets/js/sv-value-3d.js && node --check assets/js/sv-scope-3d.js && node --check assets/js/sv-floor-crane-3d.js && node --check scripts/build.mjs",
     "start": "node server.js"
   },
   "dependencies": {

@@ -993,17 +993,18 @@ class SVFloorCraneEngine {
       this.state.winchSpin = THREE.MathUtils.damp(this.state.winchSpin, target.winchSpin, 7, dt);
     }
 
-    // Cushion radius when left mount narrows on smaller desktop/tablet widths
+    // Cushion radius and horizontal framing on narrow mobile viewports so boom tip & hook remain unclipped
     const aspect = this.camera.aspect;
-    const aspectScale = aspect < 1.05 ? 1.22 : aspect < 1.32 ? 1.1 : 1.0;
+    const aspectScale = aspect < 1.15 ? 1.38 : aspect < 1.32 ? 1.12 : 1.0;
+    const txAdj = aspect < 1.15 ? this.currentCam.tx + 0.16 : this.currentCam.tx;
     const rad = THREE.MathUtils.degToRad(this.currentCam.thetaDeg);
     const rEff = this.currentCam.radius * aspectScale;
     this.camera.position.set(
-      this.currentCam.tx + Math.cos(rad) * rEff,
+      txAdj + Math.cos(rad) * rEff,
       this.currentCam.camY,
       this.currentCam.tz + Math.sin(rad) * rEff
     );
-    this.camera.lookAt(this.currentCam.tx, this.currentCam.ty, this.currentCam.tz);
+    this.camera.lookAt(txAdj, this.currentCam.ty, this.currentCam.tz);
     this.camera.updateMatrixWorld();
 
     // Articulated crane mechanisms
