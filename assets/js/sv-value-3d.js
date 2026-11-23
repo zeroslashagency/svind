@@ -5,7 +5,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { initHero3D } from './sv-hero-3d.js?v=20261113h';
 import { initScopeShowcase } from './sv-scope-3d.js?v=20261113m';
-import { initFloorCraneShowcase } from './sv-floor-crane-3d.js?v=20261114a';
+import { initFloorCraneShowcase } from './sv-floor-crane-3d.js?v=20261123e';
 
 gsap.registerPlugin(ScrollTrigger);
 

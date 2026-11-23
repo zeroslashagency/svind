@@ -1,8 +1,13 @@
 /* ==========================================================================
-   SVIND Floor Crane 3D Showcase (Section 08 — Left-Aligned 3D + Right Callouts)
-   Transparent 3D canvas on left sitting directly on --color-canvas (#EFEFEF),
-   clean stacked SVIND callout boxes on right + live SVG leader lines.
+   SVIND Floor Crane 3D Showcase — Cinematic Scroll-Driven A-to-Z Sequence
+   Pure white gallery viewport (#FFFFFF), sticky scroll runway, zero buttons,
+   zero sliders, and crisp 3D-anchored SVG leader-line part callouts.
    ========================================================================== */
+
+#floor-crane-showcase.core-band {
+  overflow: clip;
+  background-color: #FFFFFF;
+}
 
 .sv-fc {
   margin-block-start: 0;
@@ -11,69 +16,87 @@
 .sv-fc__head {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
-  margin-block-end: var(--space-4);
+  gap: 8px;
+  margin-block-end: 24px;
 }
 
 .sv-fc__kicker {
   margin: 0;
-  font-size: var(--text-micro-caps);
-  font-weight: var(--weight-micro-caps);
-  letter-spacing: var(--tracking-micro-caps);
-  text-transform: var(--case-micro-caps);
-  color: var(--color-navy);
+  font-family: "Plus Jakarta Sans", var(--font-sans, sans-serif);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--color-navy, #1E3A6B);
 }
 
 .sv-fc__intro {
   margin: 0;
-  max-width: 62ch;
-  font-size: var(--text-body);
-  line-height: var(--lh-body);
-  color: var(--color-text-secondary);
+  max-width: 60ch;
+  font-family: "Plus Jakarta Sans", var(--font-sans, sans-serif);
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: #4B5563;
 }
 
-/* Transparent stage sitting directly on the website's #EFEFEF canvas */
-.sv-fc__stage {
+/* Sticky Scroll Runway (A-to-Z Timeline: 0% -> 100%) */
+.sv-fc__runway {
+  --fc-ink: #111317;
+  --fc-muted: #4B5563;
+  --fc-subtle: #64748B;
+  --fc-accent: #1E3A6B;
+  --fc-hairline: rgba(17, 19, 23, 0.08);
+  --fc-leader: rgba(30, 58, 107, 0.56);
+
   position: relative;
   width: 100%;
-  height: clamp(460px, 60vh, 580px);
-  background-color: transparent;
-  overflow: visible;
-  border-radius: 0;
+  height: 460vh;
+  background-color: #FFFFFF;
+}
+
+.sv-fc__sticky {
+  position: sticky;
+  top: 68px;
+  width: 100%;
+  height: calc(100vh - 68px);
+  border-radius: 16px;
+  border: 1px solid var(--fc-hairline);
+  background-color: #FFFFFF;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .sv-fc__viewport {
   position: relative;
   width: 100%;
   height: 100%;
+  background-color: #FFFFFF;
 }
 
-/* Machine canvas anchored cleanly on the LEFT side (62% width on desktop) */
+/* 100% Unobstructed Pure-White 3D Canvas */
 .sv-fc__mount {
   position: absolute;
-  inset-block: 0;
-  inset-inline-start: 0;
-  width: 62%;
+  inset: 0;
+  width: 100%;
   height: 100%;
+  pointer-events: none;
 }
 
 .sv-fc__mount canvas {
   display: block;
   width: 100%;
   height: 100%;
-  background: transparent;
 }
 
-/* Static fallback if WebGL is unavailable */
+/* Static Fallback if WebGL is Unavailable */
 .sv-fc__fallback {
   position: absolute;
-  inset-block: 0;
-  inset-inline-start: 0;
-  width: 62%;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: transparent;
+  background-color: #FFFFFF;
+  z-index: 6;
 }
 
 .sv-fc__fallback[hidden] {
@@ -81,169 +104,246 @@
 }
 
 .sv-fc__fallback img {
-  max-width: 92%;
-  max-height: 86%;
+  max-width: 82%;
+  max-height: 78%;
   object-fit: contain;
 }
 
-/* Crisp SVG Leader Lines spanning full stage from right boxes to left crane */
-.sv-fc__leader-svg {
+/* Quiet Top-Left Act Caption */
+.sv-fc__hud-spec {
+  position: absolute;
+  top: 22px;
+  left: 24px;
+  z-index: 4;
+  max-width: min(360px, calc(100% - 130px));
+  padding: 4px 10px 6px 4px;
+  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.86);
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.sv-fc__spec-code {
+  margin: 0;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--fc-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.sv-fc__spec-title {
+  margin: 0;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: clamp(18px, 1.8vw, 23px);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--fc-ink);
+  text-wrap: balance;
+}
+
+.sv-fc__spec-meta {
+  margin: 2px 0 0;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--fc-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Quiet Top-Right Act Index & Subtle Scroll Cue */
+.sv-fc__hud-index {
+  position: absolute;
+  top: 24px;
+  right: 28px;
+  z-index: 4;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  text-align: right;
+}
+
+.sv-fc__index-num {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--fc-ink);
+}
+
+.sv-fc__scroll-cue {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--fc-subtle);
+  transition: opacity 160ms linear;
+}
+
+/* 3D-Anchored Minimal SVG Leader-Line Part Tags (Unboxed, Zero Pills) */
+.sv-fc__tags {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.sv-fc__tags-svg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none;
-  z-index: 4;
   overflow: visible;
-}
-
-.sv-fc__leader-line {
-  fill: none;
-  stroke: rgba(26, 29, 33, 0.28);
-  stroke-width: 1.25;
-  stroke-linecap: square;
-  stroke-linejoin: miter;
-  transition: stroke 200ms var(--ease-out), stroke-width 200ms var(--ease-out);
-}
-
-.sv-fc__leader-dot {
-  fill: var(--color-surface);
-  stroke: rgba(26, 29, 33, 0.45);
-  stroke-width: 1.5;
-  transition: fill 200ms var(--ease-out), stroke 200ms var(--ease-out);
-}
-
-.sv-fc__leader.is-active .sv-fc__leader-line {
-  stroke: var(--color-navy);
-  stroke-width: 1.75;
-}
-
-.sv-fc__leader.is-active .sv-fc__leader-dot {
-  fill: #e3a818;
-  stroke: var(--color-navy);
-}
-
-/* 4 Clean SVIND Point-Out Boxes Stacked on the RIGHT Side */
-.sv-fc__boxes {
-  position: absolute;
-  inset-block: 12px;
-  inset-inline-end: 0;
-  width: min(35%, 390px);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: var(--gutter-hair);
   pointer-events: none;
-  z-index: 5;
 }
 
-.sv-fc__box {
-  position: relative;
-  pointer-events: auto;
-  appearance: none;
-  border: 0;
-  margin: 0;
-  border-radius: 0;
-  width: 100%;
-  padding: 14px 16px;
-  background-color: var(--color-surface);
-  color: var(--color-ink);
-  text-align: left;
+.sv-fc__tag-svg-group {
+  will-change: opacity;
+}
+
+.sv-fc__tag-line {
+  stroke: var(--fc-leader);
+  stroke-width: 1.15;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sv-fc__tag-dot {
+  fill: var(--fc-accent);
+  stroke: #FFFFFF;
+  stroke-width: 1.8;
+}
+
+.sv-fc__tag {
+  position: absolute;
+  top: 0;
+  left: 0;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  cursor: pointer;
-  transition: background-color 180ms var(--ease-out), color 180ms var(--ease-out);
+  gap: 1px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background-color: rgba(255, 255, 255, 0.88);
+  white-space: nowrap;
+  will-change: transform, opacity;
+  pointer-events: none;
 }
 
-.sv-fc__box:hover {
-  background-color: var(--color-canvas-2);
+.sv-fc__tag-title {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--fc-ink);
 }
 
-.sv-fc__box:focus-visible {
-  outline: 2px solid var(--color-navy);
-  outline-offset: 2px;
-}
-
-.sv-fc__box.is-active {
-  background-color: var(--color-navy);
-  color: var(--color-surface);
-}
-
-.sv-fc__box-meta {
-  font-family: var(--font-mono);
-  font-size: 11px;
+.sv-fc__tag-sub {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10.5px;
   font-weight: 500;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--color-navy);
-  font-variant-numeric: tabular-nums;
+  line-height: 1.25;
+  color: var(--fc-muted);
 }
 
-.sv-fc__box.is-active .sv-fc__box-meta {
-  color: rgba(255, 255, 255, 0.72);
+/* Whisper-Thin 2px Bottom Scroll Progress Hairline */
+.sv-fc__progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  z-index: 6;
+  background-color: rgba(17, 19, 23, 0.06);
+  pointer-events: none;
 }
 
-.sv-fc__box-title {
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 1.24;
-  letter-spacing: -0.01em;
+.sv-fc__progress-fill {
+  width: 100%;
+  height: 100%;
+  background-color: var(--fc-accent);
+  transform-origin: left center;
+  transform: scaleX(0);
+  will-change: transform;
 }
 
-.sv-fc__box-copy {
-  font-size: 13px;
-  line-height: 1.45;
-  color: var(--color-text-secondary);
-}
-
-.sv-fc__box.is-active .sv-fc__box-copy {
-  color: var(--color-text-on-dark-muted);
-}
-
+/* Tablet & Mobile Responsive */
 @media (max-width: 899.98px) {
-  .sv-fc__stage {
+  .sv-fc__runway {
+    height: 380vh;
+  }
+
+  .sv-fc__sticky {
+    border-radius: 12px;
+  }
+
+  .sv-fc__hud-spec {
+    top: 18px;
+    left: 18px;
+    max-width: calc(100% - 104px);
+  }
+
+  .sv-fc__hud-index {
+    top: 18px;
+    right: 18px;
+  }
+
+  .sv-fc__tag-title {
+    font-size: 11.5px;
+  }
+
+  .sv-fc__tag-sub {
+    font-size: 9.5px;
+  }
+}
+
+@media (max-width: 599.98px) {
+  .sv-fc__runway {
+    height: 320vh;
+  }
+
+  .sv-fc__sticky {
+    top: 60px;
+    height: calc(100dvh - 118px);
+    min-height: 460px;
+  }
+
+  .sv-fc__hud-spec {
+    top: 14px;
+    left: 14px;
+    max-width: calc(100% - 88px);
+  }
+
+  .sv-fc__hud-index {
+    top: 14px;
+    right: 14px;
+  }
+
+  .sv-fc__spec-meta {
+    display: none;
+  }
+}
+
+/* Accessibility: Reduced Motion Static Split Fallback */
+@media (prefers-reduced-motion: reduce) {
+  .sv-fc__runway {
     height: auto;
   }
 
-  .sv-fc__viewport {
-    height: 320px;
+  .sv-fc__sticky {
+    position: relative;
+    top: 0;
+    height: clamp(500px, 68vh, 660px);
   }
 
-  .sv-fc__mount,
-  .sv-fc__fallback {
-    width: 100%;
-  }
-
-  .sv-fc__leader-svg {
+  .sv-fc__scroll-cue {
     display: none;
-  }
-
-  .sv-fc__boxes {
-    position: static;
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-    gap: var(--gutter-hair);
-    margin-top: var(--space-3);
-    pointer-events: auto;
-  }
-
-  .sv-fc__box {
-    min-height: 44px;
-  }
-}
-
-@media (min-width: 600px) and (max-width: 899.98px) {
-  .sv-fc__boxes {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .sv-fc__box,
-  .sv-fc__leader-line,
-  .sv-fc__leader-dot {
-    transition: none;
   }
 }

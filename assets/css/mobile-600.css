@@ -465,29 +465,30 @@
   }
 
   /* ------------------------------------------------------------------------
-     10. Floor Crane 3D Interactive Showcase (#floor-crane-showcase)
+     10. Floor Crane 3D Scroll Showcase (#floor-crane-showcase)
      ------------------------------------------------------------------------ */
   #floor-crane-showcase.core-band {
-    padding-block: 36px 40px;
-    padding-inline: 20px;
+    padding-block: 36px 44px;
+    padding-inline: 14px;
+    overflow: clip;
   }
 
   .sv-fc__head {
-    margin-block-end: 12px;
+    margin-block-end: 14px;
+  }
+
+  .sv-fc__runway {
+    height: 320vh;
+  }
+
+  .sv-fc__sticky {
+    top: 60px;
+    height: calc(100dvh - 118px);
+    min-height: 460px;
   }
 
   .sv-fc__viewport {
-    height: 265px;
-  }
-
-  .sv-fc__boxes {
-    margin-top: 10px;
-  }
-
-  .sv-fc__box {
-    min-height: 48px;
-    padding: 12px 14px;
-    gap: 3px;
+    height: 100%;
   }
 
   /* ------------------------------------------------------------------------

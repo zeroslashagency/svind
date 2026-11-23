@@ -21,13 +21,13 @@
   <link rel="stylesheet" href="assets/css/hero-3d.css?v=20261113e">
   <link rel="stylesheet" href="assets/css/scope-4col.css?v=20261113m">
   <link rel="stylesheet" href="assets/css/bay-grid.css?v=20261113o">
-  <link rel="stylesheet" href="assets/css/floor-crane.css?v=20261114a">
+  <link rel="stylesheet" href="assets/css/floor-crane.css?v=20261123e">
   <link rel="stylesheet" href="assets/css/rfq-plate.css?v=20261113n">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/mobile-600.css?v=20261114b">
-  <link rel="stylesheet" href="/assets/css/subpages.css?v=20261123b">
+  <link rel="stylesheet" href="assets/css/mobile-600.css?v=20261123e">
+  <link rel="stylesheet" href="/assets/css/subpages.css?v=20261123c">
   <!-- resources-bento.css removed with section -->
   <!-- vmc.css removed -->
   <script type="importmap">
@@ -408,8 +408,7 @@
         </div>
 
         <div class="sv-m25__content">
-          <p class="sv-m25__kicker">25 years of crane engineering</p>
-          <h2 class="sv-m25__title" id="m25-title">Leaning into 25 years of heavy lifting</h2>
+          <h2 class="sv-m25__title" id="m25-title">Years of heavy lifting</h2>
           <div class="sv-m25__actions">
             <a class="sv-m25__cta" href="/contact#enquiry">
               <span>Request a quote</span>
@@ -712,65 +711,47 @@
       </div>
     </section>
 
-    <!-- Floor Crane 3D Interactive Showcase -->
+    <!-- Floor Crane 3D Showcase — Cinematic Scroll-Driven A-to-Z Sequence -->
     <section class="core-band" id="floor-crane-showcase" aria-labelledby="fc-h">
       <div class="sv-fc">
         <div class="sv-fc__head">
-          <p class="sv-fc__kicker">1.0–3.0 Ton SWL · Workshop floor crane</p>
-          <h2 class="core-head" id="fc-h">Cantilever floor crane assembly</h2>
+          <p class="sv-fc__kicker">1.0–3.0 Ton SWL · Drawing to Real 3D</p>
+          <h2 class="core-head" id="fc-h">From IS 807 drawing to Harohalli steel</h2>
           <p class="sv-fc__intro">
-            Hydraulic luffing boom, twin-sheave snatch block, rear ballast drive, and screw-down outriggers—scroll or select a station to inspect each mechanism in 3D.
+            Scroll through the assembly as IS 807 CAD geometry reveals Harohalli-fabricated steel, part by part.
           </p>
         </div>
 
-        <div class="sv-fc__stage">
-          <div class="sv-fc__viewport">
-            <div class="sv-fc__mount" id="sv-fc-mount"></div>
-            <div class="sv-fc__fallback" id="sv-fc-fallback" hidden>
-              <img src="assets/img/cutouts/cutout-crab-unit.png" width="511" height="384"
-                   alt="SVIND floor crane and hoist assembly" loading="lazy" decoding="async">
-            </div>
-            <svg class="sv-fc__leader-svg" aria-hidden="true">
-              <g class="sv-fc__leader is-active" data-fc-leader="0">
-                <polyline class="sv-fc__leader-line" points=""></polyline>
-                <circle class="sv-fc__leader-dot" cx="0" cy="0" r="4"></circle>
-              </g>
-              <g class="sv-fc__leader" data-fc-leader="1">
-                <polyline class="sv-fc__leader-line" points=""></polyline>
-                <circle class="sv-fc__leader-dot" cx="0" cy="0" r="4"></circle>
-              </g>
-              <g class="sv-fc__leader" data-fc-leader="2">
-                <polyline class="sv-fc__leader-line" points=""></polyline>
-                <circle class="sv-fc__leader-dot" cx="0" cy="0" r="4"></circle>
-              </g>
-              <g class="sv-fc__leader" data-fc-leader="3">
-                <polyline class="sv-fc__leader-line" points=""></polyline>
-                <circle class="sv-fc__leader-dot" cx="0" cy="0" r="4"></circle>
-              </g>
-            </svg>
-          </div>
+        <div class="sv-fc__runway">
+          <div class="sv-fc__sticky">
+            <div class="sv-fc__viewport">
+              <div class="sv-fc__mount" id="sv-fc-mount"></div>
+              <div class="sv-fc__fallback" id="sv-fc-fallback" hidden>
+                <img src="assets/img/cutouts/cutout-crab-unit.png" width="511" height="384"
+                     alt="SVIND floor crane and hoist assembly" loading="lazy" decoding="async">
+              </div>
 
-          <div class="sv-fc__boxes" role="group" aria-label="Floor crane mechanical stations">
-            <button type="button" class="sv-fc__box is-active" data-fc-box="0" aria-pressed="true">
-              <span class="sv-fc__box-meta">01 · Boom &amp; hydraulics</span>
-              <span class="sv-fc__box-title">Cantilever Telescoping Boom</span>
-              <span class="sv-fc__box-copy">1.0–3.0 T SWL telescoping jib arm driven by a coupled chrome-rod hydraulic luffing ram.</span>
-            </button>
-            <button type="button" class="sv-fc__box" data-fc-box="1" aria-pressed="false">
-              <span class="sv-fc__box-meta">02 · Hook &amp; reeving</span>
-              <span class="sv-fc__box-title">Forged Swivel Hook &amp; Block</span>
-              <span class="sv-fc__box-copy">Twin-sheave snatch block with machined steel pulleys, limit arm, and 360° forged swivel hook.</span>
-            </button>
-            <button type="button" class="sv-fc__box" data-fc-box="2" aria-pressed="false">
-              <span class="sv-fc__box-meta">03 · Winch &amp; ballast</span>
-              <span class="sv-fc__box-title">Rear Winch &amp; Helical Drive</span>
-              <span class="sv-fc__box-copy">1.5 T counterweight cage supporting a grooved drum winch, helical gearbox, and E-stop control panel.</span>
-            </button>
-            <button type="button" class="sv-fc__box" data-fc-box="3" aria-pressed="false">
-              <span class="sv-fc__box-meta">04 · Chassis &amp; jacks</span>
-              <span class="sv-fc__box-title">Outrigger Base &amp; Screw Jacks</span>
-              <span class="sv-fc__box-copy">Box-section outrigger frame on heavy polyurethane casters with four screw-down leveling jacks.</span>
-            </button>
+              <!-- Quiet Top-Left Act Caption -->
+              <div class="sv-fc__hud-spec" aria-live="polite">
+                <p class="sv-fc__spec-code" data-fc-spec-code>01 · IS 807 CAD Engineering</p>
+                <h3 class="sv-fc__spec-title" data-fc-spec-title>Cantilever Geometry</h3>
+                <p class="sv-fc__spec-meta" data-fc-spec-meta>1.0–3.0 T SWL · IS 807 Box-Section</p>
+              </div>
+
+              <!-- Quiet Top-Right Act Index -->
+              <div class="sv-fc__hud-index" aria-hidden="true">
+                <span class="sv-fc__index-num" data-fc-index>01 / 06</span>
+                <span class="sv-fc__scroll-cue" data-fc-scroll-cue>Scroll ↓</span>
+              </div>
+
+              <!-- 3D-Anchored Minimal Leader-Line Part Tags -->
+              <div class="sv-fc__tags" data-fc-tags aria-hidden="true"></div>
+
+              <!-- Whisper-Thin 2px Bottom Scroll Progress Hairline -->
+              <div class="sv-fc__progress" aria-hidden="true">
+                <div class="sv-fc__progress-fill" data-fc-progress-fill></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
