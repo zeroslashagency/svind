@@ -22,7 +22,9 @@ fs.rmSync(distDir, { recursive: true, force: true });
 fs.mkdirSync(distDir, { recursive: true });
 
 // Core static pages & site assets
-copyFile(path.join(rootDir, 'index.html'), path.join(distDir, 'index.html'));
+for (const page of ['index.html', 'products.html', 'clients.html', 'about.html', 'contact.html']) {
+  copyFile(path.join(rootDir, page), path.join(distDir, page));
+}
 copyFile(path.join(rootDir, 'sitemap.xml'), path.join(distDir, 'sitemap.xml'));
 copyDir(path.join(rootDir, 'assets'), path.join(distDir, 'assets'));
 

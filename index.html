@@ -23,6 +23,8 @@
   <link rel="stylesheet" href="assets/css/bay-grid.css?v=20261113o">
   <link rel="stylesheet" href="assets/css/floor-crane.css?v=20261114a">
   <link rel="stylesheet" href="assets/css/rfq-plate.css?v=20261113n">
+  <link rel="stylesheet" href="assets/css/mobile-600.css?v=20261114b">
+  <link rel="stylesheet" href="/assets/css/subpages.css?v=20261122a">
   <!-- resources-bento.css removed with section -->
   <!-- vmc.css removed -->
   <script type="importmap">
@@ -125,36 +127,69 @@
     <div class="container nav__inner">
       <a class="nav__brand" href="/" aria-current="page">
         <span class="nav__wordmark">SVIND</span>
-        <span class="nav__descriptor">EOT &amp; Gantry Cranes, Bengaluru</span>
       </a>
       <nav class="nav__menu" aria-label="Main">
-        <a class="nav__link" href="/products/eot-cranes">Cranes</a>
-        <a class="nav__link" href="/industries">Industries</a>
-        <a class="nav__link" href="/services.html">Service &amp; spares</a>
-        <a class="nav__link" href="/resources.html">Resources</a>
-        <a class="nav__link" href="/about.html">Company</a>
+        <a class="nav__link" href="/" aria-current="page">Home</a>
+        <div class="nav__dropdown" data-nav-dropdown>
+          <button type="button" class="nav__dropdown-btn" aria-expanded="false" aria-haspopup="true">
+            <span>Products</span>
+            <span class="nav__caret" aria-hidden="true">▾</span>
+          </button>
+          <div class="nav__dropdown-menu" role="menu" aria-label="Product portfolios">
+            <a class="nav__dropdown-item nav__dropdown-item--all" href="/products" role="menuitem">
+              <span class="nav__dropdown-title">All Portfolios</span>
+              <span class="nav__dropdown-meta">12 systems across 4 divisions</span>
+            </a>
+            <a class="nav__dropdown-item" href="/products/industrial-cranes" role="menuitem">
+              <span class="nav__dropdown-title">Industrial Cranes &amp; Hoists</span>
+              <span class="nav__dropdown-meta">EOT · Goliath · Jib &amp; Pillar</span>
+            </a>
+            <a class="nav__dropdown-item" href="/products/spare-parts" role="menuitem">
+              <span class="nav__dropdown-title">Genuine Crane Spare Parts</span>
+              <span class="nav__dropdown-meta">Drums · Fail-Safe Brakes · VVVF Panels</span>
+            </a>
+            <a class="nav__dropdown-item" href="/products/maintenance-services" role="menuitem">
+              <span class="nav__dropdown-title">Maintenance &amp; Statutory Audits</span>
+              <span class="nav__dropdown-meta">AMC · 125% Load Testing · 24/7 Breakdown</span>
+            </a>
+            <a class="nav__dropdown-item" href="/products/scaffolding-rental" role="menuitem">
+              <span class="nav__dropdown-title">Scaffolding Rentals &amp; Formwork</span>
+              <span class="nav__dropdown-meta">IS 1161 Tubes · Couplers · Base Jacks</span>
+            </a>
+          </div>
+        </div>
+        <a class="nav__link" href="/clients">Our Clients</a>
+        <a class="nav__link" href="/about">About Us</a>
+        <a class="nav__link" href="/contact">Contact Us</a>
       </nav>
-      <a class="btn nav__cta" href="/pages/services/request-a-quote">Request a quote<span class="btn__glyph" aria-hidden="true">↗</span></a>
+      <a class="btn nav__cta" href="/contact#enquiry">Request a quote<span class="btn__glyph" aria-hidden="true">↗</span></a>
       <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="nav-overlay" aria-label="Open menu">
         <span class="nav__toggle-bar"></span><span class="nav__toggle-bar"></span><span class="nav__toggle-bar"></span>
       </button>
     </div>
     <div class="nav__overlay" id="nav-overlay" hidden>
       <ul class="nav__overlay-list">
-        <li><a class="nav__overlay-link" href="/products/eot-cranes">EOT cranes</a></li>
-        <li><a class="nav__overlay-link" href="/products/gantry-cranes">Gantry &amp; goliath</a></li>
-        <li><a class="nav__overlay-link" href="/eot-cranes/hot-metal-ladle-foundry">Hot metal &amp; ladle</a></li>
-        <li><a class="nav__overlay-link" href="/products/jib-cranes">Jib cranes</a></li>
-        <li><a class="nav__overlay-link" href="/products/hoists">Hoists</a></li>
-        <li><a class="nav__overlay-link" href="/products/spare-parts">Spares &amp; components</a></li>
-        <li><a class="nav__overlay-link" href="/services.html">Service &amp; AMC</span></li>
-        <li><a class="nav__overlay-link" href="/industries">Industries</a></li>
-        <li><a class="nav__overlay-link" href="/resources.html">Resources</a></li>
-        <li><a class="nav__overlay-link" href="/about.html">Company</a></li>
+        <li><a class="nav__overlay-link" href="/" aria-current="page">Home</a></li>
+        <li class="nav__overlay-group">
+          <button type="button" class="nav__overlay-subtoggle" data-overlay-subtoggle aria-expanded="false" aria-controls="overlay-products-list">
+            <span>Products</span>
+            <span class="nav__caret" aria-hidden="true">▾</span>
+          </button>
+          <ul class="nav__overlay-sublist" id="overlay-products-list" hidden>
+            <li><a class="nav__overlay-sublink" href="/products">All Portfolios</a></li>
+            <li><a class="nav__overlay-sublink" href="/products/industrial-cranes">Industrial Cranes &amp; Hoists</a></li>
+            <li><a class="nav__overlay-sublink" href="/products/spare-parts">Genuine Crane Spare Parts</a></li>
+            <li><a class="nav__overlay-sublink" href="/products/maintenance-services">Maintenance &amp; Statutory Audits</a></li>
+            <li><a class="nav__overlay-sublink" href="/products/scaffolding-rental">Scaffolding Rentals &amp; Formwork</a></li>
+          </ul>
+        </li>
+        <li><a class="nav__overlay-link" href="/clients">Our Clients</a></li>
+        <li><a class="nav__overlay-link" href="/about">About Us</a></li>
+        <li><a class="nav__overlay-link" href="/contact">Contact Us</a></li>
       </ul>
       <div class="nav__overlay-foot">
         <p class="eyebrow">Harohalli KIADB Industrial Area, Bengaluru</p>
-        <a class="btn btn--dark" href="/pages/services/request-a-quote">Request a quote</a>
+        <a class="btn btn--dark" href="/contact#enquiry">Request a quote</a>
       </div>
     </div>
   </header>
@@ -263,7 +298,7 @@
     </div>
 
     <!-- Expertise -->
-    <div id="services" class="expertise-section"><div class="padding-global padding-section-large"><div class="container-large"><div class="expertise-component"><div class="heading-wrapper is-center"><div class="heading-title-wrapper is-center"><div class="max-width-xlarge"><h2 class="heading-style-h2">Services built to strengthen your bay and <span class="text-color-wine">attract the right loads</span></h2></div></div><div class="max-width-medium"><p class="text-size-small">Our work rests on three levers: design, fabrication and service. Together they keep your bay at full capacity and your crane where it belongs.</p></div></div><div class="expertise-list"><div id="communication-digitale" class="expertise-item"><span class="expertise-kicker">Engineering &amp; design</span><div class="expertise-content-wrapper"><div class="heading-style-h3 expert">Design makes the difference</div><p class="text-size-small expert">We survey the bay, fix span, capacity and duty class to IS 807, then issue GA drawings and girder calculations for your approval - engineered to your cycle, not pulled off a shelf.</p><div class="button-group expert"><a href="/pages/services/request-a-quote.html" class="button"><div class="button-text">Request a quote</div></a></div></div><div class="expertise-image-wrapper parallax"><img src="assets/img/cards/fabrication-bay-eot.jpg" loading="lazy" sizes="100vw" alt="Fabrication bay with EOT crane" class="expertise-image"><div class="expertise-cover-image"></div></div></div><div id="production-contenu" class="expertise-item"><span class="expertise-kicker">Fabrication &amp; test</span><div class="expertise-content-wrapper"><div class="heading-style-h3 expert">Fabrication proves it</div><p class="text-size-small expert">Girders, crab units and end carriages built in-house at Harohalli KIADB and proof-load tested before dispatch - because we make the components, spares match the crane you own.</p><div class="button-group expert"><a href="/about.html" class="button"><div class="button-text">Request a quote</div></a></div></div><div class="expertise-image-wrapper"><img src="assets/img/cards/ladle-carrier-frame.jpg" loading="lazy" sizes="100vw" alt="Ladle carrier frame" class="expertise-image"><div class="expertise-cover-image"></div></div></div><div id="branding" class="expertise-item"><span class="expertise-kicker">Service &amp; AMC</span><div class="expertise-content-wrapper"><div class="heading-style-h3 expert">Service keeps the load</div><p class="text-size-small expert">Erection, commissioning and witnessed load testing on site, then AMC, inspection and spares from the same team that built it - the people who design the crane are the ones who service it.</p><div class="button-group expert"><a href="/pages/services/request-a-quote.html" class="button"><div class="button-text">Request a quote</div></a></div></div><div class="expertise-image-wrapper"><img src="assets/img/cards/gearbox-primed.jpg" loading="lazy" alt="Gearbox primed" class="expertise-image"><div class="expertise-cover-image"></div></div></div></div></div></div></div></div>
+    <div id="services" class="expertise-section"><div class="padding-global padding-section-large"><div class="container-large"><div class="expertise-component"><div class="heading-wrapper is-center"><div class="heading-title-wrapper is-center"><div class="max-width-xlarge"><h2 class="heading-style-h2">Services built to strengthen your bay and <span class="text-color-wine">attract the right loads</span></h2></div></div><div class="max-width-medium"><p class="text-size-small">Our work rests on three levers: design, fabrication and service. Together they keep your bay at full capacity and your crane where it belongs.</p></div></div><div class="expertise-list"><div id="communication-digitale" class="expertise-item"><span class="expertise-kicker">Engineering &amp; design</span><div class="expertise-content-wrapper"><div class="heading-style-h3 expert">Design makes the difference</div><p class="text-size-small expert">We survey the bay, fix span, capacity and duty class to IS 807, then issue GA drawings and girder calculations for your approval - engineered to your cycle, not pulled off a shelf.</p><div class="button-group expert"><a href="/contact?category=industrial-cranes&amp;item=Bay%20Engineering%20%26%20Design#enquiry" class="button"><div class="button-text">Request a quote</div></a></div></div><div class="expertise-image-wrapper parallax"><img src="assets/img/cards/fabrication-bay-eot.jpg" loading="lazy" sizes="100vw" alt="Fabrication bay with EOT crane" class="expertise-image"><div class="expertise-cover-image"></div></div></div><div id="production-contenu" class="expertise-item"><span class="expertise-kicker">Fabrication &amp; test</span><div class="expertise-content-wrapper"><div class="heading-style-h3 expert">Fabrication proves it</div><p class="text-size-small expert">Girders, crab units and end carriages built in-house at Harohalli KIADB and proof-load tested before dispatch - because we make the components, spares match the crane you own.</p><div class="button-group expert"><a href="/about" class="button"><div class="button-text">Request a quote</div></a></div></div><div class="expertise-image-wrapper"><img src="assets/img/cards/ladle-carrier-frame.jpg" loading="lazy" sizes="100vw" alt="Ladle carrier frame" class="expertise-image"><div class="expertise-cover-image"></div></div></div><div id="branding" class="expertise-item"><span class="expertise-kicker">Service &amp; AMC</span><div class="expertise-content-wrapper"><div class="heading-style-h3 expert">Service keeps the load</div><p class="text-size-small expert">Erection, commissioning and witnessed load testing on site, then AMC, inspection and spares from the same team that built it - the people who design the crane are the ones who service it.</p><div class="button-group expert"><a href="/products/maintenance-services" class="button"><div class="button-text">Request a quote</div></a></div></div><div class="expertise-image-wrapper"><img src="assets/img/cards/gearbox-primed.jpg" loading="lazy" alt="Gearbox primed" class="expertise-image"><div class="expertise-cover-image"></div></div></div></div></div></div></div></div>
 
     <!-- 25 Years Kinetic Ribbon & Orbital String Showcase -->
     <section class="sv-m25" id="milestone-25" aria-labelledby="m25-title">
@@ -373,7 +408,7 @@
           <p class="sv-m25__kicker">25 years of crane engineering</p>
           <h2 class="sv-m25__title" id="m25-title">Leaning into 25 years of heavy lifting</h2>
           <div class="sv-m25__actions">
-            <a class="sv-m25__cta" href="/pages/services/request-a-quote">
+            <a class="sv-m25__cta" href="/contact#enquiry">
               <span>Request a quote</span>
               <span aria-hidden="true">↗</span>
             </a>
@@ -478,7 +513,7 @@
         </div>
 
         <div class="sv-rank__foot sv-rank__foot--cta">
-          <a class="sv-rank__survey-link" href="/pages/services/request-a-quote">
+          <a class="sv-rank__survey-link" href="/contact?category=maintenance-services&amp;item=Bay%20Survey#enquiry">
             <span>Request a bay survey</span>
             <span aria-hidden="true">↗</span>
           </a>
@@ -503,7 +538,7 @@
             after erection, in front of your team.
           </p>
           <div class="core-actions">
-            <a class="core-btn" href="/services/inspection-load-testing">Inspection &amp; load testing</a>
+            <a class="core-btn" href="/products/maintenance-services">Inspection &amp; load testing</a>
           </div>
         </div>
         <figure style="margin: 0">
@@ -759,7 +794,7 @@
           </p>
 
           <div class="core-actions" style="margin-block-start: var(--space-6);">
-            <a class="core-btn" href="/locations/bangalore">Cranes in Bangalore →</a>
+            <a class="core-btn" href="/about#bengaluru-works">Cranes in Bangalore →</a>
           </div>
         </div>
       </div>
@@ -841,7 +876,7 @@
 
           <div class="sv-plate__action-bar">
             <p class="sv-plate__action-note">IS 807 · IS 3177 · IS 4137</p>
-            <a class="sv-plate__cta" href="/pages/services/request-a-quote">
+            <a class="sv-plate__cta" href="/contact#enquiry">
               <span>Request a quote</span>
               <span class="sv-plate__cta-glyph" aria-hidden="true">↗</span>
             </a>
@@ -917,7 +952,7 @@
               and what it costs. One conversation, no sales pitch.
             </p>
             <div class="arz__cta-action">
-              <a class="arz__btn" href="/pages/services/request-a-quote">Request a quote</a>
+              <a class="arz__btn" href="/contact#enquiry">Request a quote</a>
               <p class="arz__cta-note">Free and without obligation</p>
             </div>
           </div>
@@ -1039,7 +1074,7 @@
         </div>
 
         <div class="arz__faq-card-wrap">
-          <a class="arz__faq-card" href="/pages/company/contact">
+          <a class="arz__faq-card" href="/contact#enquiry">
             <p class="arz__faq-card-text">
               Did not find the answer to your question, or would you rather just talk
               to someone?
@@ -1062,7 +1097,7 @@
           <div>
             <div class="footer__close-cta">
               <p class="footer__close-cta-title">Sizing a crane?</p>
-              <a class="footer__close-btn" href="/pages/services/request-a-quote">Request a quote</a>
+              <a class="footer__close-btn" href="/contact#enquiry">Request a quote</a>
             </div>
 
             <ul class="footer__close-social">
@@ -1095,6 +1130,40 @@
         </div>
       </div>
 
+      <div class="footer__directory" aria-label="Footer navigation">
+        <div>
+          <p class="footer__dir-title">SVIND Works</p>
+          <p class="footer__dir-copy">Design, in-house fabrication, witnessed load testing, and lifetime crane support from Harohalli KIADB, Bengaluru since 2006.</p>
+          <p class="footer__dir-meta">IS 807 · IS 3177 · IS 4137 · 24/7 Service Desk</p>
+        </div>
+        <div>
+          <p class="footer__dir-title">Products &amp; Services</p>
+          <ul class="footer__dir-list">
+            <li><a class="footer__dir-link" href="/products/industrial-cranes">Industrial Cranes &amp; Hoists</a></li>
+            <li><a class="footer__dir-link" href="/products/spare-parts">Genuine Crane Spare Parts</a></li>
+            <li><a class="footer__dir-link" href="/products/maintenance-services">Maintenance &amp; Statutory Audits</a></li>
+            <li><a class="footer__dir-link" href="/products/scaffolding-rental">Scaffolding Rentals &amp; Formwork</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer__dir-title">Company</p>
+          <ul class="footer__dir-list">
+            <li><a class="footer__dir-link" href="/">Home</a></li>
+            <li><a class="footer__dir-link" href="/clients">Our Clients</a></li>
+            <li><a class="footer__dir-link" href="/about">About Us</a></li>
+            <li><a class="footer__dir-link" href="/contact">Contact Us</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer__dir-title">Direct Contact</p>
+          <ul class="footer__dir-list">
+            <li><a class="footer__dir-link" href="mailto:sales@svind.co.in">sales@svind.co.in</a></li>
+            <li><a class="footer__dir-link" href="/contact#phone">Phone &amp; Breakdown Desk</a></li>
+            <li><a class="footer__dir-link" href="/contact#enquiry">Technical Enquiry Form</a></li>
+          </ul>
+          <p class="footer__dir-meta">Harohalli KIADB Industrial Area, Bengaluru, Karnataka</p>
+        </div>
+      </div>
     </div>
 
     <div class="footer__mark reveal">
@@ -1113,8 +1182,8 @@
         <div class="footer__baseline-row">
           <p>&copy; 2026 S.V. Material Handling System Pvt Ltd. All rights reserved.</p>
           <ul class="footer__legal-links">
-            <li><a class="footer__link" href="/privacy">Privacy</a></li>
-            <li><a class="footer__link" href="/terms">Terms</a></li>
+            <li><a class="footer__link" href="/about">Harohalli Works</a></li>
+            <li><a class="footer__link" href="/contact">Contact</a></li>
             <li><a class="footer__link" href="/sitemap.xml">Sitemap</a></li>
           </ul>
         </div>
@@ -1125,7 +1194,7 @@
   <nav class="mobile-bar" aria-label="Quick contact">
     <a class="mobile-bar__item" href="/contact#phone">Call</a>
     <a class="mobile-bar__item" href="/contact#whatsapp">WhatsApp</a>
-    <a class="mobile-bar__item mobile-bar__item--accent" href="/pages/services/request-a-quote">Request a quote</a>
+    <a class="mobile-bar__item mobile-bar__item--accent" href="/contact#enquiry">Request a quote</a>
   </nav>
 
   <!-- Expandable 3D Crane Inspection Modal (Scoped to Section 04) -->
@@ -1211,6 +1280,7 @@
   </div>
 
   <script src="assets/js/site.js?v=20261113e" defer></script>
+  <script src="/assets/js/sv-subpages.js?v=20261122a" defer></script>
   <script type="module" src="assets/js/sv-value-3d.js?v=20261114a"></script>
 </body>
 </html>

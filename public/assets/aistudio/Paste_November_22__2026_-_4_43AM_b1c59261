@@ -1,0 +1,578 @@
+# SIVIND — Complete Website Content & Architecture Document
+
+> **Company:** SIVIND  
+> **Tagline:** Cranes. Material Handling. Service.  
+> **Industry:** Heavy Industrial Crane Manufacturing, Material Handling Systems, Certified Spares & Scaffolding Rentals  
+> **Document Purpose:** Complete page-by-page, section-by-section blueprint and editable content document for the entire SIVIND web application.
+
+---
+
+## Table of Contents
+1. [Site Architecture & Navigation Map](#1-site-architecture--navigation-map)
+2. [Global Settings & Brand Identity](#2-global-settings--brand-identity)
+3. [Page 1: Homepage (`index.php`)](#3-page-1-homepage-indexphp)
+   - [3.1 Hero Video Carousel](#31-hero-video-carousel)
+   - [3.2 Core Products Section](#32-core-products-section)
+   - [3.3 Metrics & Key Performance Stats Bar](#33-metrics--key-performance-stats-bar)
+   - [3.4 Life-Cycle Services Section](#34-life-cycle-services-section)
+4. [Page 2: Products & Catalogue Portfolio (`product.php` / `products.php`)](#4-page-2-products--catalogue-portfolio)
+   - [4.1 Page Hero Banner](#41-page-hero-banner)
+   - [4.2 Category Filter Navigation](#42-category-filter-navigation)
+   - [4.3 Portfolio 1: Industrial Cranes & Hoists](#43-portfolio-1-industrial-cranes--hoists)
+   - [4.4 Portfolio 2: Genuine Crane Spare Parts](#44-portfolio-2-genuine-crane-spare-parts)
+   - [4.5 Portfolio 3: Maintenance & Statutory Certification](#45-portfolio-3-maintenance--statutory-certification)
+   - [4.6 Portfolio 4: Scaffolding Rentals & Site Formwork](#46-portfolio-4-scaffolding-rentals--site-formwork)
+   - [4.7 Call-to-Action (CTA) Banner](#47-call-to-action-cta-banner)
+5. [Page 3: Our Clients (`clients.php`)](#5-page-3-our-clients-clientsphp)
+6. [Page 4: About Us (`about.php`)](#6-page-4-about-us-aboutphp)
+7. [Page 5: Contact Us & Technical Enquiry (`contact.php`)](#7-page-5-contact-us--technical-enquiry-contactphp)
+8. [Global Layout Components](#8-global-layout-components)
+   - [8.1 Global Header & Navigation (`header.php`)](#81-global-header--navigation-headerphp)
+   - [8.2 Global Footer (`footer.php`)](#82-global-footer-footerphp)
+9. [Backend Processing & Administrative Management](#9-backend-processing--administrative-management)
+10. [Action Plan & Content Improvement Checklist](#10-action-plan--content-improvement-checklist)
+
+---
+
+## 1. Site Architecture & Navigation Map
+
+```mermaid
+flowchart TD
+    A["SIVIND Website"] --> B["Home (index.php)"]
+    A --> C["Products & Services (product.php / products.php)"]
+    A --> D["Our Clients (clients.php)"]
+    A --> E["About Us (about.php)"]
+    A --> F["Contact Us & Quotes (contact.php)"]
+    A --> G["Admin Portal (admin.php)"]
+
+    C --> C1["Industrial Cranes"]
+    C --> C2["Crane Spare Parts"]
+    C --> C3["Maintenance & Audits"]
+    C --> C4["Scaffolding Rentals"]
+
+    B --> B1["Hero Video Carousel"]
+    B --> B2["Core Heavy-Duty Products"]
+    B --> B3["Industrial Metrics & Stats"]
+    B --> B4["Lifecycle Maintenance Services"]
+
+    F --> F1["Direct Communication Lines"]
+    F --> F2["Specification Enquiry Form"]
+    F2 --> H["submit_enquiry.php (CSRF + DB)"]
+    H --> G
+```
+
+---
+
+## 2. Global Settings & Brand Identity
+
+*Configuration source: `includes/config.php`*
+
+| Configuration Field | Current Placeholder Value | Purpose / Placement |
+| :--- | :--- | :--- |
+| **Company Legal Name** | `SIVIND` | Page titles, headers, copyright, branding |
+| **Brand Tagline** | `Cranes. Material Handling. Service.` | Header subtext, footer branding |
+| **Official Phone** | `+91 00000 00000` | Click-to-call links in header, contact page, footer |
+| **Sales & Support Email** | `sales@sivind.com` | Inbound RFQ notifications, public contact links |
+| **Factory / Works Address** | `Industrial Estate, Coimbatore, Tamil Nadu, India` | Physical premises displayed in contact & footer |
+| **Primary Theme Colors** | Dark Steel (`#0f172a`, `#121820`) + Industrial Amber (`#f59e0b`) | Primary button CTAs, badges, highlights |
+| **Typography** | Headings: `Barlow Condensed` (600, 700) <br> Body: `Inter` (400, 500, 600) | Technical engineering industrial aesthetic |
+
+---
+
+## 3. Page 1: Homepage (`index.php`)
+
+### Page Metadata
+- **Meta Title:** `SIVIND — Crane Manufacturing, Material Handling & Service`
+- **Meta Description:** `SIVIND builds and services EOT cranes, gantry cranes, jib cranes and hoists.`
+
+---
+
+### 3.1 Hero Video Carousel
+Interactive dual-slide video showcase featuring full-bleed looping MP4 engineering videos with overlay text.
+
+#### Slide 1
+- **Background Video File:** `assets/hero1.mp4`
+- **Eyebrow:** `Cranes & Material Handling`
+- **Main Heading:**
+  > Lifting Built  
+  > **To Never Stop**
+- **Call to Action (CTA):** `Request Quote` (Links to `contact.php`)
+
+#### Slide 2
+- **Background Video File:** `assets/hero2.mp4`
+- **Eyebrow:** `24/7 Support`
+- **Main Heading:**
+  > Precision Engineering  
+  > **Maximum Uptime**
+- **Call to Action (CTA):** `Schedule Service` (Links to `contact.php`)
+
+#### Interactive Controls
+- Previous Slide Button (`❮`)
+- Next Slide Button (`❯`)
+- Pagination Progress Dots (Slide 1 Active, Slide 2)
+
+---
+
+### 3.2 Core Products Section
+
+- **Eyebrow:** `Engineering Excellence`
+- **Section Heading:** `Heavy-Duty Lifting Solutions`
+- **Lead Description:** `Engineered to international standards for safety, durability, and seamless load handling across heavy industrial environments.`
+
+#### Product Card 1: EOT / Bridge Cranes
+- **Image:** `assets/images1.jpg` *(or `assets/product-1.jpg`)*
+- **Title:** `EOT / Bridge Cranes`
+- **Description:** `Single and double girder overhead travelling cranes built for precision control in heavy manufacturing plants.`
+- **Specifications / Badges:**
+  - `Up to 250 Tons`
+  - `IS: 3177 / 807`
+
+#### Product Card 2: Goliath & Gantry Cranes
+- **Image:** `assets/images2.jpg` *(or `assets/product-2.jpg`)*
+- **Title:** `Goliath & Gantry Cranes`
+- **Description:** `Robust outdoor and yard material handling systems designed to withstand harsh weather and high duty cycles.`
+- **Specifications / Badges:**
+  - `Custom Spans`
+  - `Dual Drive`
+
+#### Product Card 3: Jib & Pillar Cranes
+- **Image:** `assets/images3.jpg` *(or `assets/product-3.jpg`)*
+- **Title:** `Jib & Pillar Cranes`
+- **Description:** `Compact floor or wall-mounted pivoting swing cranes ideal for localized workstation material transfers.`
+- **Specifications / Badges:**
+  - `360° Rotation`
+  - `Up to 5 Tons`
+
+---
+
+### 3.3 Metrics & Key Performance Stats Bar
+
+High-visibility horizontal statistics banner demonstrating manufacturing capability and track record:
+
+| Metric Number | Metric Label | Significance |
+| :--- | :--- | :--- |
+| **25+** | Years of Expertise | Decades of industrial engineering heritage |
+| **1,200+** | Cranes Commissioned | Verified installations across industrial sectors |
+| **24/7** | Emergency Support | Round-the-clock maintenance & breakdown assistance |
+| **100%** | Load Test Compliance | Rigorous pre-dispatch proof load verification |
+
+---
+
+### 3.4 Life-Cycle Services Section
+
+- **Eyebrow:** `Uninterrupted Operations`
+- **Section Heading:** `Comprehensive Crane Life-Cycle Services`
+- **Lead Description:** `We don't just manufacture cranes; we protect your investment through rigorous safety audits, rapid-response breakdown teams, and certified modernization packages.`
+- **CTA Button:** `Book Maintenance Audit` (Links to `contact.php`)
+
+#### Service Item Breakdown:
+
+1. **`01` — Preventive Maintenance**  
+   *Scheduled lubrication, structural alignment checks, and electrical diagnostic sweeps to prevent costly downtime.*
+2. **`02` — Emergency Breakdown Support**  
+   *Rapid deployment engineering squads available around the clock to restore critical material handling lines.*
+3. **`03` — Statutory Load Testing & Certification**  
+   *Proof load testing with authorized water bags/dead weights and statutory safety compliance certification.*
+4. **`04` — Modernisation & Retrofits**  
+   *Upgrading legacy relay panels to VVVF drives for jerk-free material handling and extended operational life.*
+
+---
+
+## 4. Page 2: Products & Catalogue Portfolio
+
+*File sources: `product.php` & `products.php`*
+
+### Page Metadata
+- **Meta Title:** `Industrial Cranes, Spares & Rentals — SIVIND`
+- **Meta Description:** `Explore SIVIND’s comprehensive range of industrial cranes, certified spare parts, maintenance packages, and scaffolding rentals.`
+
+---
+
+### 4.1 Page Hero Banner
+- **Eyebrow:** `SIVIND CATALOGUE & SERVICES`
+- **Main Heading:**
+  > Engineering Excellence  
+  > **Built For Heavy Industry**
+- **Lead Description:** `Precision-engineered lifting systems, certified high-endurance spare parts, rigorous maintenance contracts, and industrial-grade equipment rentals.`
+- **Background Banner Image:** `assets/product-4.jpg` with dark gradient overlay
+
+---
+
+### 4.2 Category Filter Navigation
+Sticky navigation tabs allowing users to filter by specific equipment sector:
+1. `All Portfolios` (`product.php`)
+2. `Industrial Cranes` (`product.php/industrial-cranes`)
+3. `Crane Spare Parts` (`product.php/spare-parts`)
+4. `Maintenance & Audits` (`product.php/maintenance-services`)
+5. `Scaffolding Rentals` (`product.php/scaffolding-rental`)
+
+---
+
+### 4.3 Portfolio 1: Industrial Cranes & Hoists
+- **Category Eyebrow:** `Primary Manufacturing`
+- **Category Heading:** `Industrial Cranes & Hoists`
+- **Category Description:** `Heavy-duty overhead and outdoor crane systems built to stringent international safety and performance standards.`
+
+#### Item 1: EOT / Bridge Cranes
+- **Badge:** `FLAGSHIP SYSTEM`
+- **Image:** `assets/product-1.jpg`
+- **Title:** `EOT / Bridge Cranes`
+- **Description:** `Single and double girder overhead travelling cranes optimized for heavy industrial manufacturing plants, assembly bays, and heavy logistics yards.`
+- **Key Feature Specifications:**
+  - ■ Capacity up to 250 Tons with micro-speed control
+  - ■ Designed strictly per IS: 3177 & IS: 4137 codes
+  - ■ Zero-backlash gearbox and shockless braking
+- **Standard Compliance Tag:** `IS / FEM Compliant`
+- **Button CTA:** `Request Quote`
+
+#### Item 2: Goliath & Gantry Cranes
+- **Badge:** `OUTDOOR RATED`
+- **Image:** `assets/product-2.jpg`
+- **Title:** `Goliath & Gantry Cranes`
+- **Description:** `Robust rail-mounted outdoor yard cranes engineered to withstand heavy environmental exposure, high wind shears, and continuous yard duty cycles.`
+- **Key Feature Specifications:**
+  - ■ Custom structural spans matching yard dimensions
+  - ■ Storm-locking anchor pins and anti-skid drives
+  - ■ Dual-leg rigid or semi-portal configurations
+- **Standard Compliance Tag:** `Weatherproof IP55`
+- **Button CTA:** `Request Quote`
+
+#### Item 3: Jib & Pillar Cranes
+- **Badge:** `LOCALIZED LIFTING`
+- **Image:** `assets/product-3.jpg`
+- **Title:** `Jib & Pillar Cranes`
+- **Description:** `Precision floor-mounted or wall-bracketed swing cranes designed for fast, repetitive material handling around heavy machine tools.`
+- **Key Feature Specifications:**
+  - ■ Full 360-degree manual or motorized rotation
+  - ■ Capacities ranging from 500kg up to 5 Tons
+  - ■ Compact footprint for congested workshop bays
+- **Standard Compliance Tag:** `360° Swing Radius`
+- **Button CTA:** `Request Quote`
+
+---
+
+### 4.4 Portfolio 2: Genuine Crane Spare Parts
+- **Category Eyebrow:** `Component Reliability`
+- **Category Heading:** `Genuine Crane Spare Parts`
+- **Category Description:** `Eliminate operational bottlenecks with precision-machined OEM parts engineered for high mechanical endurance.`
+
+#### Item 1: Wire Ropes & Hoist Drums
+- **Badge:** `OEM CERTIFIED`
+- **Image:** `assets/product-1.jpg`
+- **Title:** `Wire Ropes & Hoist Drums`
+- **Description:** `High-tensile anti-twist steel wire ropes paired with multi-grooved precision drums designed to maximize vertical lift safety and rope longevity.`
+- **Key Feature Specifications:**
+  - ■ Grade 1960 / 2160 high tensile core construction
+  - ■ Precision machine-grooved steel rope drums
+  - ■ Hardened forged steel sheaves and pulleys
+- **Standard Compliance Tag:** `Anti-Twist Core`
+- **Button CTA:** `Inquire Spares`
+
+#### Item 2: Electro-Hydraulic & Disc Brakes
+- **Badge:** `FAIL-SAFE`
+- **Image:** `assets/product-2.jpg`
+- **Title:** `Electro-Hydraulic & Disc Brakes`
+- **Description:** `Fail-safe industrial braking systems engineered for instantaneous load lockup and maximum thermal dissipation during unexpected power outages.`
+- **Key Feature Specifications:**
+  - ■ Automatic engagement upon power failure
+  - ■ High-torque friction lining with easy adjustment
+  - ■ Corrosion-resistant linkage assemblies
+- **Standard Compliance Tag:** `Instantaneous Lock`
+- **Button CTA:** `Inquire Spares`
+
+#### Item 3: VVVF Drives & Control Panels
+- **Badge:** `SMART CONTROL`
+- **Image:** `assets/product-3.jpg`
+- **Title:** `VVVF Drives & Control Panels`
+- **Description:** `Microprocessor-based variable frequency drive panels that eliminate mechanical jerk, providing smooth acceleration and precise load spotting.`
+- **Key Feature Specifications:**
+  - ■ IP55 dust and moisture-proof enclosure rating
+  - ■ Integrated PLC safety interlocks and overload protection
+  - ■ Programmable ramp-up and ramp-down curves
+- **Standard Compliance Tag:** `PLC Integrated`
+- **Button CTA:** `Inquire Spares`
+
+---
+
+### 4.5 Portfolio 3: Maintenance & Statutory Certification
+- **Category Eyebrow:** `Preventative Engineering`
+- **Category Heading:** `Maintenance & Statutory Certification`
+- **Category Description:** `Protect operational assets and ensure absolute statutory compliance through certified audits and maintenance agreements.`
+
+#### Item 1: Preventive AMC Packages
+- **Badge:** `LIFECYCLE CARE`
+- **Image:** `assets/product-1.jpg`
+- **Title:** `Preventive AMC Packages`
+- **Description:** `Scheduled monthly and quarterly comprehensive maintenance checks including gear alignment, lubrication analysis, and electrical megger testing.`
+- **Key Feature Specifications:**
+  - ■ Scheduled routine calibration and wear inspections
+  - ■ Priority emergency technician dispatch guarantees
+  - ■ Detailed digital asset health reports
+- **Standard Compliance Tag:** `Quarterly Audits`
+- **Button CTA:** `Book AMC`
+
+#### Item 2: Statutory Load Testing
+- **Badge:** `LEGAL COMPLIANCE`
+- **Image:** `assets/product-2.jpg`
+- **Title:** `Statutory Load Testing`
+- **Description:** `Certified proof load testing utilizing water weight bags and calibrated load cells, complete with government-approved safety certification.`
+- **Key Feature Specifications:**
+  - ■ Proof testing up to 125% of safe working load (SWL)
+  - ■ NDT crack detection on hooks and critical welds
+  - ■ Authorized statutory documentation issuance
+- **Standard Compliance Tag:** `Govt Approved`
+- **Button CTA:** `Book AMC`
+
+#### Item 3: Emergency Breakdown Support
+- **Badge:** `24/7 RAPID RESPONSE`
+- **Image:** `assets/product-3.jpg`
+- **Title:** `Emergency Breakdown Support`
+- **Description:** `Dedicated rapid-response field technicians equipped with mobile welding rigs, diagnostic scanners, and vital spare replacement units.`
+- **Key Feature Specifications:**
+  - ■ 24/7 hotline dispatch for critical plant halts
+  - ■ On-site mechanical and electrical troubleshooting
+  - ■ Rapid turnaround component replacement
+- **Standard Compliance Tag:** `24/7 Availability`
+- **Button CTA:** `Book AMC`
+
+---
+
+### 4.6 Portfolio 4: Scaffolding Rentals & Site Formwork
+- **Category Eyebrow:** `Site Equipment Rental`
+- **Category Heading:** `Scaffolding Pipes & Formwork Solutions`
+- **Category Description:** `Certified heavy-duty tubular scaffolding networks and site props available for flexible short and long-term industrial project rentals.`
+
+#### Item 1: Galvanized Scaffolding Tubes
+- **Badge:** `IS 1161 CERTIFIED`
+- **Image:** `assets/product-1.jpg`
+- **Title:** `Galvanized Scaffolding Tubes`
+- **Description:** `High-yield structural steel tubes treated for corrosion resistance, engineered to safely carry massive construction loads and high-elevation workers.`
+- **Key Feature Specifications:**
+  - ■ High tensile strength structural steel grade
+  - ■ Hot-dip galvanized coating for rust prevention
+  - ■ Strict dimensional thickness tolerance
+- **Standard Compliance Tag:** `High Tensile`
+- **Button CTA:** `Rent Equipment`
+
+#### Item 2: Forged Clamps & Couplers
+- **Badge:** `BS 1139 COMPLIANT`
+- **Image:** `assets/product-2.jpg`
+- **Title:** `Forged Clamps & Couplers`
+- **Description:** `Rigid and swivel drop-forged steel couplers designed for secure tube-to-tube interconnectivity under heavy vibrational structural forces.`
+- **Key Feature Specifications:**
+  - ■ Drop-forged high-strength steel structure
+  - ■ Anti-slip serrated jaw gripping performance
+  - ■ Secure T-bolt tightening mechanism
+- **Standard Compliance Tag:** `Drop Forged`
+- **Button CTA:** `Rent Equipment`
+
+#### Item 3: Adjustable Base Jacks & Props
+- **Badge:** `HEAVY LOAD BASE`
+- **Image:** `assets/product-3.jpg`
+- **Title:** `Adjustable Base Jacks & Props`
+- **Description:** `Heavy-duty load-bearing screw jacks and telescopic steel props built for exact leveling across uneven industrial floors and formwork shoring.`
+- **Key Feature Specifications:**
+  - ■ Precision rolled threads for smooth height adjustment
+  - ■ Solid or hollow stem options available
+  - ■ High safe working load per individual prop
+- **Standard Compliance Tag:** `Precision Thread`
+- **Button CTA:** `Rent Equipment`
+
+---
+
+### 4.7 Call-to-Action (CTA) Banner
+- **Eyebrow:** `START YOUR PROJECT`
+- **Heading:** `Need a Custom Engineering Quote or Equipment Rental?`
+- **Lead Description:** `Our technical engineering team is ready to analyze your drawings or facility requirements to provide a competitive proposal within 24 hours.`
+- **Action Button:** `Speak With Our Engineers` (Links to `contact.php`)
+
+---
+
+## 5. Page 3: Our Clients (`clients.php`)
+
+### Page Metadata
+- **Meta Title:** `Our Clients — SIVIND`
+- **Meta Description:** `Industrial clients and manufacturing plants powered by SIVIND heavy lifting equipment.`
+
+---
+
+### Section Content
+- **Eyebrow:** `Our Customers`
+- **Section Heading:** `Trusted On The Shop Floor`
+- **Lead Description:** `Steel, automotive, cement, paper, power and general engineering plants rely on SIVIND equipment every shift.`
+
+### Client Grid Structure
+The page dynamically renders the client roster. Supports both SVG/PNG company logos and styled typographical badges:
+
+| Slot | Current Default Name | Recommended Industry Client / Logo Path |
+| :---: | :--- | :--- |
+| **01** | Client One | `assets/clients/client-1.png` (Heavy Steel Manufacturing) |
+| **02** | Client Two | `assets/clients/client-2.png` (Automotive Stamping & Assembly) |
+| **03** | Client Three | `assets/clients/client-3.png` (Cement & Clinker Operations) |
+| **04** | Client Four | `assets/clients/client-4.png` (Pulp & Paper Processing Mills) |
+| **05** | Client Five | `assets/clients/client-5.png` (Thermal & Hydro Power Utilities) |
+| **06** | Client Six | `assets/clients/client-6.png` (General Foundry & Forging) |
+| **07** | Client Seven | `assets/clients/client-7.png` (Logistics & Rail Freight Yards) |
+| **08** | Client Eight | `assets/clients/client-8.png` (Defense & Heavy Machinery) |
+
+---
+
+## 6. Page 4: About Us (`about.php`)
+
+### Page Metadata
+- **Meta Title:** `About Us — SIVIND`
+- **Meta Description:** `Design, fabrication, erection and lifetime servicing of industrial cranes under one roof.`
+
+---
+
+### Hero & Mission Statement
+- **Eyebrow:** `About SIVIND`
+- **Section Heading:**
+  > Engineered Here.  
+  > **Answerable Here.**
+- **Lead Description:** `Design, fabrication, electricals, erection and after-sales sit under one roof — so there is one team accountable for the lift, from drawing to certification.`
+
+### 4 Core Engineering Pillars
+
+```mermaid
+flowchart LR
+    P1["1. In-House Design<br>Custom CAD, Load Charts"]
+    P2["2. Certified Fabrication<br>Qualified Welders, Jig Assembly"]
+    P3["3. Safety First<br>Anti-Collision, Limit Switches"]
+    P4["4. Lifetime Support<br>Spares Availability, AMC"]
+
+    P1 --> P2 --> P3 --> P4
+```
+
+1. **In-House Design**  
+   *Structural and electrical design done to your bay drawings, duty class and load chart before a single plate is cut.*
+2. **Certified Fabrication**  
+   *Qualified welders, jig-controlled girder assembly and dimensional inspection at every stage.*
+3. **Safety First**  
+   *Overload protection, limit switches, anti-collision and safe load indicators built in as standard, not as options.*
+4. **Lifetime Support**  
+   *Spares availability and service contracts for the full working life of the equipment.*
+
+---
+
+## 7. Page 5: Contact Us & Technical Enquiry (`contact.php`)
+
+### Page Metadata
+- **Meta Title:** `Contact Us — SIVIND`
+- **Meta Description:** `Share your crane capacity, span and bay height for a detailed technical proposal and budgetary quote.`
+
+---
+
+### 7.1 Direct Communication Lines (Left Column)
+- **Eyebrow:** `Enquiry`
+- **Main Heading:**
+  > Tell Us What  
+  > **You Need To Lift**
+- **Lead Description:** `Share your capacity, span and bay height — we will revert with a technical proposal and budgetary quote.`
+- **Direct Contacts:**
+  - **Phone:** `+91 00000 00000` (Tel link)
+  - **Email:** `sales@sivind.com` (Mailto link)
+  - **Factory Works:** `Industrial Estate, Coimbatore, Tamil Nadu, India`
+
+---
+
+### 7.2 Technical Enquiry Form (Right Column)
+
+*Form Action: `submit_enquiry.php` (POST)*
+
+| Field Label | Input Type | Validation Rules | Purpose |
+| :--- | :--- | :--- | :--- |
+| **CSRF Token** | `hidden` | 32-byte cryptographic token | Protects against cross-site request forgery |
+| **Company Website** | `hidden (honeypot)` | Must remain blank | Anti-spam bot trap (rejects if filled) |
+| **Name** | `text` | Required, max 100 characters | Contact person name |
+| **Email** | `email` | Required, valid email format | Technical proposal recipient |
+| **Contact Number** | `tel` | Required, max 20 digits | Phone callback verification |
+| **Requirement Description** | `textarea` | Required, max 1,000 characters | Lifting capacity, girder span, bay height, application |
+| **Submit Button** | `button (submit)` | Full-width amber styled | `Send Enquiry` |
+
+---
+
+## 8. Global Layout Components
+
+### 8.1 Global Header & Navigation (`includes/header.php`)
+- **Brand Logo:** `assets/logo.png` (Links to `index.php`)
+- **Main Navigation Menu:**
+  - `Home` (`index.php`)
+  - `Products` (Dropdown with hover indicator `▾`):
+    - `Industrial Cranes` (`product.php/industrial-cranes`)
+    - `Crane Spare Parts` (`product.php/spare-parts`)
+    - `Maintenance & Audits` (`product.php/maintenance-services`)
+    - `Scaffolding Rentals` (`product.php/scaffolding-rental`)
+  - `Our Clients` (`clients.php`)
+  - `About Us` (`about.php`)
+  - `Contact Us` (`contact.php`)
+  - **Header CTA Button:** `Get a Quote` (`contact.php`)
+- **Mobile Responsive Drawer:** Hamburger toggle (`nav-toggle`) for screens under 900px.
+
+---
+
+### 8.2 Global Footer (`includes/footer.php`)
+- **Column 1 — Brand Identity:**
+  - Brand mark & logo
+  - Tagline: *Cranes. Material Handling. Service.*
+  - Note: *"Engineering safe, reliable lifting since day one. Design, manufacture, installation, load testing and lifetime service support."*
+- **Column 2 — Products Quicklinks:**
+  - EOT / Bridge Cranes
+  - Goliath & Gantry Cranes
+  - Jib & Pillar Cranes
+  - Electric Hoists & Trolleys
+- **Column 3 — Services Quicklinks:**
+  - Preventive Maintenance
+  - Breakdown Support
+  - Load Testing & Certification
+  - Modernisation & Retrofits
+- **Column 4 — Direct Contact:**
+  - Phone link (`COMPANY_PHONE`)
+  - Email link (`COMPANY_EMAIL`)
+  - Works address (`COMPANY_ADDRESS`)
+- **Footer Bottom Bar:**
+  - Copyright: `© [Year] SIVIND. All rights reserved.`
+  - Quality assurance badge: `ISO-grade manufacturing · 24/7 service desk`
+
+---
+
+## 9. Backend Processing & Administrative Management
+
+### Form Processing (`submit_enquiry.php`)
+1. Validates session CSRF token.
+2. Checks honeypot field `company_website` (aborts if spam bot detected).
+3. Validates and trims fields (`name`, `email`, `contact`, `description`).
+4. Stores enquiry securely in MySQL table `enquiries` with IP address and timestamp.
+5. Optionally triggers SMTP / email notification to `sales@sivind.com`.
+6. Redirects back to `contact.php` with session flash alert (`ok` or `error`).
+
+### Admin Enquiry Dashboard (`admin.php`)
+- Secured behind admin authentication (default master password: `sivind@admin`).
+- Lists all incoming customer RFQs with timestamp, client name, phone, email, and requirement details.
+- Allows exporting or managing lead pipelines directly.
+
+---
+
+## 10. Action Plan & Content Improvement Checklist
+
+> [!IMPORTANT]
+> The following checklist outlines the essential updates required before taking this website live on production:
+
+- [ ] **1. Company Contact Information (`includes/config.php`)**
+  - Update `COMPANY_PHONE` with the official operational phone line.
+  - Update `COMPANY_EMAIL` with the active sales mailbox.
+  - Update `COMPANY_ADDRESS` with the precise manufacturing unit / factory address.
+- [ ] **2. Asset Paths & Broken Image References**
+  - In `index.php` and `products.php`, update `assets/images1.jpg`, `assets/images2.jpg`, and `assets/images3.jpg` to match existing image files:
+    - Primary: `assets/product-1.jpg`
+    - Secondary: `assets/product-2.jpg`
+    - Tertiary: `assets/product-3.jpg`
+- [ ] **3. Client Roster & Logos (`clients.php`)**
+  - Replace the 8 placeholder client names with actual industrial customers.
+  - Add client logo images into `assets/clients/` and bind them in `clients.php`.
+- [ ] **4. MySQL Database Setup**
+  - Run `database.sql` into your MySQL instance (or phpMyAdmin) to initialize the `sivind` database and `enquiries` table.
+- [ ] **5. Admin Credentials (`admin.php`)**
+  - Change the default password `sivind@admin` in `admin.php` to a strong unique credential.
+- [ ] **6. Email Dispatch Notification**
+  - If instant email alerts are needed when a client submits an enquiry, set `SEND_EMAIL_NOTIFICATION` to `true` in `includes/config.php` and configure SMTP / PHPMailer.

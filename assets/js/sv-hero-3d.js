@@ -1936,7 +1936,8 @@ export function initHero3D() {
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.12;
-  renderer.setPixelRatio(isSoftwareGl ? 1 : Math.min(window.devicePixelRatio || 1, 2));
+  const heroDprCap = window.innerWidth < 600 ? 1.5 : 2;
+  renderer.setPixelRatio(isSoftwareGl ? 1 : Math.min(window.devicePixelRatio || 1, heroDprCap));
   renderer.shadowMap.enabled = !isSoftwareGl;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   mount.innerHTML = '';
@@ -2241,6 +2242,7 @@ export function initHero3D() {
     const h = Math.max(2, rect.height || 680);
     const aspect = w / h;
     const compact = w < 1024;
+    const phone = w < 600;
     const mobileScale = compact ? 0.45 : 1;
 
     const halfV = Math.tan(THREE.MathUtils.degToRad(dir.fov * 0.5));
@@ -2249,9 +2251,9 @@ export function initHero3D() {
     const camZ = Math.max(10.8 + dir.camZBoost, minZForWidth);
 
     const camX = dir.camX * mobileScale;
-    const camY = (compact ? 0.30 : 0.72) + dir.camYOffset * (compact ? 0.55 : 1);
+    const camY = (phone ? 0.42 : compact ? 0.30 : 0.72) + dir.camYOffset * (compact ? 0.55 : 1);
     const lookX = dir.lookX * mobileScale;
-    const lookY = (compact ? -0.95 : -0.10) + dir.lookYOffset * (compact ? 0.45 : 1);
+    const lookY = (phone ? -0.62 : compact ? -0.95 : -0.10) + dir.lookYOffset * (compact ? 0.45 : 1);
 
     camTargetPos.set(camX, camY, camZ);
     camTargetLook.set(lookX, lookY, 0);
@@ -2446,7 +2448,8 @@ export function initHero3D() {
     camera.lookAt(camCurrentLook);
     camera.updateProjectionMatrix();
 
-    renderer.setPixelRatio(isSoftwareGl ? 1 : Math.min(window.devicePixelRatio || 1, 2));
+    const heroDprCap = window.innerWidth < 600 ? 1.5 : 2;
+    renderer.setPixelRatio(isSoftwareGl ? 1 : Math.min(window.devicePixelRatio || 1, heroDprCap));
     renderer.setSize(w, h, false);
     renderer.render(scene, camera);
   }
@@ -2494,6 +2497,7 @@ export function initHero3D() {
   }
 
   function onPointerMove(ev) {
+    if (!heroInView && dragIndex < 0) return;
     const rect = renderer.domElement.getBoundingClientRect();
     pointerHoverX = ((ev.clientX - rect.left) / Math.max(1, rect.width) - 0.5) * 2;
     pointerHoverY = ((ev.clientY - rect.top) / Math.max(1, rect.height) - 0.5) * 2;
@@ -2789,10 +2793,16 @@ export function initHero3D() {
         const entry = entries[0];
         if (!entry) return;
         heroInView = entry.isIntersecting;
+        if (!heroInView && dragIndex < 0) {
+          running = false;
+          window.cancelAnimationFrame(frameId);
+          window.clearTimeout(frameId);
+          return;
+        }
         if (heroInView && !prefersReducedMotion()) {
           startLoop();
         }
-      }, { threshold: 0.02 })
+      }, { rootMargin: '120px 0px', threshold: 0.01 })
     : null;
   io?.observe(section);
 

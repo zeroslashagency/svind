@@ -197,7 +197,8 @@ class SVScopeShowcaseEngine {
     const width = Math.max(this.section.clientWidth || 1280, 320);
     const height = Math.max(this.section.clientHeight || 680, 320);
 
-    renderer.setPixelRatio(isSoftwareGl ? 1 : Math.min(window.devicePixelRatio || 1, 2));
+    const scopeDprCap = window.innerWidth < 600 ? 1.5 : 2;
+    renderer.setPixelRatio(isSoftwareGl ? 1 : Math.min(window.devicePixelRatio || 1, scopeDprCap));
     renderer.setSize(width, height, false);
     renderer.setClearColor(0x000000, 0);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -606,8 +607,11 @@ class SVScopeShowcaseEngine {
     const width = Math.max(Math.round(sectionRect.width), 320);
     const height = Math.max(Math.round(sectionRect.height), 320);
 
+    const scopeDprCap = window.innerWidth < 600 ? 1.5 : 2;
+    this.renderer.setPixelRatio(isSoftwareGl ? 1 : Math.min(window.devicePixelRatio || 1, scopeDprCap));
     this.renderer.setSize(width, height, false);
 
+    const isPhone = window.innerWidth < 600;
     this.colEls.forEach((col, i) => {
       const slot = this.slots[i];
       if (!slot) return;
@@ -621,7 +625,9 @@ class SVScopeShowcaseEngine {
       const aspect = w / h;
       slot.rect = { x, y, width: w, height: h };
       slot.visible = w > 4 && h > 4;
-      slot.aspectScale = aspect < 0.72 ? Math.min(1.45, 0.72 / Math.max(aspect, 0.36)) : 1;
+      slot.aspectScale = aspect < 0.72
+        ? Math.min(1.45, 0.72 / Math.max(aspect, 0.36))
+        : (isPhone ? 1.18 : 1);
       slot.camera.aspect = aspect;
       slot.camera.updateProjectionMatrix();
     });
@@ -666,8 +672,10 @@ class SVScopeShowcaseEngine {
         if (this.inView) {
           this.requestRender();
           this.startLoopIfNeeded();
+        } else {
+          this.stopLoop();
         }
-      }, { threshold: 0.05 });
+      }, { rootMargin: '120px 0px', threshold: 0.01 });
       this._io.observe(this.section);
     }
 
@@ -775,7 +783,7 @@ class SVScopeShowcaseEngine {
   }
 
   startLoopIfNeeded() {
-    if (this.destroyed || this.contextLost || this.continuousRunning) return;
+    if (this.destroyed || this.contextLost || this.continuousRunning || !this.inView) return;
     this.continuousRunning = true;
     this.lastTs = performance.now();
     this.requestRender();

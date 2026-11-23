@@ -279,6 +279,8 @@ class SVFloorCraneEngine {
     this.renderBusy = false;
     this.renderDirty = false;
     this.loopActive = false;
+    this.inView = true;
+    this.io = null;
     this.destroyed = false;
     this.contextLost = false;
   }
@@ -309,7 +311,8 @@ class SVFloorCraneEngine {
     const width = Math.max(this.mount.clientWidth || 960, 320);
     const height = Math.max(this.mount.clientHeight || 480, 280);
 
-    renderer.setPixelRatio(isSoftwareGl ? 1 : Math.min(window.devicePixelRatio || 1, 2));
+    const dprCap = window.innerWidth < 600 ? 1.5 : 2;
+    renderer.setPixelRatio(isSoftwareGl ? 1 : Math.min(window.devicePixelRatio || 1, dprCap));
     renderer.setSize(width, height, false);
     renderer.setClearColor(0x000000, 0);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -366,6 +369,12 @@ class SVFloorCraneEngine {
     if ('ResizeObserver' in window) {
       this.resizeObserver = new ResizeObserver(() => this.resize());
       this.resizeObserver.observe(this.mount);
+    }
+    if ('IntersectionObserver' in window && this.section) {
+      this.io = new IntersectionObserver((entries) => {
+        this.setInView(entries[0]?.isIntersecting);
+      }, { rootMargin: '140px 0px', threshold: 0.01 });
+      this.io.observe(this.section);
     }
 
     this.requestRender();
@@ -994,9 +1003,12 @@ class SVFloorCraneEngine {
     }
 
     // Cushion radius and horizontal framing on narrow mobile viewports so boom tip & hook remain unclipped
+    const isPhone = window.innerWidth < 600;
     const aspect = this.camera.aspect;
-    const aspectScale = aspect < 1.15 ? 1.38 : aspect < 1.32 ? 1.12 : 1.0;
-    const txAdj = aspect < 1.15 ? this.currentCam.tx + 0.16 : this.currentCam.tx;
+    const aspectScale = isPhone
+      ? (aspect < 1.15 ? 1.38 : 1.24)
+      : (aspect < 1.15 ? 1.38 : aspect < 1.32 ? 1.12 : 1.0);
+    const txAdj = (isPhone || aspect < 1.15) ? this.currentCam.tx + 0.14 : this.currentCam.tx;
     const rad = THREE.MathUtils.degToRad(this.currentCam.thetaDeg);
     const rEff = this.currentCam.radius * aspectScale;
     this.camera.position.set(
@@ -1121,8 +1133,26 @@ class SVFloorCraneEngine {
     }
   }
 
+  setInView(visible) {
+    const next = Boolean(visible);
+    if (this.inView === next) return;
+    this.inView = next;
+    if (!this.inView) {
+      this.stopPendingFrame();
+      return;
+    }
+    if (Math.abs(this.progressCurrent - this.progressTarget) > 0.0025 && !prefersReducedMotion()) {
+      this.startDampLoop();
+    } else {
+      this.progressCurrent = this.progressTarget;
+      this.applyRigAndCameraFromParams(this.progressCurrent, 1);
+      this.requestRender();
+    }
+  }
+
   setTargetProgress(t) {
     this.progressTarget = THREE.MathUtils.clamp(t, 0, 1);
+    if (!this.inView) return;
     if (prefersReducedMotion()) {
       this.progressCurrent = this.progressTarget;
       this.applyRigAndCameraFromParams(this.progressCurrent, 1);
@@ -1138,7 +1168,7 @@ class SVFloorCraneEngine {
   }
 
   startDampLoop() {
-    if (this.destroyed || this.contextLost) return;
+    if (this.destroyed || this.contextLost || !this.inView) return;
     if (this.loopActive) {
       this.requestRender();
       return;
@@ -1239,6 +1269,8 @@ class SVFloorCraneEngine {
     if (!this.renderer || !this.camera || !this.mount) return;
     const width = Math.max(this.mount.clientWidth || 960, 300);
     const height = Math.max(this.mount.clientHeight || 480, 260);
+    const dprCap = window.innerWidth < 600 ? 1.5 : 2;
+    this.renderer.setPixelRatio(isSoftwareGl ? 1 : Math.min(window.devicePixelRatio || 1, dprCap));
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(width, height, false);
@@ -1252,6 +1284,7 @@ class SVFloorCraneEngine {
     this.stopPendingFrame();
     if (this.boundResize) window.removeEventListener('resize', this.boundResize);
     if (this.resizeObserver) this.resizeObserver.disconnect();
+    if (this.io) this.io.disconnect();
     this.disposables.geometries.forEach((g) => g.dispose());
     this.disposables.materials.forEach((m) => m.dispose());
     this.disposables.textures.forEach((t) => t.dispose());

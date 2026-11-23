@@ -1,0 +1,705 @@
+/* ==========================================================================
+   SVIND — Mobile Optimization Stylesheet (< 600px ONLY)
+   Strictly isolated to @media (max-width: 599.98px) so tablet (600px–1023px)
+   and desktop (>= 1024px) rendering and rhythm remain completely unchanged.
+   ========================================================================== */
+
+@media (max-width: 599.98px) {
+  /* ------------------------------------------------------------------------
+     1. Sticky Header & Fixed Mobile Action Bar (<= 15% of 844px viewport)
+     ------------------------------------------------------------------------ */
+  .nav__inner {
+    min-height: 60px;
+  }
+
+  .nav.is-scrolled .nav__inner {
+    min-height: 54px;
+  }
+
+  .nav__brand {
+    padding-block: 6px;
+    padding-inline-end: 12px;
+    gap: 1px;
+  }
+
+  .nav__wordmark {
+    font-size: 1rem;
+  }
+
+  .nav__descriptor {
+    font-size: 9.5px;
+    line-height: 1.2;
+    letter-spacing: 0.07em;
+  }
+
+  body {
+    padding-block-end: 50px;
+  }
+
+  .mobile-bar {
+    min-height: 50px;
+  }
+
+  .mobile-bar__item {
+    min-height: 50px;
+    padding-inline: 4px;
+    gap: 4px;
+    font-size: 10px;
+    letter-spacing: 0.055em;
+    line-height: 1.15;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  /* ------------------------------------------------------------------------
+     2. Hero 3D Stage (#hero-3d) — Compact Framing & 44px Swatch Targets
+     ------------------------------------------------------------------------ */
+  .sv-hero3d {
+    min-height: clamp(470px, calc(100svh - 114px), 590px);
+    scroll-margin-top: 56px;
+  }
+
+  .sv-hero3d__chrome {
+    min-height: clamp(470px, calc(100svh - 114px), 590px);
+    padding: 12px 16px 18px;
+  }
+
+  .sv-hero3d__switcher-wrap {
+    gap: 6px;
+  }
+
+  .sv-hero3d__swatches {
+    gap: 4px;
+    padding: 2px 6px;
+  }
+
+  /* Preserve 26px visual circular finish dot inside a true 44x44px hit target */
+  .sv-hero3d__swatch {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-grid;
+    place-items: center;
+    background: transparent !important;
+    border: 0;
+    box-shadow: none !important;
+    transform: none;
+  }
+
+  .sv-hero3d__swatch::before {
+    content: "";
+    width: 26px;
+    height: 26px;
+    border-radius: 999px;
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(26, 29, 33, 0.16);
+    transition: transform 150ms ease, box-shadow 150ms ease;
+  }
+
+  .sv-hero3d__swatch--steel::before {
+    background: linear-gradient(135deg, #E2E7EE 0%, #8A96A8 50%, #394454 100%);
+  }
+
+  .sv-hero3d__swatch--molten::before {
+    background: radial-gradient(circle at 38% 38%, #FFB454 0%, #FF5A1F 42%, #242228 84%);
+  }
+
+  .sv-hero3d__swatch--enamel::before {
+    background: linear-gradient(135deg, #F2B705 0%, #F2B705 52%, #1E3A6B 52%, #1E3A6B 100%);
+  }
+
+  .sv-hero3d__swatch--cad::before {
+    background:
+      linear-gradient(rgba(30, 58, 107, 0.32) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(30, 58, 107, 0.32) 1px, transparent 1px),
+      #EFF6FC;
+    background-size: 6px 6px;
+  }
+
+  .sv-hero3d__swatch--galvanized::before {
+    background: conic-gradient(from 45deg, #CBD5E0, #909EAE, #E3EAF2, #7E8C9C, #CBD5E0);
+  }
+
+  .sv-hero3d__swatch:hover,
+  .sv-hero3d__swatch:focus-visible,
+  .sv-hero3d__swatch.is-active {
+    transform: none;
+  }
+
+  .sv-hero3d__swatch:hover::before,
+  .sv-hero3d__swatch:focus-visible::before {
+    transform: scale(1.1);
+  }
+
+  .sv-hero3d__swatch:focus-visible {
+    outline: 2px solid var(--h3d-eyebrow);
+    outline-offset: -3px;
+  }
+
+  .sv-hero3d__swatch.is-active::before {
+    transform: scale(1.12);
+    box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px var(--h3d-eyebrow);
+  }
+
+  .sv-hero3d__mode-label {
+    font-size: 10px;
+    letter-spacing: 0.09em;
+  }
+
+  .sv-hero3d__stage-spacer {
+    flex: 1 1 165px;
+    min-height: 165px;
+  }
+
+  .sv-hero3d__eyebrow {
+    margin-bottom: 4px;
+    font-size: 10px;
+    letter-spacing: 0.11em;
+  }
+
+  .sv-hero3d__h1 {
+    font-size: clamp(20px, 5.6vw, 26px);
+    line-height: 1.14;
+  }
+
+  /* ------------------------------------------------------------------------
+     3. Client Logo Marquee
+     ------------------------------------------------------------------------ */
+  .logo-slider-section {
+    padding-block: 16px;
+    padding-inline: 16px;
+  }
+
+  .logo-slider .splide__list {
+    gap: 32px !important;
+  }
+
+  .core-marquee__logo {
+    height: 24px;
+    max-width: 110px;
+  }
+
+  .core-marquee__logo[src$="ajax-engineering.svg"],
+  .core-marquee__logo[src$="lt.svg"] {
+    height: 30px;
+  }
+
+  /* ------------------------------------------------------------------------
+     4. Expertise / Services Band (#services)
+     ------------------------------------------------------------------------ */
+  .expertise-section {
+    padding-block: 36px 42px;
+    padding-inline: 16px;
+  }
+
+  .expertise-component {
+    gap: 24px;
+  }
+
+  .heading-wrapper.is-center {
+    padding-block-start: 4px;
+    gap: 10px;
+  }
+
+  .heading-style-h2 {
+    font-size: clamp(25px, 6.8vw, 30px);
+  }
+
+  .expertise-list,
+  .expertsie-list {
+    gap: 24px;
+    margin-block-start: 16px;
+  }
+
+  .expertise-item {
+    gap: 10px;
+  }
+
+  .expertise-content-wrapper {
+    padding: 36px 20px 20px;
+    gap: 12px;
+  }
+
+  .expertise-item .expertise-kicker {
+    top: -12px;
+    left: 16px !important;
+    right: auto !important;
+    inset: -12px auto auto 16px !important;
+    transform: rotate(-1.5deg);
+    padding: 5px 11px;
+    font-size: 12px;
+  }
+
+  .heading-style-h3.expert {
+    font-size: 24px;
+  }
+
+  .text-size-small.expert {
+    font-size: 14.5px;
+    line-height: 1.55;
+  }
+
+  .button-group.expert {
+    margin-block-start: 4px;
+  }
+
+  #services .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 10px 20px;
+    background-color: var(--color-navy, #1E3A6B);
+    color: #FFFFFF;
+    font-family: var(--font-mono, "IBM Plex Mono", monospace);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 0;
+  }
+
+  #services .button:hover,
+  #services .button:focus-visible {
+    background-color: var(--color-navy-deep, #162C52);
+    color: #FFFFFF;
+  }
+
+  .expertise-image-wrapper {
+    max-height: 185px;
+    aspect-ratio: 16 / 10;
+  }
+
+  .expertise-image {
+    height: 100%;
+    transform: none !important;
+    object-position: center center;
+  }
+
+  /* ------------------------------------------------------------------------
+     5. 25 Years Milestone (#milestone-25)
+     ------------------------------------------------------------------------ */
+  .sv-m25__frame {
+    padding-top: 12px;
+    gap: 4px;
+  }
+
+  .sv-m25__art {
+    min-height: 165px;
+  }
+
+  .sv-m25__content {
+    padding: 4px 20px 28px;
+  }
+
+  .sv-m25__kicker {
+    margin-bottom: 8px;
+  }
+
+  .sv-m25__title {
+    margin-bottom: 16px;
+    font-size: clamp(24px, 6.8vw, 30px);
+  }
+
+  .sv-m25__cta {
+    min-height: 44px;
+    padding: 12px 22px;
+  }
+
+  /* ------------------------------------------------------------------------
+     6. Capability & Scale Metrics (#capability-scale)
+     ------------------------------------------------------------------------ */
+  .sv-rank__block {
+    min-height: 160px;
+    padding: 20px 18px 22px 24px;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+  }
+
+  .sv-rank__num {
+    font-size: 60px;
+  }
+
+  .sv-rank__num--compact {
+    font-size: 48px;
+  }
+
+  .sv-rank__meta {
+    margin-block-start: 14px;
+    gap: 14px;
+  }
+
+  .sv-rank__foot,
+  .sv-rank__foot--headline {
+    padding: 18px 20px 20px;
+    gap: 12px;
+  }
+
+  .sv-value__title {
+    font-size: 23px;
+  }
+
+  .sv-mind__inspect {
+    min-height: 44px;
+    padding: 10px 14px;
+    font-size: 10.5px;
+  }
+
+  .sv-rank__survey-link {
+    min-height: 44px;
+    padding-block: 10px;
+  }
+
+  /* ------------------------------------------------------------------------
+     7. Rated Load, Real Bay + Bengaluru Local Band
+     ------------------------------------------------------------------------ */
+  [aria-labelledby="service-h"].core-band {
+    padding-block: 36px 40px;
+    padding-inline: 20px;
+  }
+
+  [aria-labelledby="service-h"] .core-split {
+    margin-block-start: 0 !important;
+    gap: 20px;
+  }
+
+  [aria-labelledby="service-h"] .core-actions,
+  [aria-labelledby="local-h"] .core-actions {
+    margin-block-start: 16px !important;
+  }
+
+  .core-lead {
+    margin-block-start: 12px;
+  }
+
+  .core-btn {
+    min-height: 44px;
+    padding: 12px 20px;
+  }
+
+  [aria-labelledby="local-h"].core-band {
+    padding-block: 32px;
+    padding-inline: 16px;
+  }
+
+  [aria-labelledby="local-h"] > div > div {
+    margin-block-start: 0 !important;
+    padding: 22px 20px !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     8. Crane Bays & Systems (#bay-systems)
+     ------------------------------------------------------------------------ */
+  .sv-bays {
+    padding: 38px 20px 42px;
+  }
+
+  .sv-bays__heading {
+    font-size: clamp(30px, 8.2vw, 38px);
+  }
+
+  .sv-bays__grid {
+    gap: 14px;
+    margin-block-start: 24px;
+  }
+
+  .sv-bays__card {
+    min-height: 270px;
+    padding: 20px 20px 0;
+  }
+
+  .sv-bays__title {
+    font-size: 21px;
+  }
+
+  .sv-bays__desc {
+    margin-block-start: 6px;
+    font-size: 13.5px;
+    line-height: 1.42;
+  }
+
+  /* Always show the top-right arrow cue on touch devices (no hover cursor) */
+  .sv-bays__arrow {
+    opacity: 1;
+    transform: none;
+  }
+
+  .sv-bays__media--indoor {
+    height: 54%;
+  }
+
+  .sv-bays__media--sky {
+    height: 56%;
+  }
+
+  /* ------------------------------------------------------------------------
+     9. Engineering Scope 4-Column 3D Showcase (#engineering-scope)
+     ------------------------------------------------------------------------ */
+  .sv-scope__col {
+    min-height: 256px;
+    padding: 16px 20px 18px;
+  }
+
+  .sv-scope__head {
+    height: 32px;
+  }
+
+  .sv-scope__num {
+    font-size: 24px;
+  }
+
+  .sv-scope__stage {
+    min-height: 138px;
+  }
+
+  .sv-scope__foot {
+    padding-top: 8px;
+    gap: 8px;
+  }
+
+  .sv-scope__title {
+    min-height: 0;
+    font-size: 20px;
+    transform: none;
+  }
+
+  /* ------------------------------------------------------------------------
+     10. Floor Crane 3D Interactive Showcase (#floor-crane-showcase)
+     ------------------------------------------------------------------------ */
+  #floor-crane-showcase.core-band {
+    padding-block: 36px 40px;
+    padding-inline: 20px;
+  }
+
+  .sv-fc__head {
+    margin-block-end: 12px;
+  }
+
+  .sv-fc__viewport {
+    height: 265px;
+  }
+
+  .sv-fc__boxes {
+    margin-top: 10px;
+  }
+
+  .sv-fc__box {
+    min-height: 48px;
+    padding: 12px 14px;
+    gap: 3px;
+  }
+
+  /* ------------------------------------------------------------------------
+     11. RFQ Stainless Nameplate (#rfq-plate)
+     ------------------------------------------------------------------------ */
+  .sv-plate {
+    padding: 36px 16px;
+  }
+
+  .sv-plate__brand-zone {
+    gap: 18px;
+    padding: 22px 20px;
+  }
+
+  .sv-plate__mark-svg {
+    width: min(100%, 230px);
+  }
+
+  .sv-plate__head {
+    font-size: 22px;
+  }
+
+  .sv-plate__specs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sv-plate__cell {
+    padding: 13px 10px;
+    gap: 4px;
+  }
+
+  .sv-plate__cell:nth-child(odd) {
+    border-inline-end: 1px solid var(--groove-dark);
+    box-shadow:
+      inset -1px 0 0 var(--groove-light),
+      inset 0 -1px 0 var(--groove-light);
+  }
+
+  .sv-plate__value {
+    font-size: clamp(10.25px, 2.8vw, 12px);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+
+  .sv-plate__action-bar {
+    padding: 16px 18px;
+    gap: 12px;
+  }
+
+  .sv-plate__cta {
+    min-height: 44px;
+    width: 100%;
+  }
+
+  /* ------------------------------------------------------------------------
+     12. About Band (.abt)
+     ------------------------------------------------------------------------ */
+  .abt {
+    --abt-pad-block: 28px;
+    --abt-pad-inline: 20px;
+    --abt-display: clamp(28px, 8vw, 38px);
+  }
+
+  .abt__content-inner {
+    gap: 20px;
+  }
+
+  .abt__lead {
+    font-size: 18px;
+    line-height: 1.32;
+  }
+
+  .abt__lead + .abt__lead {
+    margin-block-start: 14px;
+  }
+
+  .abt__body {
+    font-size: 14.5px;
+    line-height: 1.62;
+  }
+
+  /* ------------------------------------------------------------------------
+     13. Closing CTA & FAQ (.arz)
+     ------------------------------------------------------------------------ */
+  .arz {
+    --arz-pad-block: 38px;
+    --arz-pad-inline: 20px;
+    --arz-display-big: 56px;
+    --arz-display-h2: 28px;
+    --arz-display-faq: 30px;
+    --arz-question: 17px;
+  }
+
+  .arz__cta {
+    gap: 20px;
+  }
+
+  .arz__cta-bottom {
+    gap: 18px;
+  }
+
+  .arz__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 12px 22px;
+  }
+
+  .arz__faq {
+    gap: 28px;
+  }
+
+  .arz__faq-left {
+    gap: 24px;
+  }
+
+  .arz__faq-heading {
+    gap: 14px;
+  }
+
+  .arz__faq-q {
+    min-height: 48px;
+    padding-block: 14px;
+    gap: 16px;
+    line-height: 1.35;
+  }
+
+  .arz__faq-a p {
+    padding-block-end: 16px;
+  }
+
+  .arz__faq-card {
+    padding: 24px 20px;
+    gap: 16px;
+  }
+
+  .arz__faq-card-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 30px;
+    line-height: 1.25;
+  }
+
+  /* ------------------------------------------------------------------------
+     14. Footer & Legal Baseline
+     ------------------------------------------------------------------------ */
+  .footer {
+    padding-block-start: 32px;
+  }
+
+  .footer__close {
+    gap: 24px;
+    padding-block-end: 28px;
+  }
+
+  .footer__close-heading {
+    font-size: 36px;
+  }
+
+  .footer__close-right {
+    gap: 20px;
+  }
+
+  .footer__close-cta {
+    gap: 12px;
+  }
+
+  .footer__close-btn {
+    min-height: 44px;
+    padding: 12px 20px;
+  }
+
+  .footer__close-social {
+    margin-block-start: 20px;
+    gap: 20px;
+  }
+
+  .footer__close-social a {
+    min-height: 44px;
+    padding-inline: 4px;
+  }
+
+  .footer__close-partners {
+    padding-block-start: 20px;
+    gap: 14px;
+  }
+
+  .footer__close-partners-list {
+    gap: 16px;
+  }
+
+  .footer__close-partners img {
+    width: 88px;
+    height: 34px;
+  }
+
+  .footer__baseline-row {
+    gap: 8px;
+    padding-block: 14px 20px;
+  }
+
+  .footer__baseline .footer__legal-links {
+    gap: 12px;
+  }
+
+  .footer__baseline .footer__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding-inline: 10px;
+  }
+}
