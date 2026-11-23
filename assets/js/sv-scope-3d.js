@@ -864,11 +864,64 @@ class SVScopeShowcaseEngine {
   }
 }
 
+const DESKTOP_SCOPE_QUERY = '(min-width: 600px)';
+
 export function initScopeShowcase() {
   const section = document.querySelector('#engineering-scope');
   if (!section) return null;
 
-  const engine = new SVScopeShowcaseEngine(section);
-  engine.init();
-  return engine;
+  const canvasLayer = section.querySelector('#sv-scope-canvas-layer');
+  const fallback = section.querySelector('#sv-scope-fallback');
+  const mql = window.matchMedia ? window.matchMedia(DESKTOP_SCOPE_QUERY) : null;
+  let engine = null;
+
+  function syncMode() {
+    const isDesktopOrTablet = mql ? mql.matches : window.innerWidth >= 600;
+    if (isDesktopOrTablet) {
+      if (!engine) {
+        delete section.dataset.scopeMode;
+        engine = new SVScopeShowcaseEngine(section);
+        engine.init();
+      }
+    } else {
+      if (engine) {
+        engine.dispose();
+        engine = null;
+      }
+      if (canvasLayer) {
+        canvasLayer.innerHTML = '';
+      }
+      if (fallback) {
+        fallback.hidden = true;
+      }
+      section.dataset.scopeMode = 'mobile-editorial';
+    }
+  }
+
+  syncMode();
+
+  if (mql) {
+    if (typeof mql.addEventListener === 'function') {
+      mql.addEventListener('change', syncMode);
+    } else if (typeof mql.addListener === 'function') {
+      mql.addListener(syncMode);
+    }
+  }
+
+  return {
+    getEngine: () => engine,
+    dispose: () => {
+      if (mql) {
+        if (typeof mql.removeEventListener === 'function') {
+          mql.removeEventListener('change', syncMode);
+        } else if (typeof mql.removeListener === 'function') {
+          mql.removeListener(syncMode);
+        }
+      }
+      if (engine) {
+        engine.dispose();
+        engine = null;
+      }
+    }
+  };
 }

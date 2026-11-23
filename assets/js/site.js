@@ -1661,6 +1661,88 @@
   }
 
   /* ------------------------------------------------------------------------
+     12. MOBILE DISCLOSURES (< 600px)
+     About "Read full story" toggle and collapsible Footer directory groups.
+     Strictly active below 600px; desktop/tablet always render fully expanded.
+     ------------------------------------------------------------------------ */
+
+  function initMobileDisclosures() {
+    var mql = window.matchMedia ? window.matchMedia('(max-width: 599.98px)') : null;
+    function isMobile() {
+      return mql ? mql.matches : window.innerWidth < 600;
+    }
+
+    // 1. About "Read full story" progressive disclosure
+    var abtBtn = document.getElementById('abt-read-more');
+    var abtContent = abtBtn ? abtBtn.closest('.abt__content') : null;
+    var abtLabel = abtBtn ? abtBtn.querySelector('[data-abt-label]') : null;
+
+    if (abtBtn && abtContent) {
+      var syncAbout = function () {
+        if (!isMobile()) {
+          abtBtn.setAttribute('aria-expanded', 'true');
+          abtContent.classList.remove('is-expanded');
+          if (abtLabel) abtLabel.textContent = 'Read full story';
+        } else {
+          var open = abtContent.classList.contains('is-expanded');
+          abtBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+          if (abtLabel) abtLabel.textContent = open ? 'Show less' : 'Read full story';
+        }
+      };
+
+      abtBtn.addEventListener('click', function () {
+        if (!isMobile()) return;
+        var next = !abtContent.classList.contains('is-expanded');
+        abtContent.classList.toggle('is-expanded', next);
+        abtBtn.setAttribute('aria-expanded', next ? 'true' : 'false');
+        if (abtLabel) abtLabel.textContent = next ? 'Show less' : 'Read full story';
+      });
+
+      syncAbout();
+      if (mql) {
+        if (typeof mql.addEventListener === 'function') mql.addEventListener('change', syncAbout);
+        else if (typeof mql.addListener === 'function') mql.addListener(syncAbout);
+      }
+    }
+
+    // 2. Footer directory collapsible link groups
+    var footerGroups = qsa('[data-footer-acc]');
+    if (footerGroups.length) {
+      var syncFooter = function () {
+        var mobile = isMobile();
+        footerGroups.forEach(function (group) {
+          var btn = group.querySelector('.footer__dir-trigger');
+          if (!btn) return;
+          if (!mobile) {
+            group.classList.remove('is-open');
+            btn.setAttribute('aria-expanded', 'true');
+          } else {
+            var open = group.classList.contains('is-open');
+            btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+          }
+        });
+      };
+
+      footerGroups.forEach(function (group) {
+        var btn = group.querySelector('.footer__dir-trigger');
+        if (!btn) return;
+        btn.addEventListener('click', function () {
+          if (!isMobile()) return;
+          var next = !group.classList.contains('is-open');
+          group.classList.toggle('is-open', next);
+          btn.setAttribute('aria-expanded', next ? 'true' : 'false');
+        });
+      });
+
+      syncFooter();
+      if (mql) {
+        if (typeof mql.addEventListener === 'function') mql.addEventListener('change', syncFooter);
+        else if (typeof mql.addListener === 'function') mql.addListener(syncFooter);
+      }
+    }
+  }
+
+  /* ------------------------------------------------------------------------
      BOOT
      ------------------------------------------------------------------------ */
 
@@ -1686,6 +1768,7 @@
     initFilters();
     initFormSteps();
     initPlateSheen();
+    initMobileDisclosures();
   }
 
   if (document.readyState === 'loading') {

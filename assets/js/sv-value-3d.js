@@ -4,7 +4,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { initHero3D } from './sv-hero-3d.js?v=20261113h';
-import { initScopeShowcase } from './sv-scope-3d.js?v=20261113m';
+import { initScopeShowcase } from './sv-scope-3d.js?v=20261123g';
 import { initFloorCraneShowcase } from './sv-floor-crane-3d.js?v=20261123e';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -366,8 +366,9 @@ function initSection04Scroll() {
     };
   });
 
-  // Tablet & mobile (< 1024px): staggered top-to-down card drop inside clipped rows
-  mm.add('(max-width: 1023.98px) and (prefers-reduced-motion: no-preference)', () => {
+  // Tablet (600px–1023px): staggered top-to-down card drop inside clipped rows
+  // Mobile (< 600px) renders immediately at full opacity for zero-latency scanning.
+  mm.add('(min-width: 600px) and (max-width: 1023.98px) and (prefers-reduced-motion: no-preference)', () => {
     const mobileTl = gsap.timeline({
       scrollTrigger: {
         trigger: section,

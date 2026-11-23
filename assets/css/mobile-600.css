@@ -1,19 +1,34 @@
 /* ==========================================================================
-   SVIND — Mobile Optimization Stylesheet (< 600px ONLY)
+   SVIND — Mobile Optimization & Continuous Scroll Stylesheet (< 600px ONLY)
    Strictly isolated to @media (max-width: 599.98px) so tablet (600px–1023px)
    and desktop (>= 1024px) rendering and rhythm remain completely unchanged.
    ========================================================================== */
 
 @media (max-width: 599.98px) {
   /* ------------------------------------------------------------------------
+     0. Shared Mobile Utilities & Continuous Scroll Rhythm
+     ------------------------------------------------------------------------ */
+  .sv-m-swipe-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin: 2px 0 0;
+    font-family: var(--ed-font, "Plus Jakarta Sans", sans-serif);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    color: var(--ed-navy, #1E3A6B);
+  }
+
+  /* ------------------------------------------------------------------------
      1. Sticky Header & Fixed Mobile Action Bar (<= 15% of 844px viewport)
      ------------------------------------------------------------------------ */
   .nav__inner {
-    min-height: 60px;
+    min-height: 58px;
   }
 
   .nav.is-scrolled .nav__inner {
-    min-height: 54px;
+    min-height: 52px;
   }
 
   .nav__brand {
@@ -52,7 +67,7 @@
   }
 
   /* ------------------------------------------------------------------------
-     2. Hero 3D Stage (#hero-3d) — Compact Framing & 44px Swatch Targets
+     2. Hero 3D Stage (#hero-3d) — Preserved Active 3D & 44px Swatch Targets
      ------------------------------------------------------------------------ */
   .sv-hero3d {
     min-height: clamp(470px, calc(100svh - 114px), 590px);
@@ -164,311 +179,637 @@
   }
 
   /* ------------------------------------------------------------------------
-     3. Client Logo Marquee
+     3. Client Logo Marquee — Slim Continuous Strip
      ------------------------------------------------------------------------ */
   .logo-slider-section {
-    padding-block: 16px;
+    padding-block: 14px;
     padding-inline: 16px;
   }
 
   .logo-slider .splide__list {
-    gap: 32px !important;
+    gap: 28px !important;
   }
 
   .core-marquee__logo {
-    height: 24px;
-    max-width: 110px;
+    height: 22px;
+    max-width: 104px;
   }
 
   .core-marquee__logo[src$="ajax-engineering.svg"],
   .core-marquee__logo[src$="lt.svg"] {
-    height: 30px;
+    height: 28px;
   }
 
   /* ------------------------------------------------------------------------
-     4. Expertise / Services Band (#services)
+     4. Services / Expertise (#services) — Horizontal Snap-Scroll Swipe Row
      ------------------------------------------------------------------------ */
+  body.ed-home .expertise-section,
   .expertise-section {
-    padding-block: 36px 42px;
+    padding-block: 28px 32px;
     padding-inline: 16px;
+    background-color: #FFFFFF;
+    border-block-end: 1px solid var(--ed-hairline, #E8EBF0);
+  }
+
+  .expertise-section .padding-global,
+  .expertise-section .padding-section-large {
+    padding: 0;
   }
 
   .expertise-component {
-    gap: 24px;
+    gap: 16px;
   }
 
   .heading-wrapper.is-center {
-    padding-block-start: 4px;
-    gap: 10px;
+    align-items: flex-start;
+    text-align: left;
+    padding-block-start: 0;
+    gap: 8px;
+    margin-inline: 0;
   }
 
+  .heading-title-wrapper.is-center {
+    align-items: flex-start;
+  }
+
+  body.ed-home .heading-style-h2,
   .heading-style-h2 {
-    font-size: clamp(25px, 6.8vw, 30px);
+    font-size: clamp(22px, 6.2vw, 26px);
+    line-height: 1.14;
+    text-wrap: balance;
+  }
+
+  .heading-wrapper .text-size-small {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
   }
 
   .expertise-list,
   .expertsie-list {
-    gap: 24px;
-    margin-block-start: 16px;
-  }
-
-  .expertise-item {
-    gap: 10px;
-  }
-
-  .expertise-content-wrapper {
-    padding: 36px 20px 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
     gap: 12px;
+    margin-block-start: 0;
+    margin-inline: -16px;
+    padding-inline: 16px;
+    padding-block-end: 4px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 16px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
   }
 
+  .expertise-list::-webkit-scrollbar,
+  .expertsie-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  body.ed-home .expertise-item,
+  .expertise-item {
+    position: relative;
+    top: 0;
+    flex: 0 0 82%;
+    min-width: 0;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-height: none;
+    border-radius: 12px;
+    border: 1px solid var(--ed-hairline, #E5E8EE);
+    background-color: var(--ed-surface, #F7F8FA);
+    overflow: hidden;
+    transform: none !important;
+  }
+
+  body.ed-home .expertise-image-wrapper,
+  .expertise-image-wrapper {
+    order: 1;
+    width: 100%;
+    height: 142px;
+    max-height: 142px;
+    min-height: 142px;
+    aspect-ratio: auto;
+    border-radius: 0;
+    border: 0;
+  }
+
+  .expertise-image {
+    width: 100%;
+    height: 100%;
+    transform: none !important;
+    object-fit: cover;
+    object-position: center center;
+  }
+
+  /* Clean unboxed eyebrow below photo (zero rotated pill badges on mobile) */
+  body.ed-home .expertise-item .expertise-kicker,
   .expertise-item .expertise-kicker {
-    top: -12px;
-    left: 16px !important;
-    right: auto !important;
-    inset: -12px auto auto 16px !important;
-    transform: rotate(-1.5deg);
-    padding: 5px 11px;
+    order: 2;
+    position: static !important;
+    inset: auto !important;
+    transform: none !important;
+    display: block;
+    padding: 14px 16px 0 !important;
+    margin: 0;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    color: var(--ed-navy, #1E3A6B) !important;
+    font-family: var(--ed-font, "Plus Jakarta Sans", sans-serif);
     font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    line-height: 1.2;
   }
 
+  body.ed-home .expertise-content-wrapper,
+  .expertise-content-wrapper {
+    order: 3;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 6px 16px 16px !important;
+    gap: 8px;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+  }
+
+  body.ed-home .heading-style-h3.expert,
   .heading-style-h3.expert {
-    font-size: 24px;
+    font-size: 19px;
+    line-height: 1.18;
+    font-weight: 600;
   }
 
+  body.ed-home .text-size-small.expert,
   .text-size-small.expert {
-    font-size: 14.5px;
-    line-height: 1.55;
+    font-size: 13.5px;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .button-group.expert {
-    margin-block-start: 4px;
+    margin-block-start: auto;
+    padding-block-start: 6px;
   }
 
+  body.ed-home #services .button,
   #services .button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     min-height: 44px;
-    padding: 10px 20px;
-    background-color: var(--color-navy, #1E3A6B);
+    padding: 10px 16px;
+    background-color: var(--ed-navy, #1E3A6B);
     color: #FFFFFF;
-    font-family: var(--font-mono, "IBM Plex Mono", monospace);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    font-family: var(--ed-font, "Plus Jakarta Sans", sans-serif);
+    font-size: 13.5px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    text-transform: none;
     text-decoration: none;
-    border-radius: 0;
+    border-radius: 6px;
   }
 
-  #services .button:hover,
-  #services .button:focus-visible {
-    background-color: var(--color-navy-deep, #162C52);
+  body.ed-home #services .button:hover,
+  body.ed-home #services .button:focus-visible {
+    background-color: var(--ed-navy-hover, #162C52);
     color: #FFFFFF;
-  }
-
-  .expertise-image-wrapper {
-    max-height: 185px;
-    aspect-ratio: 16 / 10;
-  }
-
-  .expertise-image {
-    height: 100%;
-    transform: none !important;
-    object-position: center center;
   }
 
   /* ------------------------------------------------------------------------
-     5. 25 Years Milestone (#milestone-25)
+     5. 25 Years Milestone (#milestone-25) — Compact Continuous Bridge
      ------------------------------------------------------------------------ */
+  body.ed-home .sv-m25 {
+    border-top: 0;
+  }
+
   .sv-m25__frame {
-    padding-top: 12px;
-    gap: 4px;
+    padding-top: 8px;
+    gap: 0;
   }
 
   .sv-m25__art {
-    min-height: 165px;
+    min-height: 132px;
   }
 
   .sv-m25__content {
-    padding: 4px 20px 28px;
-  }
-
-  .sv-m25__kicker {
-    margin-bottom: 8px;
+    padding: 0 16px 24px;
   }
 
   .sv-m25__title {
-    margin-bottom: 16px;
-    font-size: clamp(24px, 6.8vw, 30px);
+    margin-bottom: 14px;
+    font-size: clamp(22px, 6.2vw, 26px);
   }
 
   .sv-m25__cta {
     min-height: 44px;
-    padding: 12px 22px;
+    padding: 10px 18px;
   }
 
   /* ------------------------------------------------------------------------
-     6. Capability & Scale Metrics (#capability-scale)
+     6. Capability & Scale Metrics (#capability-scale) — Compact 2x2 Grid
      ------------------------------------------------------------------------ */
+  body.ed-home .sv-value,
+  .sv-value {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding: 24px 16px 28px;
+    background-color: #FFFFFF;
+    border-block: 1px solid var(--ed-hairline, #E8EBF0);
+  }
+
+  body.ed-home .sv-rank__col,
+  .sv-rank__col {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid var(--ed-hairline, #E5E8EE);
+    border-radius: 12px;
+    background-color: #FFFFFF;
+    overflow: hidden;
+  }
+
+  body.ed-home .sv-rank__col:last-child,
+  .sv-rank__col:last-child {
+    border-block-end: 1px solid var(--ed-hairline, #E5E8EE);
+  }
+
   .sv-rank__block {
-    min-height: 160px;
-    padding: 20px 18px 22px 24px;
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+    min-height: 0;
+    padding: 14px 12px 12px;
+    clip-path: none;
+    justify-content: flex-start;
   }
 
+  .sv-rank__num-row {
+    gap: 4px;
+    align-items: baseline;
+  }
+
+  body.ed-home .sv-rank__num,
   .sv-rank__num {
-    font-size: 60px;
+    font-size: 34px;
+    line-height: 0.95;
+    font-weight: 500;
   }
 
+  body.ed-home .sv-rank__num--compact,
   .sv-rank__num--compact {
-    font-size: 48px;
+    font-size: 30px;
+    line-height: 0.95;
+  }
+
+  .sv-rank__unit {
+    font-size: 11px;
+    margin-block-start: 0;
   }
 
   .sv-rank__meta {
-    margin-block-start: 14px;
-    gap: 14px;
+    margin-block-start: 8px;
+    gap: 6px;
+    font-size: 12px;
+    line-height: 1.25;
+  }
+
+  .sv-rank__meta-id {
+    display: none;
+  }
+
+  .sv-rank__meta-detail span:first-child {
+    font-weight: 600;
+    font-size: 12.5px;
+  }
+
+  .sv-rank__meta-detail span:nth-child(2) {
+    display: none;
   }
 
   .sv-rank__foot,
-  .sv-rank__foot--headline {
-    padding: 18px 20px 20px;
-    gap: 12px;
+  .sv-rank__foot--headline,
+  .sv-rank__foot--cta {
+    padding: 10px 10px 10px;
+    gap: 6px;
+    justify-content: flex-end;
+    background-color: #FFFFFF;
   }
 
+  /* Keep accessible heading for aria-labelledby while keeping all 4 2x2 tiles uniform */
   .sv-value__title {
-    font-size: 23px;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
   }
 
+  .sv-value__copy {
+    display: none;
+  }
+
+  .sv-rank__note {
+    display: block;
+    font-size: 11.5px;
+    line-height: 1.35;
+    color: var(--ed-muted, #525965);
+  }
+
+  body.ed-home .sv-mind__inspect,
   .sv-mind__inspect {
+    width: 100%;
+    justify-content: space-between;
     min-height: 44px;
-    padding: 10px 14px;
-    font-size: 10.5px;
+    padding: 8px 10px;
+    gap: 4px;
+    font-size: 11px;
+    border-radius: 6px;
+    white-space: nowrap;
   }
 
+  body.ed-home .sv-rank__survey-link,
   .sv-rank__survey-link {
+    width: 100%;
+    justify-content: space-between;
     min-height: 44px;
-    padding-block: 10px;
+    padding-block: 6px;
+    font-size: 11.5px;
+    border-bottom: 0;
   }
 
   /* ------------------------------------------------------------------------
-     7. Rated Load, Real Bay + Bengaluru Local Band
+     7. Rated Load, Real Bay + Bengaluru Local Band — Compact Flow
      ------------------------------------------------------------------------ */
   [aria-labelledby="service-h"].core-band {
-    padding-block: 36px 40px;
-    padding-inline: 20px;
+    padding-block: 28px 30px;
+    padding-inline: 16px;
   }
 
   [aria-labelledby="service-h"] .core-split {
     margin-block-start: 0 !important;
-    gap: 20px;
+    gap: 16px;
+  }
+
+  [aria-labelledby="service-h"] figure img {
+    aspect-ratio: 16 / 10;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 10px;
   }
 
   [aria-labelledby="service-h"] .core-actions,
   [aria-labelledby="local-h"] .core-actions {
-    margin-block-start: 16px !important;
+    margin-block-start: 14px !important;
   }
 
   .core-lead {
-    margin-block-start: 12px;
+    margin-block-start: 10px;
+    font-size: 14.5px;
+    line-height: 1.55;
   }
 
   .core-btn {
     min-height: 44px;
-    padding: 12px 20px;
+    padding: 10px 18px;
   }
 
   [aria-labelledby="local-h"].core-band {
-    padding-block: 32px;
+    padding-block: 24px;
     padding-inline: 16px;
   }
 
+  body.ed-home .sv-local-card,
   [aria-labelledby="local-h"] > div > div {
     margin-block-start: 0 !important;
-    padding: 22px 20px !important;
+    padding: 20px 18px !important;
+    border-radius: 12px;
   }
 
   /* ------------------------------------------------------------------------
-     8. Crane Bays & Systems (#bay-systems)
+     8. Crane Bays & Systems (#bay-systems) — Compact 2x2 Architectural Grid
      ------------------------------------------------------------------------ */
+  body.ed-home .sv-bays,
   .sv-bays {
-    padding: 38px 20px 42px;
+    padding: 28px 16px 32px;
+    border-block-end: 1px solid var(--ed-hairline, #E8EBF0);
   }
 
+  .sv-bays__header {
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  body.ed-home .sv-bays__heading,
   .sv-bays__heading {
-    font-size: clamp(30px, 8.2vw, 38px);
+    font-size: clamp(22px, 6.2vw, 26px);
+    max-width: none;
+    line-height: 1.12;
+  }
+
+  .sv-bays__sig {
+    display: none;
   }
 
   .sv-bays__grid {
-    gap: 14px;
-    margin-block-start: 24px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-block-start: 16px;
   }
 
+  body.ed-home .sv-bays__card,
   .sv-bays__card {
-    min-height: 270px;
-    padding: 20px 20px 0;
+    min-height: 184px;
+    padding: 12px 12px 0;
+    border-radius: 12px;
   }
 
+  .sv-bays__title-row {
+    gap: 6px;
+    align-items: flex-start;
+  }
+
+  body.ed-home .sv-bays__title,
   .sv-bays__title {
-    font-size: 21px;
+    font-size: 14.5px;
+    line-height: 1.18;
+    font-weight: 600;
   }
 
   .sv-bays__desc {
-    margin-block-start: 6px;
-    font-size: 13.5px;
-    line-height: 1.42;
+    display: none;
   }
 
-  /* Always show the top-right arrow cue on touch devices (no hover cursor) */
+  /* Always show the top-right arrow cue on touch devices */
   .sv-bays__arrow {
     opacity: 1;
     transform: none;
+    font-size: 14px;
   }
 
   .sv-bays__media--indoor {
-    height: 54%;
+    height: 60%;
   }
 
   .sv-bays__media--sky {
-    height: 56%;
+    height: 62%;
   }
 
   /* ------------------------------------------------------------------------
-     9. Engineering Scope 4-Column 3D Showcase (#engineering-scope)
+     9. Engineering Scope (#engineering-scope) — Lightweight Swipe Track (No 3D)
      ------------------------------------------------------------------------ */
+  body.ed-home .sv-scope,
+  .sv-scope {
+    background-color: #FFFFFF;
+    border-top: 0;
+    border-bottom: 1px solid var(--ed-hairline, #E8EBF0);
+    padding-block: 28px 30px;
+  }
+
+  .sv-scope__canvas-layer,
+  .sv-scope__fallback,
+  .sv-scope__stage {
+    display: none !important;
+  }
+
+  .sv-scope__m-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding-inline: 16px;
+    margin-block-end: 14px;
+  }
+
+  .sv-scope__m-title {
+    margin: 0;
+    font-family: var(--ed-font, "Plus Jakarta Sans", sans-serif);
+    font-size: clamp(22px, 6.2vw, 26px);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1.12;
+    color: var(--ed-ink, #111317);
+  }
+
+  .sv-scope__grid {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 10px;
+    padding-inline: 16px;
+    padding-block-end: 4px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 16px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .sv-scope__grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  body.ed-home .sv-scope__col,
   .sv-scope__col {
-    min-height: 256px;
-    padding: 16px 20px 18px;
+    flex: 0 0 78%;
+    min-width: 0;
+    min-height: 0;
+    scroll-snap-align: start;
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 18px 16px;
+    border: 1px solid var(--ed-hairline, #E5E8EE);
+    border-radius: 12px;
+    background-color: var(--ed-surface, #F7F8FA);
+    color: var(--ed-ink, #111317);
+    cursor: default;
+  }
+
+  body.ed-home .sv-scope__col:last-child,
+  .sv-scope__col:last-child {
+    border-bottom: 1px solid var(--ed-hairline, #E5E8EE);
+  }
+
+  body.ed-home .sv-scope__col.is-active,
+  .sv-scope__col.is-active {
+    background-color: var(--ed-surface, #F7F8FA);
+    color: var(--ed-ink, #111317);
   }
 
   .sv-scope__head {
-    height: 32px;
+    container-type: normal;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: space-between;
+    height: auto;
   }
 
+  .sv-scope__dash {
+    position: static;
+    transform: none !important;
+    width: 24px;
+    height: 2px;
+  }
+
+  body.ed-home .sv-scope__num,
   .sv-scope__num {
-    font-size: 24px;
-  }
-
-  .sv-scope__stage {
-    min-height: 138px;
+    position: static;
+    transform: none !important;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--ed-navy, #1E3A6B);
   }
 
   .sv-scope__foot {
-    padding-top: 8px;
-    gap: 8px;
+    padding-top: 0;
+    gap: 6px;
   }
 
+  body.ed-home .sv-scope__title,
   .sv-scope__title {
     min-height: 0;
-    font-size: 20px;
-    transform: none;
+    max-width: none;
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.22;
+    transform: none !important;
+    color: var(--ed-ink, #111317);
+  }
+
+  body.ed-home .sv-scope__desc,
+  .sv-scope__desc {
+    max-height: none !important;
+    overflow: visible;
+    margin-top: 0 !important;
+    opacity: 1 !important;
+    transform: none !important;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--ed-muted, #525965) !important;
   }
 
   /* ------------------------------------------------------------------------
-     10. Floor Crane 3D Scroll Showcase (#floor-crane-showcase)
+     10. Floor Crane 3D Scroll Showcase (#floor-crane-showcase) — Preserved Full-Bleed
      ------------------------------------------------------------------------ */
   #floor-crane-showcase.core-band {
-    padding-block: 36px 0;
+    padding-block: 32px 0;
     padding-inline: 0;
     overflow: clip;
     background-color: #FFFFFF;
@@ -484,8 +825,8 @@
   }
 
   .sv-fc__sticky {
-    top: 60px;
-    height: calc(100dvh - 118px);
+    top: 58px;
+    height: calc(100dvh - 114px);
     min-height: 460px;
     border: none;
     border-radius: 0;
@@ -496,23 +837,23 @@
   }
 
   /* ------------------------------------------------------------------------
-     11. RFQ Stainless Nameplate (#rfq-plate)
+     11. RFQ Stainless Nameplate (#rfq-plate) — Compact Mobile Presentation
      ------------------------------------------------------------------------ */
   .sv-plate {
-    padding: 36px 16px;
+    padding: 28px 16px;
   }
 
   .sv-plate__brand-zone {
-    gap: 18px;
-    padding: 22px 20px;
+    gap: 14px;
+    padding: 18px 16px;
   }
 
   .sv-plate__mark-svg {
-    width: min(100%, 230px);
+    width: min(100%, 200px);
   }
 
   .sv-plate__head {
-    font-size: 22px;
+    font-size: 20px;
   }
 
   .sv-plate__specs {
@@ -520,8 +861,8 @@
   }
 
   .sv-plate__cell {
-    padding: 13px 10px;
-    gap: 4px;
+    padding: 11px 10px;
+    gap: 3px;
   }
 
   .sv-plate__cell:nth-child(odd) {
@@ -538,8 +879,8 @@
   }
 
   .sv-plate__action-bar {
-    padding: 16px 18px;
-    gap: 12px;
+    padding: 14px 16px;
+    gap: 10px;
   }
 
   .sv-plate__cta {
@@ -548,50 +889,123 @@
   }
 
   /* ------------------------------------------------------------------------
-     12. About Band (.abt)
+     12. About Band (.abt) — Concise Summary + "Read full story" Disclosure
      ------------------------------------------------------------------------ */
   .abt {
-    --abt-pad-block: 28px;
-    --abt-pad-inline: 20px;
-    --abt-display: clamp(28px, 8vw, 38px);
+    --abt-pad-block: 22px;
+    --abt-pad-inline: 16px;
+    --abt-display: clamp(24px, 6.8vw, 30px);
+  }
+
+  .abt__stage {
+    aspect-ratio: 16 / 10;
+  }
+
+  .abt__line-wrap {
+    padding-block: 18px;
+    padding-inline: 16px;
+  }
+
+  .abt__content {
+    padding-block: 22px 26px;
+    padding-inline: 16px;
   }
 
   .abt__content-inner {
-    gap: 20px;
+    gap: 14px;
   }
 
+  body.ed-home .abt__lead,
   .abt__lead {
-    font-size: 18px;
-    line-height: 1.32;
+    font-size: 17px;
+    line-height: 1.35;
   }
 
+  /* Second emphasis line reveals with full story to keep initial summary crisp */
   .abt__lead + .abt__lead {
-    margin-block-start: 14px;
+    display: none;
+    margin-block-start: 10px;
   }
 
+  .abt__content.is-expanded .abt__lead + .abt__lead {
+    display: block;
+  }
+
+  body.ed-home .abt__body,
   .abt__body {
-    font-size: 14.5px;
-    line-height: 1.62;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .abt__more {
+    display: none;
+  }
+
+  .abt__content.is-expanded .abt__more {
+    display: block;
+    margin-block-start: 12px;
+  }
+
+  .abt__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    margin-block-start: 14px;
+    padding: 10px 16px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    background-color: rgba(255, 255, 255, 0.06);
+    color: #FFFFFF;
+    font-family: var(--ed-font, "Plus Jakarta Sans", sans-serif);
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 160ms ease, border-color 160ms ease;
+  }
+
+  .abt__toggle:hover,
+  .abt__toggle:focus-visible {
+    background-color: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.45);
+    outline: none;
+  }
+
+  .abt__toggle:focus-visible {
+    outline: 2px solid #FFFFFF;
+    outline-offset: 2px;
+  }
+
+  .abt__toggle-chev {
+    display: inline-block;
+    font-size: 12px;
+    line-height: 1;
+    transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .abt__content.is-expanded .abt__toggle-chev {
+    transform: rotate(180deg);
   }
 
   /* ------------------------------------------------------------------------
-     13. Closing CTA & FAQ (.arz)
+     13. Closing CTA & FAQ (.arz) — Tight Continuous Flow
      ------------------------------------------------------------------------ */
   .arz {
-    --arz-pad-block: 38px;
-    --arz-pad-inline: 20px;
-    --arz-display-big: 56px;
-    --arz-display-h2: 28px;
-    --arz-display-faq: 30px;
-    --arz-question: 17px;
+    --arz-pad-block: 30px;
+    --arz-pad-inline: 16px;
+    --arz-display-big: 44px;
+    --arz-display-h2: 24px;
+    --arz-display-faq: 25px;
+    --arz-question: 15.5px;
   }
 
   .arz__cta {
-    gap: 20px;
+    gap: 16px;
   }
 
   .arz__cta-bottom {
-    gap: 18px;
+    gap: 14px;
   }
 
   .arz__btn {
@@ -599,105 +1013,228 @@
     align-items: center;
     justify-content: center;
     min-height: 44px;
-    padding: 12px 22px;
+    padding: 11px 20px;
   }
 
   .arz__faq {
-    gap: 28px;
+    gap: 22px;
   }
 
   .arz__faq-left {
-    gap: 24px;
+    gap: 18px;
   }
 
   .arz__faq-heading {
-    gap: 14px;
+    gap: 10px;
   }
 
   .arz__faq-q {
     min-height: 48px;
-    padding-block: 14px;
-    gap: 16px;
+    padding-block: 12px;
+    gap: 14px;
     line-height: 1.35;
   }
 
   .arz__faq-a p {
-    padding-block-end: 16px;
+    padding-block-end: 14px;
   }
 
   .arz__faq-card {
-    padding: 24px 20px;
-    gap: 16px;
+    padding: 20px 18px;
+    gap: 12px;
   }
 
+  body.ed-home .arz__faq-card-link,
   .arz__faq-card-link {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
-    font-size: 30px;
-    line-height: 1.25;
+    font-size: 22px;
+    line-height: 1.2;
   }
 
   /* ------------------------------------------------------------------------
-     14. Footer & Legal Baseline
+     14. Dark SVIND Footer (.footer) — Compact CTA, Collapsible Link Groups,
+         Clean Legal Baseline
      ------------------------------------------------------------------------ */
   .footer {
-    padding-block-start: 32px;
+    padding-block-start: 28px;
   }
 
   .footer__close {
-    gap: 24px;
-    padding-block-end: 28px;
+    gap: 16px;
+    padding-block-end: 20px;
   }
 
+  body.ed-home .footer__close-heading,
   .footer__close-heading {
-    font-size: 36px;
+    font-size: 26px;
+    line-height: 1.14;
+    text-transform: none;
+    text-wrap: balance;
   }
 
   .footer__close-right {
-    gap: 20px;
+    gap: 14px;
   }
 
   .footer__close-cta {
-    gap: 12px;
+    gap: 10px;
   }
 
   .footer__close-btn {
     min-height: 44px;
-    padding: 12px 20px;
+    padding: 11px 18px;
   }
 
   .footer__close-social {
-    margin-block-start: 20px;
-    gap: 20px;
+    margin-block-start: 12px;
+    gap: 18px;
   }
 
   .footer__close-social a {
     min-height: 44px;
-    padding-inline: 4px;
+    padding-inline: 2px;
   }
 
+  /* Redundant partner wall already displayed in top client marquee */
   .footer__close-partners {
-    padding-block-start: 20px;
-    gap: 14px;
+    display: none;
   }
 
-  .footer__close-partners-list {
-    gap: 16px;
+  body.ed-home .footer__directory,
+  .footer__directory {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding-block: 18px 8px;
   }
 
-  .footer__close-partners img {
-    width: 88px;
-    height: 34px;
+  .footer__dir-summary {
+    padding-block-end: 16px;
+    border-block-end: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .footer__dir-summary .footer__dir-title {
+    margin-block-end: 6px;
+  }
+
+  .footer__dir-copy {
+    font-size: 13.5px;
+    line-height: 1.5;
+    max-width: none;
+  }
+
+  .footer__dir-meta {
+    margin-block-start: 8px;
+    font-size: 11.5px;
+  }
+
+  .footer__dir-group {
+    border-block-end: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  body.ed-home .footer__dir-trigger,
+  .footer__dir-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    min-height: 48px;
+    margin: 0;
+    padding: 12px 0;
+    border: 0;
+    background: transparent;
+    color: #FFFFFF;
+    font-family: var(--ed-font, "Plus Jakarta Sans", sans-serif);
+    font-size: 14.5px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    text-align: left;
+    cursor: pointer;
+    pointer-events: auto;
+  }
+
+  .footer__dir-trigger:focus-visible {
+    outline: 2px solid #FFFFFF;
+    outline-offset: -2px;
+  }
+
+  .footer__dir-chev {
+    display: inline-block;
+    position: relative;
+    width: 14px;
+    height: 14px;
+    flex: none;
+  }
+
+  .footer__dir-chev::before,
+  .footer__dir-chev::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 12px;
+    height: 1.5px;
+    background-color: rgba(255, 255, 255, 0.72);
+    transform: translate(-50%, -50%);
+    transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1), opacity 180ms ease;
+  }
+
+  .footer__dir-chev::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+
+  .footer__dir-group.is-open .footer__dir-chev::after {
+    transform: translate(-50%, -50%) rotate(0deg);
+    opacity: 0;
+  }
+
+  .footer__dir-panel {
+    display: none;
+  }
+
+  .footer__dir-group.is-open .footer__dir-panel {
+    display: block;
+    padding-block-end: 14px;
+  }
+
+  .footer__dir-list {
+    gap: 2px;
+  }
+
+  .footer__dir-link {
+    min-height: 44px;
+    font-size: 14px;
+  }
+
+  .footer__mark {
+    padding-block: 16px 12px;
+  }
+
+  .footer__mark-row {
+    margin-block: 0;
+    padding-inline: 16px;
+    font-size: clamp(56px, 19.5vw, 84px);
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    gap: 0.04em;
+  }
+
+  .footer__mark.is-armed .footer__mark-letter {
+    transform: none !important;
+    transition: none !important;
   }
 
   .footer__baseline-row {
-    gap: 8px;
-    padding-block: 14px 20px;
+    gap: 6px;
+    padding-block: 12px 16px;
+    font-size: 12.5px;
   }
 
   .footer__baseline .footer__legal-links {
-    gap: 12px;
+    gap: 8px;
   }
 
   .footer__baseline .footer__link {
@@ -706,5 +1243,13 @@
     justify-content: center;
     min-height: 44px;
     padding-inline: 10px;
+  }
+}
+
+@media (max-width: 599.98px) and (prefers-reduced-motion: reduce) {
+  .abt__toggle-chev,
+  .footer__dir-chev::before,
+  .footer__dir-chev::after {
+    transition: none !important;
   }
 }

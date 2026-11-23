@@ -3360,7 +3360,34 @@ body.ed-home .footer__baseline {
   letter-spacing: 0.01em;
 }
 
-/* Homepage Mobile (< 600px) Editorial Polish Guardrails */
+/* Desktop & Tablet (>= 600px) pass-through defaults for mobile-only disclosure controls */
+.sv-m-swipe-hint,
+.sv-scope__m-head,
+.abt__toggle,
+.footer__dir-chev {
+  display: none;
+}
+
+.abt__more {
+  display: contents;
+}
+
+.footer__dir-trigger {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: default;
+  pointer-events: none;
+}
+
+.footer__dir-panel {
+  display: block;
+}
+
+/* Homepage Mobile (< 600px) Editorial Polish Guardrails (base hero framing; section layouts owned by mobile-600.css) */
 @media (max-width: 599.98px) {
   body.ed-home .sv-hero3d {
     height: calc(100svh - 110px);
@@ -3383,31 +3410,6 @@ body.ed-home .footer__baseline {
   body.ed-home .sv-hero3d__h1 {
     font-size: clamp(21px, 5.4vw, 25px);
     line-height: 1.14;
-  }
-
-  body.ed-home .expertise-item .expertise-kicker {
-    top: 14px !important;
-    left: 16px !important;
-    inset: 14px auto auto 16px !important;
-    transform: none !important;
-  }
-
-  body.ed-home .expertise-content-wrapper {
-    padding: 58px 20px 22px;
-  }
-
-  body.ed-home #services .button {
-    border-radius: 6px;
-    font-family: var(--ed-font);
-    font-size: 14px;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    text-transform: none;
-  }
-
-  body.ed-home .sv-local-card {
-    margin-block-start: 20px;
-    padding: 24px 20px;
   }
 }
 
