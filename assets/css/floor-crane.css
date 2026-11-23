@@ -7,6 +7,8 @@
 #floor-crane-showcase.core-band {
   overflow: clip;
   background-color: #FFFFFF;
+  padding-inline: 0;
+  padding-block-end: 0;
 }
 
 .sv-fc {
@@ -17,6 +19,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  padding-inline: var(--band-inset, clamp(20px, 5vw, 72px));
   margin-block-end: 24px;
 }
 
@@ -38,13 +41,12 @@
   color: #4B5563;
 }
 
-/* Sticky Scroll Runway (A-to-Z Timeline: 0% -> 100%) */
+/* Full-Bleed Sticky Scroll Runway (A-to-Z Timeline: 0% -> 100%) */
 .sv-fc__runway {
   --fc-ink: #111317;
   --fc-muted: #4B5563;
   --fc-subtle: #64748B;
   --fc-accent: #1E3A6B;
-  --fc-hairline: rgba(17, 19, 23, 0.08);
   --fc-leader: rgba(30, 58, 107, 0.56);
 
   position: relative;
@@ -58,8 +60,8 @@
   top: 68px;
   width: 100%;
   height: calc(100vh - 68px);
-  border-radius: 16px;
-  border: 1px solid var(--fc-hairline);
+  border: none;
+  border-radius: 0;
   background-color: #FFFFFF;
   overflow: hidden;
   user-select: none;
@@ -113,11 +115,10 @@
 .sv-fc__hud-spec {
   position: absolute;
   top: 22px;
-  left: 24px;
+  left: var(--band-inset, clamp(20px, 5vw, 72px));
   z-index: 4;
   max-width: min(360px, calc(100% - 130px));
-  padding: 4px 10px 6px 4px;
-  border-radius: 6px;
+  padding: 4px 10px 6px 0;
   background-color: rgba(255, 255, 255, 0.86);
   pointer-events: none;
   display: flex;
@@ -159,7 +160,7 @@
 .sv-fc__hud-index {
   position: absolute;
   top: 24px;
-  right: 28px;
+  right: var(--band-inset, clamp(20px, 5vw, 72px));
   z-index: 4;
   pointer-events: none;
   display: flex;
@@ -281,7 +282,7 @@
   }
 
   .sv-fc__sticky {
-    border-radius: 12px;
+    border-radius: 0;
   }
 
   .sv-fc__hud-spec {

@@ -468,12 +468,14 @@
      10. Floor Crane 3D Scroll Showcase (#floor-crane-showcase)
      ------------------------------------------------------------------------ */
   #floor-crane-showcase.core-band {
-    padding-block: 36px 44px;
-    padding-inline: 14px;
+    padding-block: 36px 0;
+    padding-inline: 0;
     overflow: clip;
+    background-color: #FFFFFF;
   }
 
   .sv-fc__head {
+    padding-inline: 16px;
     margin-block-end: 14px;
   }
 
@@ -485,6 +487,8 @@
     top: 60px;
     height: calc(100dvh - 118px);
     min-height: 460px;
+    border: none;
+    border-radius: 0;
   }
 
   .sv-fc__viewport {

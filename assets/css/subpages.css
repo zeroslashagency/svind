@@ -2998,7 +2998,7 @@ body.ed-home .sv-scope__desc {
 
 /* 09 · Cantilever Floor Crane 3D Showcase (#floor-crane-showcase) */
 body.ed-home #floor-crane-showcase {
-  background-color: var(--ed-surface);
+  background-color: #FFFFFF;
   border-block-end: 1px solid var(--ed-hairline);
 }
 
